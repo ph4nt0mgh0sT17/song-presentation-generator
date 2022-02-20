@@ -1,0 +1,52 @@
+﻿<Window x:Class="SongTheoryApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm2="clr-namespace:SongTheoryApplication.ViewModels.Windows"
+        xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm2:MainWindowViewModel}"
+        Title="{Binding Path=ApplicationTitle, Mode=OneWay}"
+        Height="{Binding Path=Height, Mode=TwoWay}" Width="{Binding Path=Width, Mode=TwoWay}"
+        MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
+        Left="{Binding Path=LeftWindow, Mode=OneWay}" Top="{Binding Path=TopWindow, Mode=OneWay}"
+        x:Name="Main">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="LightGray" BorderThickness="1" BorderBrush="Black">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Text="{Binding Path=MainWindowTitleText}"
+                       FontSize="25">
+            </TextBlock>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Grid.Column="0" Margin="50" Command="{Binding Path=OpenCreateSongWindow}">
+                <TextBlock Text="Vytvoření písničky" FontSize="20" HorizontalAlignment="Center"></TextBlock>
+            </Button>
+
+            <Button Grid.Row="0" Grid.Column="1" Margin="50" Command="{Binding Path=OpenSongListWindow}">
+                <TextBlock Text="Evidence písniček" FontSize="20" HorizontalAlignment="Center"></TextBlock>
+            </Button>
+        </Grid>
+
+        <controls:FooterControl Grid.Row="2" FooterWidth="{Binding ElementName=Main, Path=Width, Mode=OneWay}"
+                                FooterVersion="1.00"
+                                ApplicationAuthor="David Miko">
+        </controls:FooterControl>
+    </Grid>
+</Window>
