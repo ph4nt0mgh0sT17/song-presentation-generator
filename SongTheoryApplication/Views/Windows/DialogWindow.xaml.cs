@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.ViewModels.Base;
 
@@ -20,19 +21,7 @@ public partial class DialogWindow : Window
         Buttons = buttons;
         Icons = icons;
         
-        CenterScreen();
-    }
-
-    private void CenterScreen()
-    {
-        var screenWidth = (int)SystemParameters.PrimaryScreenWidth;
-        var screenHeight = (int)SystemParameters.PrimaryScreenHeight;
-
-        var windowWidth = Width;
-        var windowHeight = Height;
-
-        Left = (screenWidth / 2) - (windowWidth / 2);
-        Top = (screenHeight / 2) - (windowHeight / 2);
+        this.CenterScreen();
     }
 
     public string TitleText { get; set; }
