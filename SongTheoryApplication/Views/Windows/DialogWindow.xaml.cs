@@ -8,7 +8,10 @@ namespace SongTheoryApplication.Views.Windows;
 
 public partial class DialogWindow : Window
 {
-    public DialogWindow(string? titleText, string? descriptionText, DialogButtons buttons, DialogIcons icons)
+    public DialogWindow(
+        string titleText, string descriptionText, 
+        DialogButtons buttons = DialogButtons.OK, 
+        DialogIcons icons = DialogIcons.INFORMATION)
     {
         InitializeComponent();
         DataContext = this;
@@ -17,6 +20,11 @@ public partial class DialogWindow : Window
         Buttons = buttons;
         Icons = icons;
         
+        CenterScreen();
+    }
+
+    private void CenterScreen()
+    {
         var screenWidth = (int)SystemParameters.PrimaryScreenWidth;
         var screenHeight = (int)SystemParameters.PrimaryScreenHeight;
 
@@ -27,12 +35,12 @@ public partial class DialogWindow : Window
         Top = (screenHeight / 2) - (windowHeight / 2);
     }
 
-    public string? TitleText { get; set; }
-    public string? DescriptionText { get; set; }
+    public string TitleText { get; set; }
+    public string DescriptionText { get; set; }
 
-    public DialogButtons? Buttons { get; set; }
+    public DialogButtons Buttons { get; set; }
     
-    public DialogIcons? Icons { get; set; }
+    public DialogIcons Icons { get; set; }
 
     public ICommand OkButtonCommand => new RelayCommand(Close);
 
