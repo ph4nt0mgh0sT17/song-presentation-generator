@@ -23,7 +23,8 @@ public class MainWindowViewModel : BaseViewModel
         new DialogWindow(
                 "Není implementovaná operace",
                 "Tato operace není ještě implementována. Prosím kontaktuje administrátora.",
-                DialogButtons.OK)
+                DialogButtons.OK,
+                DialogIcons.INFORMATION)
             .ShowDialog();
     }
 }

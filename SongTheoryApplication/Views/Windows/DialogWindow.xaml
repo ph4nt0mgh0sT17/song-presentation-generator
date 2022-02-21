@@ -14,9 +14,9 @@
             <StackPanel Margin="30">
                 <Grid>
                     <fa5:ImageAwesome Icon="Solid_CheckCircle" Width="30" Foreground="Green"
-                                      Visibility="{Binding Path=AcceptCancelButtonsLayoutVisiblity}" />
+                                      Visibility="{Binding Path=SuccessIconVisibility}" />
                     <fa5:ImageAwesome Icon="Solid_InfoCircle" Width="30" Foreground="SkyBlue"
-                                      Visibility="{Binding Path=OkButtonLayoutVisibility}" />
+                                      Visibility="{Binding Path=InformationIconVisibility}" />
                 </Grid>
                 <TextBlock HorizontalAlignment="Center" FontSize="30" Text="{Binding Path=TitleText}"></TextBlock>
                 <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" FontSize="20"

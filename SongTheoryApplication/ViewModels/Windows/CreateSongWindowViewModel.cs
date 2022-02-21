@@ -107,7 +107,8 @@ public class CreateSongWindowViewModel : BaseViewModel
             new DialogWindow(
                     "Písnička byla úspěšně vytvořena!",
                     "Písnička byla úspěšně vytvořena a uložena do systému.",
-                    DialogButtons.OK)
+                    DialogButtons.OK,
+                    DialogIcons.SUCCESS)
                 .ShowDialog();
             
             if (_createSongWindow == null)
