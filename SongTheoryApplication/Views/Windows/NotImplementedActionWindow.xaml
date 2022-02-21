@@ -11,11 +11,15 @@
         Height="{Binding Path=Height, Mode=TwoWay}" Width="{Binding Path=Width, Mode=TwoWay}"
         MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
         Left="{Binding Path=LeftWindow, Mode=OneWay}" Top="{Binding Path=TopWindow, Mode=OneWay}"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize" WindowStyle="None">
     <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBlock HorizontalAlignment="Center"
                    VerticalAlignment="Center">
             Akce, kterou chcete provést není implementována.
         </TextBlock>
+        
+        <Button Click="ButtonBase_OnClick">Zavřít</Button>
+        </StackPanel>
     </Grid>
 </Window>

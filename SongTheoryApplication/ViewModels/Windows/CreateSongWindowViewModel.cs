@@ -2,6 +2,7 @@
 using System.Printing;
 using System.Windows;
 using System.Windows.Input;
+using SongTheoryApplication.Models;
 using SongTheoryApplication.Requests;
 using SongTheoryApplication.Services;
 using SongTheoryApplication.ViewModels.Base;
@@ -102,7 +103,13 @@ public class CreateSongWindowViewModel : BaseViewModel
         try
         {
             _songService.CreateSong(createSongRequest);
-            MessageBox.Show("Písnička byla úspěšně vytvořena!");
+            
+            new DialogWindow(
+                    "Písnička byla úspěšně vytvořena!",
+                    "Písnička byla úspěšně vytvořena a uložena do systému.",
+                    DialogButtons.OK)
+                .ShowDialog();
+            
             if (_createSongWindow == null)
                 throw new InvalidOperationException("Cannot close the window because its reference is null.");
 

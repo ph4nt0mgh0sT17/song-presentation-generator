@@ -18,4 +18,9 @@ public partial class NotImplementedActionWindow : Window
 
         DataContext = notImplementedActionWindowViewModel;
     }
+
+    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }
