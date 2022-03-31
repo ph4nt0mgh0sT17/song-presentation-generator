@@ -24,7 +24,7 @@ namespace SongTheoryApplication
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            DataContext = App.Current.Services.GetService(typeof(MainWindowViewModel));
         }
     }
 }

@@ -19,7 +19,7 @@ public class CreateSongWindowViewModel : BaseViewModel
 
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
-    private readonly CreateSongWindow _createSongWindow;
+    public CreateSongWindow _createSongWindow;
 
     public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
 
@@ -61,19 +61,12 @@ public class CreateSongWindowViewModel : BaseViewModel
         }
     }
 
-    public CreateSongWindowViewModel(CreateSongWindow createSongWindow)
-        : this(new SongService(), new PresentationGeneratorService(), createSongWindow)
-    {
-    }
-
     public CreateSongWindowViewModel(
         ISongService songService, 
-        IPresentationGeneratorService presentationGeneratorService, 
-        CreateSongWindow createSongWindow)
+        IPresentationGeneratorService presentationGeneratorService)
     {
         _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
-        _createSongWindow = createSongWindow;
     }
 
 
