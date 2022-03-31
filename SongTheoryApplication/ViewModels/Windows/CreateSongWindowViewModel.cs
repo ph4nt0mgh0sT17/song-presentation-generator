@@ -19,7 +19,7 @@ public class CreateSongWindowViewModel : BaseViewModel
 
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
-    public CreateSongWindow _createSongWindow;
+    public CreateSongWindow? _createSongWindow;
 
     public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
 
@@ -62,7 +62,7 @@ public class CreateSongWindowViewModel : BaseViewModel
     }
 
     public CreateSongWindowViewModel(
-        ISongService songService, 
+        ISongService songService,
         IPresentationGeneratorService presentationGeneratorService)
     {
         _songService = songService;
@@ -83,17 +83,31 @@ public class CreateSongWindowViewModel : BaseViewModel
         try
         {
             _songService.CreateSong(createSongRequest);
-            
+
             new DialogWindow(
                     "Písnička byla úspěšně vytvořena!",
                     "Písnička byla úspěšně vytvořena a uložena do systému.",
                     DialogButtons.OK,
                     DialogIcons.SUCCESS)
                 .ShowDialog();
-            
-            _presentationGeneratorService.GenerateTestingPresentation(createSongRequest.SongTitle, createSongRequest.SongText);
 
-            _createSongWindow.Close();
+            _presentationGeneratorService.GenerateTestingPresentation(createSongRequest.SongTitle,
+                createSongRequest.SongText);
+
+            if (_createSongWindow == null)
+            {
+                new DialogWindow(
+                        "Toto dialogové okno nemohlo být uzavřeno.",
+                        "Toto dialogové okno nemohlo být uzavřeno.",
+                        DialogButtons.OK,
+                        DialogIcons.ERROR)
+                    .ShowDialog();
+            }
+
+            else
+            {
+                _createSongWindow.Close();
+            }
         }
         catch (InvalidOperationException)
         {
