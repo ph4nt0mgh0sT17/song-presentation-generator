@@ -74,11 +74,7 @@ public class CreateSongWindowViewModel : BaseViewModel
     {
         if (!CheckCanCreateSong()) return;
 
-        var createSongRequest = new CreateSongRequest
-        {
-            SongTitle = SongTitle,
-            SongText = SongText
-        };
+        var createSongRequest = new CreateSongRequest(SongTitle, SongText);
 
         try
         {

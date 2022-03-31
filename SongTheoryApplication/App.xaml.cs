@@ -31,6 +31,7 @@ namespace SongTheoryApplication
             var services = new ServiceCollection();
 
             services.AddAllServices();
+            services.AddAllRepositories();
             services.AddAllViewModels();
             
             return services.BuildServiceProvider();

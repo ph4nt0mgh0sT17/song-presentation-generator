@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongTheoryApplication", "SongTheoryApplication\SongTheoryApplication.csproj", "{449A7086-7D3A-4811-8C77-0EB4918DA309}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SongTheoryApplication.Tests", "SongTheoryApplication.Tests\SongTheoryApplication.Tests.csproj", "{ACB8E45E-F08C-4A00-937A-7F7386CB1177}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{C3753F90-81BA-4A1C-8B2A-7A408AE39FC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1951F1A7-D0BB-42A8-B7AD-83BE2163871F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +18,13 @@ Global
 		{449A7086-7D3A-4811-8C77-0EB4918DA309}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{449A7086-7D3A-4811-8C77-0EB4918DA309}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{449A7086-7D3A-4811-8C77-0EB4918DA309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACB8E45E-F08C-4A00-937A-7F7386CB1177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACB8E45E-F08C-4A00-937A-7F7386CB1177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACB8E45E-F08C-4A00-937A-7F7386CB1177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACB8E45E-F08C-4A00-937A-7F7386CB1177}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{449A7086-7D3A-4811-8C77-0EB4918DA309} = {C3753F90-81BA-4A1C-8B2A-7A408AE39FC0}
+		{ACB8E45E-F08C-4A00-937A-7F7386CB1177} = {1951F1A7-D0BB-42A8-B7AD-83BE2163871F}
 	EndGlobalSection
 EndGlobal

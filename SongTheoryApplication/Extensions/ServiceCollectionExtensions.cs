@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SongTheoryApplication.Repositories;
 using SongTheoryApplication.Services;
 using SongTheoryApplication.ViewModels.Windows;
 
@@ -10,6 +11,11 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<ISongService, SongService>();
         services.AddSingleton<IPresentationGeneratorService, PresentationGeneratorService>();
+    }
+    
+    public static void AddAllRepositories(this IServiceCollection services)
+    {
+        services.AddSingleton<ILocalSongRepository, LocalSongRepository>();
     }
     
     public static void AddAllViewModels(this IServiceCollection services)

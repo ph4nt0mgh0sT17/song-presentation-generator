@@ -4,50 +4,34 @@ using System.IO;
 using System.Text.Json;
 using System.Windows.Documents;
 using CommunityToolkit.Diagnostics;
+using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Models;
+using SongTheoryApplication.Repositories;
 using SongTheoryApplication.Requests;
 
 namespace SongTheoryApplication.Services;
 
 public class SongService : ISongService
 {
+    private readonly ILocalSongRepository _localSongRepository;
+
+    public SongService(ILocalSongRepository localSongRepository)
+    {
+        _localSongRepository = localSongRepository;
+    }
+
     public void CreateSong(CreateSongRequest createSongRequest)
     {
-        Guard.IsNotNull(createSongRequest, nameof(createSongRequest));
-        if (createSongRequest == null)
-            throw new ArgumentNullException(nameof(createSongRequest));
+        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText);
 
-        var song = new Song
+        try
         {
-            Title = createSongRequest.SongTitle,
-            Text = createSongRequest.SongText
-        };
-
-        var songs = RetrieveAllSongsFromJson();
-        songs.Add(song);
-
-        var songsJsonText = JsonSerializer.Serialize(songs);
-
-        var fileStream = new FileStream(Constants.Constants.SONGS_JSON_FILENAME, FileMode.Create);
-        using (var streamWriter = new StreamWriter(fileStream))
-        {
-            streamWriter.Write(songsJsonText);
+            _localSongRepository.CreateSong(song);
         }
-    }
 
-    private List<Song> RetrieveAllSongsFromJson()
-    {
-        if (!File.Exists(Constants.Constants.SONGS_JSON_FILENAME))
-            return new List<Song>();
-
-        var songsJsonText = RetrieveJsonFromSongsJsonFile();
-
-        return JsonSerializer.Deserialize<List<Song>>(songsJsonText) ?? 
-               throw new InvalidOperationException("The songs could not be retrieved.");
-    }
-
-    private string RetrieveJsonFromSongsJsonFile()
-    {
-        return File.ReadAllText(Constants.Constants.SONGS_JSON_FILENAME);
+        catch (Exception ex)
+        {
+            throw new SongCannotBeCreatedException("Song cannot be created.", ex);
+        }
     }
 }
