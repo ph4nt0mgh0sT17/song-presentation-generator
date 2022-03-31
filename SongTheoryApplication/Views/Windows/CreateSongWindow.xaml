@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" Grid.Row="0" Margin="10">
+            <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Margin="10">
 
                 <StackPanel Margin="10">
                     <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
@@ -50,25 +50,15 @@
                 </StackPanel>
             </Grid>
 
-            <Grid Grid.Column="1" Grid.Row="0" Margin="10">
-                <StackPanel Margin="10">
-                    <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                        <StackPanel Margin="10">
-                            <Label>Interpret písničky</Label>
-                            <TextBox
-                                Text="{Binding Path=SongInterpret, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            </TextBox>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-            </Grid>
-
             <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="1" Margin="10">
                 <StackPanel Margin="10">
                     <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
                         <StackPanel Margin="10">
                             <Label>Text písničky</Label>
                             <TextBox Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Visible"
+                                     AcceptsReturn="True"
                                      Height="100">
                             </TextBox>
                         </StackPanel>

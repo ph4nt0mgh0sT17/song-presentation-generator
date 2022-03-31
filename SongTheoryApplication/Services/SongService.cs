@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Documents;
+using CommunityToolkit.Diagnostics;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Requests;
 
@@ -12,13 +13,13 @@ public class SongService : ISongService
 {
     public void CreateSong(CreateSongRequest createSongRequest)
     {
+        Guard.IsNotNull(createSongRequest, nameof(createSongRequest));
         if (createSongRequest == null)
             throw new ArgumentNullException(nameof(createSongRequest));
 
         var song = new Song
         {
             Title = createSongRequest.SongTitle,
-            Interpret = createSongRequest.SongInterpret,
             Text = createSongRequest.SongText
         };
 

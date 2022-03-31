@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.ViewModels.Base;
 using SongTheoryApplication.Views.Windows;

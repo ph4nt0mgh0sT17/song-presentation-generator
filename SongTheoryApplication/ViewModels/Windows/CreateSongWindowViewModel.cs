@@ -2,6 +2,7 @@
 using System.Printing;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Requests;
 using SongTheoryApplication.Services;
@@ -13,12 +14,12 @@ namespace SongTheoryApplication.ViewModels.Windows;
 public class CreateSongWindowViewModel : BaseViewModel
 {
     private string? _songTitle;
-    private string? _songInterpret;
     private string? _songText;
     private bool _canCreateSong;
 
     private readonly ISongService _songService;
-    private readonly CreateSongWindow? _createSongWindow;
+    private readonly IPresentationGeneratorService _presentationGeneratorService;
+    private readonly CreateSongWindow _createSongWindow;
 
     public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
 
@@ -31,18 +32,6 @@ public class CreateSongWindowViewModel : BaseViewModel
             _songTitle = value;
             CanCreateSong = CheckCanCreateSong();
             RaisePropertyChanged(nameof(SongTitle));
-        }
-    }
-
-    public string? SongInterpret
-    {
-        get => _songInterpret;
-
-        set
-        {
-            _songInterpret = value;
-            CanCreateSong = CheckCanCreateSong();
-            RaisePropertyChanged(nameof(SongInterpret));
         }
     }
 
@@ -72,19 +61,18 @@ public class CreateSongWindowViewModel : BaseViewModel
         }
     }
 
-    public CreateSongWindowViewModel()
-        : this(new SongService(), null)
+    public CreateSongWindowViewModel(CreateSongWindow createSongWindow)
+        : this(new SongService(), new PresentationGeneratorService(), createSongWindow)
     {
     }
 
-    public CreateSongWindowViewModel(CreateSongWindow? createSongWindow)
-        : this(new SongService(), createSongWindow)
-    {
-    }
-
-    public CreateSongWindowViewModel(ISongService songService, CreateSongWindow? createSongWindow)
+    public CreateSongWindowViewModel(
+        ISongService songService, 
+        IPresentationGeneratorService presentationGeneratorService, 
+        CreateSongWindow createSongWindow)
     {
         _songService = songService;
+        _presentationGeneratorService = presentationGeneratorService;
         _createSongWindow = createSongWindow;
     }
 
@@ -96,7 +84,6 @@ public class CreateSongWindowViewModel : BaseViewModel
         var createSongRequest = new CreateSongRequest
         {
             SongTitle = SongTitle,
-            SongInterpret = SongInterpret,
             SongText = SongText
         };
 
@@ -111,8 +98,7 @@ public class CreateSongWindowViewModel : BaseViewModel
                     DialogIcons.SUCCESS)
                 .ShowDialog();
             
-            if (_createSongWindow == null)
-                throw new InvalidOperationException("Cannot close the window because its reference is null.");
+            _presentationGeneratorService.GenerateTestingPresentation(createSongRequest.SongTitle, createSongRequest.SongText);
 
             _createSongWindow.Close();
         }
@@ -126,7 +112,6 @@ public class CreateSongWindowViewModel : BaseViewModel
     private bool CheckCanCreateSong()
     {
         return !string.IsNullOrEmpty(SongTitle) &&
-               !string.IsNullOrEmpty(SongInterpret) &&
                !string.IsNullOrEmpty(SongText);
     }
 }

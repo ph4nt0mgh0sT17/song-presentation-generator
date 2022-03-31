@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.ViewModels.Base;
@@ -24,8 +25,8 @@ public partial class DialogWindow : Window
         this.CenterScreen();
     }
 
-    public string TitleText { get; set; }
-    public string DescriptionText { get; set; }
+    public string TitleText { get; set; } = "Test";
+    public string DescriptionText { get; set; } = "Test";
 
     public DialogButtons Buttons { get; set; }
     
