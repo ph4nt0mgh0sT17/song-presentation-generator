@@ -26,7 +26,7 @@ public class SongService : ISongService
 
         try
         {
-            _localSongRepository.CreateSong(song);
+            _localSongRepository.SaveSong(song);
         }
 
         catch (Exception ex)

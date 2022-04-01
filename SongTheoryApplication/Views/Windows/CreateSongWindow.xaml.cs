@@ -11,7 +11,7 @@ public partial class CreateSongWindow : Window
     {
         InitializeComponent();
         var createSongWindowViewModel = App.Current.Services.GetService<CreateSongWindowViewModel>();
-        createSongWindowViewModel._createSongWindow = this;
+        //createSongWindowViewModel.CreateSongWindow = this;
         
         DataContext = createSongWindowViewModel;
 

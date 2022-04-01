@@ -21,6 +21,8 @@
                 <TextBlock HorizontalAlignment="Center" 
                            Foreground="{StaticResource PureWhite}" 
                            FontSize="30" 
+                           TextWrapping="Wrap" 
+                           TextAlignment="Center"
                            FontFamily="{StaticResource OpenSansRegular}" 
                            Text="{Binding Path=TitleText}">
                 </TextBlock>

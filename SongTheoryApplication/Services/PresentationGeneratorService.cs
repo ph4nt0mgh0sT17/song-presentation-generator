@@ -1,4 +1,5 @@
 ﻿using System;
+using CommunityToolkit.Diagnostics;
 using NetOffice.OfficeApi.Enums;
 using NetOffice.OfficeApi.Tools.Contribution;
 using NetOffice.PowerPointApi;
@@ -10,12 +11,9 @@ public class PresentationGeneratorService : IPresentationGeneratorService
 {
     public void GenerateTestingPresentation(string? songTitle, string? songText)
     {
-        if (songTitle == null)
-            throw new ArgumentNullException(nameof(songTitle));
-        
-        if (songText == null)
-            throw new ArgumentNullException(nameof(songText));
-        
+        Guard.IsNotNull(songTitle, nameof(songTitle));
+        Guard.IsNotNull(songText, nameof(songText));
+
         var powerpointApplication = new Application();
 
         var presentation = GeneratePresentation(songTitle, songText, powerpointApplication);
@@ -48,11 +46,11 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         songTextLabel.TextFrame.TextRange.Text = songText;
     }
 
-    private void GenerateTitleSlide(string s, Presentation presentation1)
+    private void GenerateTitleSlide(string songTitle, Presentation presentation)
     {
-        Slide titleSlide = presentation1.Slides.Add(1, PpSlideLayout.ppLayoutTitleOnly);
+        Slide titleSlide = presentation.Slides.Add(1, PpSlideLayout.ppLayoutTitleOnly);
 
         Shape titleLabel = titleSlide.Shapes.Title;
-        titleLabel.TextFrame.TextRange.Text = s;
+        titleLabel.TextFrame.TextRange.Text = songTitle;
     }
 }

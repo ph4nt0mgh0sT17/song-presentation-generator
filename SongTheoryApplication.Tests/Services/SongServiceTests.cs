@@ -28,7 +28,7 @@ public class SongServiceTests
         var songRequest = new CreateSongRequest("Song", "Song text");
         
         // Assert
-        _localSongRepository.Setup(x => x.CreateSong(It.IsAny<Song>()))
+        _localSongRepository.Setup(x => x.SaveSong(It.IsAny<Song>()))
             .Throws<InvalidOperationException>();
 
         // Act

@@ -45,4 +45,11 @@ public partial class DialogWindow : Window
     
     public Visibility InformationIconVisibility =>
         Icons == DialogIcons.INFORMATION ? Visibility.Visible : Visibility.Hidden;
+
+    public static void ShowDialog(string titleText, string descriptionText,
+        DialogButtons buttons = DialogButtons.OK,
+        DialogIcons icons = DialogIcons.INFORMATION)
+    {
+        new DialogWindow(titleText, descriptionText, buttons, icons).ShowDialog();
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Printing;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
@@ -19,9 +20,17 @@ public class CreateSongWindowViewModel : BaseViewModel
 
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
-    public CreateSongWindow? _createSongWindow;
 
     public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
+    public ICommand CreateSongCommand => new RelayCommand(CreateSong);
+    
+    public CreateSongWindowViewModel(
+        ISongService songService,
+        IPresentationGeneratorService presentationGeneratorService)
+    {
+        _songService = songService;
+        _presentationGeneratorService = presentationGeneratorService;
+    }
 
     public string? SongTitle
     {
@@ -47,9 +56,6 @@ public class CreateSongWindowViewModel : BaseViewModel
         }
     }
 
-
-    public ICommand CreateSongCommand => new RelayCommand(CreateSong);
-
     public bool CanCreateSong
     {
         get => _canCreateSong;
@@ -60,15 +66,12 @@ public class CreateSongWindowViewModel : BaseViewModel
             RaisePropertyChanged(nameof(CanCreateSong));
         }
     }
-
-    public CreateSongWindowViewModel(
-        ISongService songService,
-        IPresentationGeneratorService presentationGeneratorService)
+    
+    public CreateSongWindow? CreateSongWindow
     {
-        _songService = songService;
-        _presentationGeneratorService = presentationGeneratorService;
+        get;
+        set;
     }
-
 
     private void CreateSong()
     {
@@ -90,25 +93,29 @@ public class CreateSongWindowViewModel : BaseViewModel
             _presentationGeneratorService.GenerateTestingPresentation(createSongRequest.SongTitle,
                 createSongRequest.SongText);
 
-            if (_createSongWindow == null)
+            if (CreateSongWindow == null)
             {
-                new DialogWindow(
-                        "Toto dialogové okno nemohlo být uzavřeno.",
-                        "Toto dialogové okno nemohlo být uzavřeno.",
-                        DialogButtons.OK,
-                        DialogIcons.ERROR)
-                    .ShowDialog();
+                DialogWindow.ShowDialog(
+                    "Toto dialogové okno nemohlo být uzavřeno.",
+                    "Toto dialogové okno nemohlo být uzavřeno.",
+                    DialogButtons.OK,
+                    DialogIcons.ERROR
+                );
             }
 
             else
             {
-                _createSongWindow.Close();
+                CreateSongWindow.Close();
             }
         }
         catch (InvalidOperationException)
         {
-            // TODO: Replace MessageBox.Show by some dialog window
-            MessageBox.Show("The song could not be created due to various reasons.");
+            DialogWindow.ShowDialog(
+                "Písnička nemohla být z neznámých důvodů vytvořena.",
+                "Písnička nemohla být z neznámých důvodů vytvořena.",
+                DialogButtons.OK,
+                DialogIcons.ERROR
+            );
         }
     }
 

@@ -16,7 +16,7 @@ public class MainWindowViewModel : BaseViewModel
 
     private void OpenCreateSongWindow()
     {
-        new CreateSongWindow().Show();
+        new CreateSongWindow().ShowDialog();
     }
     
     private void OpenSongListWindow()

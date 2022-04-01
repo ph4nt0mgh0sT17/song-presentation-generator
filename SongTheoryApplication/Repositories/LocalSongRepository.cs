@@ -8,7 +8,7 @@ namespace SongTheoryApplication.Repositories;
 
 public class LocalSongRepository : ILocalSongRepository
 {
-    public void CreateSong(Song song)
+    public void SaveSong(Song song)
     {
         var songs = RetrieveAllSongs();
         songs.Add(song);
