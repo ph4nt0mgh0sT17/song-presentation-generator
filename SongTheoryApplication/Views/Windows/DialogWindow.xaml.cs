@@ -31,8 +31,12 @@ public partial class DialogWindow : Window
     public DialogButtons Buttons { get; set; }
     
     public DialogIcons Icons { get; set; }
+    
+    public DialogResult? DialogResult { get; private set; }
 
-    public ICommand OkButtonCommand => new RelayCommand(Close);
+    public ICommand OkButtonCommand => new RelayCommand(ExecuteOk);
+    public ICommand AcceptButtonCommand => new RelayCommand(ExecuteAccept);
+    public ICommand CancelButtonCommand => new RelayCommand(ExecuteCancel);
 
     public Visibility OkButtonLayoutVisibility =>
         Buttons == DialogButtons.OK ? Visibility.Visible : Visibility.Hidden;
@@ -45,6 +49,24 @@ public partial class DialogWindow : Window
     
     public Visibility InformationIconVisibility =>
         Icons == DialogIcons.INFORMATION ? Visibility.Visible : Visibility.Hidden;
+
+    private void ExecuteOk()
+    {
+        DialogResult = new DialogResult(true, false, false);
+        Close();
+    }
+    
+    private void ExecuteAccept()
+    {
+        DialogResult = new DialogResult(false, true, false);
+        Close();
+    }
+    
+    private void ExecuteCancel()
+    {
+        DialogResult = new DialogResult(false, false, true);
+        Close();
+    }
 
     public static void ShowDialog(string titleText, string descriptionText,
         DialogButtons buttons = DialogButtons.OK,

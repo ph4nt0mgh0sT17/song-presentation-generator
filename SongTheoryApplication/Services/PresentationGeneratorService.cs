@@ -9,7 +9,8 @@ namespace SongTheoryApplication.Services;
 
 public class PresentationGeneratorService : IPresentationGeneratorService
 {
-    public void GenerateTestingPresentation(string? songTitle, string? songText)
+    /// <inheritdoc cref="IPresentationGeneratorService.GenerateTestingPresentation"/>
+    public void GenerateTestingPresentation(string? songTitle, string? songText, string fileName)
     {
         Guard.IsNotNull(songTitle, nameof(songTitle));
         Guard.IsNotNull(songText, nameof(songText));
@@ -17,17 +18,28 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         var powerpointApplication = new Application();
 
         var presentation = GeneratePresentation(songTitle, songText, powerpointApplication);
-        presentation.SaveAs("D:\\testinxdg.pptx");
+        presentation.SaveAs($"{fileName}.pptx");
 
         ExitPowerpointApplication(powerpointApplication);
     }
 
+    /// <summary>
+    /// Exits the PowerPoint application that is running in the background.
+    /// </summary>
+    /// <param name="powerpointApplication">The PowerPoint application running in the background.</param>
     private void ExitPowerpointApplication(Application powerpointApplication)
     {
         powerpointApplication.Quit();
         powerpointApplication.Dispose();
     }
 
+    /// <summary>
+    /// Generates the whole PowerPoint presentation.
+    /// </summary>
+    /// <param name="songTitle">The title of the song.</param>
+    /// <param name="songText">The text of the song.</param>
+    /// <param name="powerpointApplication">The PowerPoint application running in the background.</param>
+    /// <returns>The <see cref="Presentation"/> object that is used to save the presentation to specific file name location.</returns>
     private Presentation GeneratePresentation(string songTitle, string songText, Application powerpointApplication)
     {
         Presentation presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
@@ -38,6 +50,11 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         return presentation;
     }
 
+    /// <summary>
+    /// Generates the slide with the text of the song.
+    /// </summary>
+    /// <param name="songText">The text of the song</param>
+    /// <param name="presentation">The <see cref="Presentation"/> object that will contain the slide.</param>
     private void GenerateTextSlide(string songText, Presentation presentation)
     {
         Slide textSlide = presentation.Slides.Add(2, PpSlideLayout.ppLayoutBlank);
@@ -46,6 +63,11 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         songTextLabel.TextFrame.TextRange.Text = songText;
     }
 
+    /// <summary>
+    /// Generates the slide with the title of the song.
+    /// </summary>
+    /// <param name="songTitle">The title of the song</param>
+    /// <param name="presentation">The <see cref="Presentation"/> object that will contain the slide.</param>
     private void GenerateTitleSlide(string songTitle, Presentation presentation)
     {
         Slide titleSlide = presentation.Slides.Add(1, PpSlideLayout.ppLayoutTitleOnly);

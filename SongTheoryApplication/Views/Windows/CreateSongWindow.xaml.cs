@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using SongTheoryApplication.Extensions;
 using SongTheoryApplication.ViewModels.Windows;
 
 namespace SongTheoryApplication.Views.Windows;
@@ -10,16 +12,16 @@ public partial class CreateSongWindow : Window
     public CreateSongWindow()
     {
         InitializeComponent();
-        var createSongWindowViewModel = App.Current.Services.GetService<CreateSongWindowViewModel>();
-        //createSongWindowViewModel.CreateSongWindow = this;
-        
-        DataContext = createSongWindowViewModel;
+        var createSongWindowViewModel = GetViewModel();
 
+        DataContext = createSongWindowViewModel;
     }
 
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    private CreateSongWindowViewModel GetViewModel()
     {
-        if (sender is Button button)
-            MessageBox.Show(button.IsEnabled.ToString());
+        var createSongWindowViewModel = App.Current.Services.GetService<CreateSongWindowViewModel>();
+        Guard.IsNotNull(createSongWindowViewModel, nameof(createSongWindowViewModel));
+        createSongWindowViewModel.CreateSongWindow = this;
+        return createSongWindowViewModel;
     }
 }

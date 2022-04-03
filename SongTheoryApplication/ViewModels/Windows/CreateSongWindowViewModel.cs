@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Requests;
 using SongTheoryApplication.Services;
@@ -83,15 +84,34 @@ public class CreateSongWindowViewModel : BaseViewModel
         {
             _songService.CreateSong(createSongRequest);
 
-            new DialogWindow(
+            var dialog = new DialogWindow(
                     "Písnička byla úspěšně vytvořena!",
-                    "Písnička byla úspěšně vytvořena a uložena do systému.",
-                    DialogButtons.OK,
-                    DialogIcons.SUCCESS)
-                .ShowDialog();
+                    "Písnička byla úspěšně vytvořena a uložena do systému. " +
+                    "Přejete si taktéž vygenerovat i testovací prezentaci?",
+                    DialogButtons.ACCEPT_CANCEL,
+                    DialogIcons.SUCCESS
+            );
+                
+            dialog.ShowDialog();
 
-            _presentationGeneratorService.GenerateTestingPresentation(createSongRequest.SongTitle,
-                createSongRequest.SongText);
+            if (dialog.DialogResult is { Accept: true })
+            {
+                // TODO: Generate testing presentation
+                var saveFileDialog = new SaveFileDialog();
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    var fileName = saveFileDialog.FileName;
+                    
+                    _presentationGeneratorService.GenerateTestingPresentation(
+                        createSongRequest.SongTitle,
+                        createSongRequest.SongText,
+                        fileName
+                    );
+                }
+            }
+
+                
 
             if (CreateSongWindow == null)
             {
