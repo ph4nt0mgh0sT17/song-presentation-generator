@@ -16,18 +16,27 @@ public partial class FooterControl : UserControl
         DataContext = this;
     }
 
+    /// <summary>
+    /// The footer version of the <see cref="FooterControl"/>.
+    /// </summary>
     public string FooterVersion
     {
         get => (string)GetValue(FooterVersionProperty);
         set => SetValue(FooterVersionProperty, value);
     }
 
+    /// <summary>
+    /// The application author name of the <see cref="FooterControl"/>.
+    /// </summary>
     public string ApplicationAuthor
     {
         get => (string)GetValue(ApplicationAuthorProperty);
         set => SetValue(ApplicationAuthorProperty, value);
     }
-
+    
+    /// <summary>
+    /// The footer width of the <see cref="FooterControl"/>.
+    /// </summary>
     public int FooterWidth
     {
         get => (int)GetValue(FooterWidthProperty);

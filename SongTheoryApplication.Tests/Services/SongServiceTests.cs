@@ -22,8 +22,8 @@ public class SongServiceTests
     }
 
 
-    [Fact(DisplayName = "CreateSong() should throw null argument when request is null")]
-    public void CreateSong_ShouldThrowOperationException_WhenSongCannotBeCreated()
+    [Fact(DisplayName = "CreateSong() should throw ThrowSongCannotBeCreatedException when song cannot be saved")]
+    public void CreateSong_ShouldThrowSongCannotBeCreatedException_WhenSongCannotBeCreated()
     {
         var songRequest = new CreateSongRequest("Song", "Song text");
         
