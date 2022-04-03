@@ -1,2 +1,4 @@
 ﻿/SongTheoryApplication/bin/
 /SongTheoryApplication/obj/
+/SongTheoryApplication.Tests/obj
+/SongTheoryApplication.Tests/bin
