@@ -7,18 +7,19 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=local:FooterControl, IsDesignTimeCreatable=True}">
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="20" Width="{Binding Path=FooterWidth}" Background="#EEE" >
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="20" Width="{Binding Path=FooterWidth}"
+          Background="#EEE">
 
         <Border BorderThickness="1,1,0,1" BorderBrush="Navy">
             <Grid>
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Border BorderThickness="0,0,1,0" BorderBrush="Navy">
-                    <TextBlock Grid.Column="0" Text="{Binding Path=FooterVersion}" TextAlignment="Center"/>
+                    <TextBlock Text="{Binding Path=FooterVersion}" TextAlignment="Center" />
                 </Border>
                 <TextBlock Grid.Column="1" Text="{Binding Path=ApplicationAuthor}" TextAlignment="Center" />
             </Grid>

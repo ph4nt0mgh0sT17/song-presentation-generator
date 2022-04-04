@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using SongTheoryApplication.Exceptions;
@@ -13,8 +12,8 @@ namespace SongTheoryApplication.Tests.Services;
 
 public class SongServiceTests
 {
-    private readonly SongService _songService;
     private readonly Mock<ILocalSongRepository> _localSongRepository = new();
+    private readonly SongService _songService;
 
     public SongServiceTests()
     {
@@ -26,7 +25,7 @@ public class SongServiceTests
     public void CreateSong_ShouldThrowSongCannotBeCreatedException_WhenSongCannotBeCreated()
     {
         var songRequest = new CreateSongRequest("Song", "Song text");
-        
+
         // Assert
         _localSongRepository.Setup(x => x.SaveSong(It.IsAny<Song>()))
             .Throws<InvalidOperationException>();

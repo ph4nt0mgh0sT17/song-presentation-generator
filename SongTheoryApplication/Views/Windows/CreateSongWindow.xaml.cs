@@ -1,8 +1,6 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using SongTheoryApplication.Extensions;
 using SongTheoryApplication.ViewModels.Windows;
 
 namespace SongTheoryApplication.Views.Windows;

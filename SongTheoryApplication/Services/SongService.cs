@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Windows.Documents;
-using CommunityToolkit.Diagnostics;
 using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Repositories;

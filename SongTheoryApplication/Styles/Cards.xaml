@@ -3,8 +3,8 @@
     <Style x:Key="Card" TargetType="Border">
         <Style.Triggers>
             <Trigger Property="Border.IsMouseOver" Value="True">
-                <Setter Property="Border.Background" Value="Green"></Setter>
-                <Setter Property="Border.Cursor" Value="Hand"></Setter>
+                <Setter Property="Border.Background" Value="Green" />
+                <Setter Property="Border.Cursor" Value="Hand" />
             </Trigger>
         </Style.Triggers>
     </Style>

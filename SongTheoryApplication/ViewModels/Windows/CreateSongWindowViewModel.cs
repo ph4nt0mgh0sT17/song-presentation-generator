@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Printing;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -15,16 +12,13 @@ namespace SongTheoryApplication.ViewModels.Windows;
 
 public class CreateSongWindowViewModel : BaseViewModel
 {
-    private string? _songTitle;
-    private string? _songText;
-    private bool _canCreateSong;
-
-    private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
 
-    public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
-    public ICommand CreateSongCommand => new RelayCommand(CreateSong);
-    
+    private readonly ISongService _songService;
+    private bool _canCreateSong;
+    private string? _songText;
+    private string? _songTitle;
+
     public CreateSongWindowViewModel(
         ISongService songService,
         IPresentationGeneratorService presentationGeneratorService)
@@ -32,6 +26,9 @@ public class CreateSongWindowViewModel : BaseViewModel
         _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
     }
+
+    public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
+    public ICommand CreateSongCommand => new RelayCommand(CreateSong);
 
     public string? SongTitle
     {
@@ -67,12 +64,8 @@ public class CreateSongWindowViewModel : BaseViewModel
             RaisePropertyChanged(nameof(CanCreateSong));
         }
     }
-    
-    public CreateSongWindow? CreateSongWindow
-    {
-        get;
-        set;
-    }
+
+    public CreateSongWindow? CreateSongWindow { get; set; }
 
     private void CreateSong()
     {
@@ -85,16 +78,16 @@ public class CreateSongWindowViewModel : BaseViewModel
             _songService.CreateSong(createSongRequest);
 
             var dialog = new DialogWindow(
-                    "Písnička byla úspěšně vytvořena!",
-                    "Písnička byla úspěšně vytvořena a uložena do systému. " +
-                    "Přejete si taktéž vygenerovat i testovací prezentaci?",
-                    DialogButtons.ACCEPT_CANCEL,
-                    DialogIcons.SUCCESS
+                "Písnička byla úspěšně vytvořena!",
+                "Písnička byla úspěšně vytvořena a uložena do systému. " +
+                "Přejete si taktéž vygenerovat i testovací prezentaci?",
+                DialogButtons.ACCEPT_CANCEL,
+                DialogIcons.SUCCESS
             );
-                
+
             dialog.ShowDialog();
 
-            if (dialog.DialogResult is { Accept: true })
+            if (dialog.DialogResult is {Accept: true})
             {
                 // TODO: Generate testing presentation
                 var saveFileDialog = new SaveFileDialog();
@@ -102,7 +95,7 @@ public class CreateSongWindowViewModel : BaseViewModel
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     var fileName = saveFileDialog.FileName;
-                    
+
                     _presentationGeneratorService.GenerateTestingPresentation(
                         createSongRequest.SongTitle,
                         createSongRequest.SongText,
@@ -111,22 +104,17 @@ public class CreateSongWindowViewModel : BaseViewModel
                 }
             }
 
-                
 
             if (CreateSongWindow == null)
-            {
                 DialogWindow.ShowDialog(
                     "Toto dialogové okno nemohlo být uzavřeno.",
                     "Toto dialogové okno nemohlo být uzavřeno.",
                     DialogButtons.OK,
                     DialogIcons.ERROR
                 );
-            }
 
             else
-            {
                 CreateSongWindow.Close();
-            }
         }
         catch (InvalidOperationException)
         {
