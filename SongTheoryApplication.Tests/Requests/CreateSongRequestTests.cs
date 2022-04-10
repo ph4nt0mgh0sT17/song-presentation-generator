@@ -16,7 +16,7 @@ public class CreateSongRequestTests
         // Act + Assert
         act.Should().Throw<ArgumentNullException>();
     }
-    
+
     [Fact(DisplayName = "Call constructor throws ArgumentException when empty song title is supplied")]
     public void Constructor_ThrowsArgumentException_WhenSongTitleIsEmpty()
     {
@@ -26,7 +26,7 @@ public class CreateSongRequestTests
         // Act + Assert
         act.Should().Throw<ArgumentException>();
     }
-    
+
     [Fact(DisplayName = "Call constructor throws ArgumentNullException when null song text is supplied")]
     public void Constructor_ThrowsArgumentNullException_WhenSongTextIsNull()
     {
@@ -36,7 +36,7 @@ public class CreateSongRequestTests
         // Act + Assert
         act.Should().Throw<ArgumentNullException>();
     }
-    
+
     [Fact(DisplayName = "Call constructor throws ArgumentException when empty song text is supplied")]
     public void Constructor_ThrowsArgumentException_WhenSongTextIsEmpty()
     {

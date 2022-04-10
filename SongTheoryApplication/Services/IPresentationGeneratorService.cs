@@ -3,8 +3,8 @@
 public interface IPresentationGeneratorService
 {
     /// <summary>
-    /// Generates a testing presentation with 'songTitle' and 'songText' into .pptx file
-    /// to given 'fileName'.
+    ///     Generates a testing presentation with 'songTitle' and 'songText' into .pptx file
+    ///     to given 'fileName'.
     /// </summary>
     /// <param name="songTitle">The title of the song.</param>
     /// <param name="songText">The text of the song.</param>

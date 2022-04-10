@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using SongTheoryApplication.Models;
+﻿using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Repositories;
 
 public interface ILocalSongRepository
 {
     /// <summary>
-    /// Saves a new song into the local song repository.
+    ///     Saves a new song into the local song repository.
     /// </summary>
-    /// <param name="song">The <see cref="Song"/> to be saved.</param>
+    /// <param name="song">The <see cref="Song" /> to be saved.</param>
     void SaveSong(Song song);
 }

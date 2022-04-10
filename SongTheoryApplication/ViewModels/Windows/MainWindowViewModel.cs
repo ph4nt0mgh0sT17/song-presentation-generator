@@ -1,6 +1,5 @@
 ﻿using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
-using SongTheoryApplication.Models;
 using SongTheoryApplication.ViewModels.Base;
 using SongTheoryApplication.Views.Windows;
 
@@ -18,14 +17,12 @@ public class MainWindowViewModel : BaseViewModel
     {
         new CreateSongWindow().ShowDialog();
     }
-    
+
     private void OpenSongListWindow()
     {
         new DialogWindow(
                 "Není implementovaná operace",
-                "Tato operace není ještě implementována. Prosím kontaktuje administrátora.",
-                DialogButtons.OK,
-                DialogIcons.INFORMATION)
+                "Tato operace není ještě implementována. Prosím kontaktuje administrátora.")
             .ShowDialog();
     }
 }

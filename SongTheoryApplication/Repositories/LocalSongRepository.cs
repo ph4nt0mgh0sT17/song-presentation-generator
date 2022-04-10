@@ -29,7 +29,7 @@ public class LocalSongRepository : ILocalSongRepository
 
         var songsJsonText = RetrieveJsonFromSongsJsonFile();
 
-        return JsonSerializer.Deserialize<List<Song>>(songsJsonText) ?? 
+        return JsonSerializer.Deserialize<List<Song>>(songsJsonText) ??
                throw new InvalidOperationException("The songs could not be retrieved.");
     }
 
