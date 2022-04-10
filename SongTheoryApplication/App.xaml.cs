@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using SongTheoryApplication.Extensions;
+using SongTheoryApplication.Views;
 
 namespace SongTheoryApplication;
 

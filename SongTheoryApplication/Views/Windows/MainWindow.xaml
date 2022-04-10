@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm2="clr-namespace:SongTheoryApplication.ViewModels.Windows"
         xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:MainWindowViewModel}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         Title="{Binding Path=ApplicationTitle, Mode=OneWay}"
         Height="{Binding Path=Height, Mode=TwoWay}" Width="{Binding Path=Width, Mode=TwoWay}"
         MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
@@ -18,23 +26,38 @@
             <RowDefinition Height="6*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="LightGray" BorderThickness="1" BorderBrush="Black">
+        <materialDesign:Card Grid.Row="0" Padding="10" Margin="16">
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                        TextWrapping="WrapWithOverflow"
                        Text="{Binding Path=MainWindowTitleText}"
                        FontSize="25">
             </TextBlock>
-        </Border>
+        </materialDesign:Card>
 
         <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
 
-            <Button Width="250" Height="250" Margin="50" Command="{Binding Path=OpenCreateSongWindowCommand}">
-                <TextBlock Text="Vytvoření písničky" FontSize="20" HorizontalAlignment="Center"></TextBlock>
-            </Button>
+            <materialDesign:Card Padding="32" Margin="16">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock HorizontalAlignment="Center" FontSize="25">
+                        Vytvoření písničky v systému
+                    </TextBlock>
+                    <Button Margin="50" Command="{Binding Path=OpenCreateSongWindowCommand}">
+                        <TextBlock Text="Vytvořit písničku" FontSize="20" HorizontalAlignment="Center"></TextBlock>
+                    </Button>
+                </StackPanel>
+            </materialDesign:Card>
+            
 
-            <Button Width="250" Height="250" Margin="50" Command="{Binding Path=OpenSongListWindowCommand}">
-                <TextBlock Text="Evidence písniček" FontSize="20" HorizontalAlignment="Center"></TextBlock>
-            </Button>
+            <materialDesign:Card Padding="32" Margin="16">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock HorizontalAlignment="Center" FontSize="25">
+                        Zobrazení evidence písniček v systému
+                    </TextBlock>
+                    <Button Margin="50" Command="{Binding Path=OpenSongListWindowCommand}">
+                        <TextBlock Text="Zobrazit evidenci písniček" FontSize="20" HorizontalAlignment="Center"></TextBlock>
+                    </Button>
+                </StackPanel>
+            </materialDesign:Card>
         </WrapPanel>
     </Grid>
 </Window>
