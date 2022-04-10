@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SongTheoryApplication.ViewModels.Base;
 
-public abstract class BaseViewModel : INotifyPropertyChanged
+public abstract class BaseViewModel : ObservableObject
 {
     private int _width;
     private int _height;
@@ -14,8 +15,6 @@ public abstract class BaseViewModel : INotifyPropertyChanged
     private int _topWindow;
 
     private string _applicationTitle;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     protected BaseViewModel()
     {
@@ -45,7 +44,7 @@ public abstract class BaseViewModel : INotifyPropertyChanged
         set
         {
             _width = value;
-            RaisePropertyChanged(nameof(Width));
+            SetProperty(ref _width, value);
         }
     }
     
@@ -56,7 +55,7 @@ public abstract class BaseViewModel : INotifyPropertyChanged
         set
         {
             _height = value;
-            RaisePropertyChanged(nameof(Height));
+            SetProperty(ref _height, value);
         }
     }
     
@@ -88,10 +87,5 @@ public abstract class BaseViewModel : INotifyPropertyChanged
     {
         get => _applicationTitle;
         set => _applicationTitle = value;
-    }
-    
-    protected void RaisePropertyChanged(string propertyName)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

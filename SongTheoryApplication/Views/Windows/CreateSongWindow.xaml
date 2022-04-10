@@ -4,8 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:SongTheoryApplication.Views.Windows"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:vm2="clr-namespace:SongTheoryApplication.ViewModels.Windows"
-        xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
+        xmlns:converters="clr-namespace:SongTheoryApplication.Converters"
+        xmlns:wpf="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:CreateSongWindowViewModel}"
         Title="Vytvoření písničky"
@@ -13,71 +15,63 @@
         MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
         Left="{Binding Path=LeftWindow, Mode=OneWay}" Top="{Binding Path=TopWindow, Mode=OneWay}"
         x:Name="CreateSong">
+    <Window.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="6*"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
-        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical"
+                    Visibility="{Binding Path=WindowIsIdle, Converter={StaticResource BoolToVisibilityConverter}}">
 
-        <Border Grid.Row="0" Background="LightGray" BorderThickness="1" BorderBrush="Black">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                       Text="{Binding Path=CreateSongWindowTitleText}"
-                       FontSize="25">
-            </TextBlock>
-        </Border>
+            <Border Background="LightGray" BorderThickness="1" BorderBrush="Black">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Padding="15"
+                           Text="{Binding Path=CreateSongWindowTitleText}"
+                           TextWrapping="WrapWithOverflow"
+                           FontSize="25">
+                </TextBlock>
+            </Border>
 
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0" Margin="10">
-
+            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5" Margin="30">
                 <StackPanel Margin="10">
-                    <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                        <StackPanel Margin="10">
-                            <Label>Název písničky</Label>
-                            <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                        </StackPanel>
-                    </Border>
+                    <TextBlock TextWrapping="WrapWithOverflow">Název písničky</TextBlock>
+                    <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                 </StackPanel>
-            </Grid>
+            </Border>
 
-            <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="1" Margin="10">
+            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5" Margin="30">
                 <StackPanel Margin="10">
-                    <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                        <StackPanel Margin="10">
-                            <Label>Text písničky</Label>
-                            <TextBox Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     TextWrapping="Wrap"
-                                     VerticalScrollBarVisibility="Visible"
-                                     AcceptsReturn="True"
-                                     Height="100">
-                            </TextBox>
-                        </StackPanel>
-                    </Border>
+                    <TextBlock TextWrapping="Wrap">Text písničky</TextBlock>
+                    <TextBox Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="WrapWithOverflow"
+                             VerticalScrollBarVisibility="Visible"
+                             AcceptsReturn="True"
+                             Height="100">
+                    </TextBox>
                 </StackPanel>
-            </Grid>
+            </Border>
 
-            <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" Margin="10">
-                <Button Width="100" Height="50"
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="30" Padding="15"
                         IsEnabled="{Binding Path=CanCreateSong}"
                         Command="{Binding Path=CreateSongCommand}">
                     Uložit
                 </Button>
-            </Grid>
-        </Grid>
+            </StackPanel>
+        </StackPanel>
 
-        <controls:FooterControl Grid.Row="2" FooterWidth="{Binding ElementName=CreateSong, Path=Width, Mode=OneWay}"
-                                FooterVersion="1.00"
-                                ApplicationAuthor="David Miko">
-        </controls:FooterControl>
+        <Grid
+            Visibility="{Binding Path=PresentationIsBeingGenerated, Converter={StaticResource BoolToVisibilityConverter}}">
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock FontSize="25" 
+                           TextWrapping="WrapWithOverflow"
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           Margin="30">
+                    Právě se generuje prezentace...
+                </TextBlock>
+
+                <wpf:ImageAwesome Icon="CircleOutlineNotch" Width="50" Spin="True" SpinDuration="4"></wpf:ImageAwesome>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

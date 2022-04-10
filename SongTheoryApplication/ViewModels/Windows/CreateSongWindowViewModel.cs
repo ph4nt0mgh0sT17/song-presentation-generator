@@ -18,19 +18,23 @@ public class CreateSongWindowViewModel : BaseViewModel
     private string? _songTitle;
     private string? _songText;
     private bool _canCreateSong;
+    private bool _presentationIsBeingGenerated;
+    private bool _windowIsIdle;
 
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
 
     public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
-    public ICommand CreateSongCommand => new RelayCommand(CreateSong);
-    
+    public IAsyncRelayCommand CreateSongCommand { get; }
+
     public CreateSongWindowViewModel(
         ISongService songService,
         IPresentationGeneratorService presentationGeneratorService)
     {
         _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
+        CreateSongCommand = new AsyncRelayCommand(CreateSong);
+        WindowIsIdle = true;
     }
 
     public string? SongTitle
@@ -39,9 +43,8 @@ public class CreateSongWindowViewModel : BaseViewModel
 
         set
         {
-            _songTitle = value;
+            SetProperty(ref _songTitle, value);
             CanCreateSong = CheckCanCreateSong();
-            RaisePropertyChanged(nameof(SongTitle));
         }
     }
 
@@ -51,9 +54,8 @@ public class CreateSongWindowViewModel : BaseViewModel
 
         set
         {
-            _songText = value;
+            SetProperty(ref _songText, value);
             CanCreateSong = CheckCanCreateSong();
-            RaisePropertyChanged(nameof(SongText));
         }
     }
 
@@ -61,81 +63,84 @@ public class CreateSongWindowViewModel : BaseViewModel
     {
         get => _canCreateSong;
 
+        set => SetProperty(ref _canCreateSong, value);
+    }
+
+    public bool PresentationIsBeingGenerated
+    {
+        get => _presentationIsBeingGenerated;
+
         set
         {
-            _canCreateSong = value;
-            RaisePropertyChanged(nameof(CanCreateSong));
+            SetProperty(ref _presentationIsBeingGenerated, value);
+            WindowIsIdle = !PresentationIsBeingGenerated;
         }
     }
     
-    public CreateSongWindow? CreateSongWindow
+    public bool WindowIsIdle
     {
-        get;
-        set;
+        get => _windowIsIdle;
+
+        set => SetProperty(ref _windowIsIdle, value);
     }
 
-    private void CreateSong()
+    public CreateSongWindow? CreateSongWindow { get; set; }
+
+    private async Task CreateSong()
     {
         if (!CheckCanCreateSong()) return;
 
         var createSongRequest = new CreateSongRequest(SongTitle, SongText);
 
-        try
+        await Task.Run(() =>
         {
             _songService.CreateSong(createSongRequest);
+        });
+        
+        var dialog = new DialogWindow(
+            "Písnička byla úspěšně vytvořena!",
+            "Písnička byla úspěšně vytvořena a uložena do systému. " +
+            "Přejete si taktéž vygenerovat i testovací prezentaci?",
+            DialogButtons.ACCEPT_CANCEL,
+            DialogIcons.SUCCESS
+        );
+        
+        dialog.ShowDialog();
 
-            var dialog = new DialogWindow(
-                    "Písnička byla úspěšně vytvořena!",
-                    "Písnička byla úspěšně vytvořena a uložena do systému. " +
-                    "Přejete si taktéž vygenerovat i testovací prezentaci?",
-                    DialogButtons.ACCEPT_CANCEL,
-                    DialogIcons.SUCCESS
-            );
-                
-            dialog.ShowDialog();
+        if (dialog.DialogResult is { Accept: true })
+        {
+            var saveFileDialog = new SaveFileDialog();
 
-            if (dialog.DialogResult is { Accept: true })
+            if (saveFileDialog.ShowDialog() == true)
             {
-                // TODO: Generate testing presentation
-                var saveFileDialog = new SaveFileDialog();
+                PresentationIsBeingGenerated = true;
+                var fileName = saveFileDialog.FileName;
 
-                if (saveFileDialog.ShowDialog() == true)
+                await Task.Run(() =>
                 {
-                    var fileName = saveFileDialog.FileName;
-                    
                     _presentationGeneratorService.GenerateTestingPresentation(
                         createSongRequest.SongTitle,
                         createSongRequest.SongText,
                         fileName
                     );
-                }
-            }
-
-                
-
-            if (CreateSongWindow == null)
-            {
-                DialogWindow.ShowDialog(
-                    "Toto dialogové okno nemohlo být uzavřeno.",
-                    "Toto dialogové okno nemohlo být uzavřeno.",
-                    DialogButtons.OK,
-                    DialogIcons.ERROR
-                );
-            }
-
-            else
-            {
-                CreateSongWindow.Close();
+                });
             }
         }
-        catch (InvalidOperationException)
+
+
+        if (CreateSongWindow == null)
         {
             DialogWindow.ShowDialog(
-                "Písnička nemohla být z neznámých důvodů vytvořena.",
-                "Písnička nemohla být z neznámých důvodů vytvořena.",
+                "Toto dialogové okno nemohlo být uzavřeno.",
+                "Toto dialogové okno nemohlo být uzavřeno.",
                 DialogButtons.OK,
                 DialogIcons.ERROR
             );
+        }
+
+        else
+        {
+            CreateSongWindow.Close();
         }
     }
 
