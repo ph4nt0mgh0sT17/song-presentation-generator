@@ -43,5 +43,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<CreateSongWindowViewModel>();
         services.AddTransient<MainWindowViewModel>();
+        services.AddTransient<CreateSongPresentationFormatViewModel>();
+        services.AddTransient<EditSongPresentationFormatViewModel>();
     }
 }

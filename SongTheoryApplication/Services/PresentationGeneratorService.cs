@@ -2,6 +2,7 @@
 using NetOffice.OfficeApi.Enums;
 using NetOffice.PowerPointApi;
 using NetOffice.PowerPointApi.Enums;
+using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Services;
 
@@ -53,9 +54,9 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     /// </summary>
     /// <param name="songText">The text of the song</param>
     /// <param name="presentation">The <see cref="Presentation" /> object that will contain the slide.</param>
-    private void GenerateTextSlide(string songText, Presentation presentation)
+    private void GenerateTextSlide(string songText, Presentation presentation, int slideIndex = 2)
     {
-        var textSlide = presentation.Slides.Add(2, PpSlideLayout.ppLayoutBlank);
+        var textSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutBlank);
         var songTextLabel =
             textSlide.Shapes.AddLabel(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 600, 20);
         songTextLabel.TextFrame.TextRange.Text = songText;
@@ -72,5 +73,25 @@ public class PresentationGeneratorService : IPresentationGeneratorService
 
         var titleLabel = titleSlide.Shapes.Title;
         titleLabel.TextFrame.TextRange.Text = songTitle;
+    }
+
+    public void GeneratePresentation(Song? song, string fileName)
+    {
+        Guard.IsNotNull(song, nameof(song));
+        
+        var powerpointApplication = new Application();
+
+        var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
+
+        int slideIndex = 1;
+        song.Slides.ForEach(currentSlideFormat =>
+        {
+            GenerateTextSlide(currentSlideFormat.TextContent, presentation, slideIndex);
+            slideIndex++;
+        });
+        
+        presentation.SaveAs($"{fileName}.pptx");
+
+        ExitPowerpointApplication(powerpointApplication);
     }
 }

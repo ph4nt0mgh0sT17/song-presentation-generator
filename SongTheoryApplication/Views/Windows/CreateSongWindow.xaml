@@ -7,9 +7,17 @@
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:vm2="clr-namespace:SongTheoryApplication.ViewModels.Windows"
         xmlns:converters="clr-namespace:SongTheoryApplication.Converters"
-        xmlns:wpf="http://schemas.fontawesome.io/icons/"
+        xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:CreateSongWindowViewModel}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Vytvoření písničky"
         Height="{Binding Path=Height, Mode=TwoWay}" Width="{Binding Path=Width, Mode=TwoWay}"
         MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
@@ -17,61 +25,69 @@
         x:Name="CreateSong">
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:ReversedBoolToVisibilityConverter x:Key="ReversedBoolToVisibilityConverter" />
     </Window.Resources>
     <Grid>
         <StackPanel Orientation="Vertical"
                     Visibility="{Binding Path=WindowIsIdle, Converter={StaticResource BoolToVisibilityConverter}}">
 
-            <Border Background="LightGray" BorderThickness="1" BorderBrush="Black">
+            <materialDesign:Card Padding="10" Margin="16">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                            Padding="15"
                            Text="{Binding Path=CreateSongWindowTitleText}"
                            TextWrapping="WrapWithOverflow"
                            FontSize="25">
                 </TextBlock>
-            </Border>
+            </materialDesign:Card>
 
-            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5" Margin="30">
-                <StackPanel Margin="10">
-                    <TextBlock TextWrapping="WrapWithOverflow">Název písničky</TextBlock>
-                    <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                </StackPanel>
-            </Border>
+            <StackPanel Margin="30">
+                <TextBlock TextWrapping="WrapWithOverflow">Název písničky</TextBlock>
+                <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            </StackPanel>
 
-            <Border BorderThickness="1" BorderBrush="Black" CornerRadius="5" Margin="30">
-                <StackPanel Margin="10">
-                    <TextBlock TextWrapping="Wrap">Text písničky</TextBlock>
-                    <TextBox Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             TextWrapping="WrapWithOverflow"
-                             VerticalScrollBarVisibility="Visible"
-                             AcceptsReturn="True"
-                             Height="100">
-                    </TextBox>
+            <StackPanel Margin="30">
+                <TextBlock TextWrapping="Wrap">Text písničky</TextBlock>
+                <TextBox Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         TextWrapping="WrapWithOverflow"
+                         VerticalScrollBarVisibility="Visible"
+                         AcceptsReturn="True"
+                         Height="100">
+                </TextBox>
+            </StackPanel>
+
+            <Grid>
+                <StackPanel Margin="30" Orientation="Vertical" HorizontalAlignment="Left"
+                            Visibility="{Binding Path=PresentationFormatIsCreated, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBlock Margin="0,0,0,20" Text="Vlastní formát prezentace je již vytvořen." />
+                    <Button
+                        Style="{DynamicResource MaterialDesignRaisedDarkButton}"
+                        Command="{Binding Path=EditSongPresentationFormatCommand}"
+                        Content="Upravit vlastní formát prezentace">
+                    </Button>
                 </StackPanel>
-            </Border>
+
+                <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Right"
+                            Visibility="{Binding Path=PresentationFormatIsCreated, Converter={StaticResource ReversedBoolToVisibilityConverter}}">
+                    <Button
+                        Style="{DynamicResource MaterialDesignRaisedDarkButton}"
+                        Command="{Binding Path=CreateSongPresentationFormatCommand}"
+                        Content="Vytvořit vlastní formát prezentace">
+                    </Button>
+                </StackPanel>
+            </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="30" Padding="15"
-                        IsEnabled="{Binding Path=CanCreateSong}"
-                        Command="{Binding Path=CreateSongCommand}">
-                    Uložit
+                <Button
+                    Style="{DynamicResource MaterialDesignRaisedDarkButton}"
+                    Command="{Binding Path=CreateSongCommand}"
+                    Content="Uložit">
                 </Button>
             </StackPanel>
         </StackPanel>
 
         <Grid
             Visibility="{Binding Path=PresentationIsBeingGenerated, Converter={StaticResource BoolToVisibilityConverter}}">
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock FontSize="25" 
-                           TextWrapping="WrapWithOverflow"
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Center" 
-                           Margin="30">
-                    Právě se generuje prezentace...
-                </TextBlock>
-
-                <wpf:ImageAwesome Icon="CircleOutlineNotch" Width="50" Spin="True" SpinDuration="4"></wpf:ImageAwesome>
-            </StackPanel>
+            <controls:LoadingSpinnerControl LoadingTitle="Právě se generuje prezentace..." />
         </Grid>
     </Grid>
 </Window>

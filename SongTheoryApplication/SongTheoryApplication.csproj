@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>WinExe</OutputType>
+        <OutputType>Exe</OutputType>
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <UseWPF>true</UseWPF>
@@ -11,6 +11,7 @@
       <PackageReference Include="CommunityToolkit.Diagnostics" Version="7.1.2" />
       <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.2" />
       <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+      <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
       <PackageReference Include="MaterialDesignThemes" Version="4.4.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />

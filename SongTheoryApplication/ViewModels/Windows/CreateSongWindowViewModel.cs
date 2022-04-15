@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mime;
 using System.Printing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using SongTheoryApplication.Models;
@@ -20,12 +24,17 @@ public class CreateSongWindowViewModel : BaseViewModel
     private bool _canCreateSong;
     private bool _presentationIsBeingGenerated;
     private bool _windowIsIdle;
+    private bool _presentationFormatIsCreated;
+    private List<PresentationSlideDetail>? _slides;
 
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
 
     public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
     public IAsyncRelayCommand CreateSongCommand { get; }
+    public IRelayCommand CreateSongPresentationFormatCommand { get; }
+    public IRelayCommand EditSongPresentationFormatCommand { get; }
+
 
     public CreateSongWindowViewModel(
         ISongService songService,
@@ -33,7 +42,12 @@ public class CreateSongWindowViewModel : BaseViewModel
     {
         _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
-        CreateSongCommand = new AsyncRelayCommand(CreateSong);
+        CreateSongCommand = new AsyncRelayCommand(CreateSong, () => CanCreateSong);
+        CreateSongPresentationFormatCommand = new RelayCommand(CreateSongPresentationFormat, () => CanCreateSong);
+        EditSongPresentationFormatCommand = new RelayCommand(
+            EditSongPresentationFormat, 
+            () => PresentationFormatIsCreated
+        );
         WindowIsIdle = true;
     }
 
@@ -63,7 +77,12 @@ public class CreateSongWindowViewModel : BaseViewModel
     {
         get => _canCreateSong;
 
-        set => SetProperty(ref _canCreateSong, value);
+        set
+        {
+            SetProperty(ref _canCreateSong, value);
+            CreateSongCommand.NotifyCanExecuteChanged();
+            CreateSongPresentationFormatCommand.NotifyCanExecuteChanged();
+        }
     }
 
     public bool PresentationIsBeingGenerated
@@ -76,7 +95,7 @@ public class CreateSongWindowViewModel : BaseViewModel
             WindowIsIdle = !PresentationIsBeingGenerated;
         }
     }
-    
+
     public bool WindowIsIdle
     {
         get => _windowIsIdle;
@@ -86,17 +105,34 @@ public class CreateSongWindowViewModel : BaseViewModel
 
     public CreateSongWindow? CreateSongWindow { get; set; }
 
+    private List<PresentationSlideDetail>? Slides
+    {
+        get => _slides;
+        set
+        {
+            _slides = value;
+            PresentationFormatIsCreated = true;
+        }
+    }
+
+    public bool PresentationFormatIsCreated
+    {
+        get => _presentationFormatIsCreated;
+        set
+        {
+            SetProperty(ref _presentationFormatIsCreated, value);
+            EditSongPresentationFormatCommand.NotifyCanExecuteChanged();
+        }
+    }
+
     private async Task CreateSong()
     {
         if (!CheckCanCreateSong()) return;
 
-        var createSongRequest = new CreateSongRequest(SongTitle, SongText);
+        var createSongRequest = new CreateSongRequest(SongTitle, SongText, _slides);
 
-        await Task.Run(() =>
-        {
-            _songService.CreateSong(createSongRequest);
-        });
-        
+        await Task.Run(() => { _songService.CreateSong(createSongRequest); });
+
         var dialog = new DialogWindow(
             "Písnička byla úspěšně vytvořena!",
             "Písnička byla úspěšně vytvořena a uložena do systému. " +
@@ -104,7 +140,7 @@ public class CreateSongWindowViewModel : BaseViewModel
             DialogButtons.ACCEPT_CANCEL,
             DialogIcons.SUCCESS
         );
-        
+
         dialog.ShowDialog();
 
         if (dialog.DialogResult is { Accept: true })
@@ -118,11 +154,17 @@ public class CreateSongWindowViewModel : BaseViewModel
 
                 await Task.Run(() =>
                 {
-                    _presentationGeneratorService.GenerateTestingPresentation(
-                        createSongRequest.SongTitle,
-                        createSongRequest.SongText,
-                        fileName
-                    );
+                    if (_slides == null)
+                        _presentationGeneratorService.GenerateTestingPresentation(
+                            createSongRequest.SongTitle,
+                            createSongRequest.SongText,
+                            fileName
+                        );
+                    else
+                        _presentationGeneratorService.GeneratePresentation(
+                            new Song(SongTitle, SongText, _slides),
+                            fileName
+                        );
                 });
             }
         }
@@ -142,6 +184,30 @@ public class CreateSongWindowViewModel : BaseViewModel
         {
             CreateSongWindow.Close();
         }
+    }
+
+    private void CreateSongPresentationFormat()
+    {
+        var createSongPresentationFormatWindow = new CreateSongPresentationFormatWindow(
+            SongTitle, SongText,
+            slides => Slides = slides
+        );
+
+        createSongPresentationFormatWindow.ShowDialog();
+    }
+
+    private void EditSongPresentationFormat()
+    {
+        Guard.IsNotNull(Slides, nameof(Slides));
+        Guard.IsNotNull(SongTitle, nameof(SongTitle));
+        Guard.IsNotNull(SongText, nameof(SongText));
+
+        var editSongPresentationFormatWindow = new EditSongPresentationFormatWindow(
+            SongTitle, SongText, new List<PresentationSlideDetail>(Slides),
+            slides => Slides = slides
+        );
+
+        editSongPresentationFormatWindow.ShowDialog();
     }
 
     private bool CheckCanCreateSong()
