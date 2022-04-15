@@ -5,7 +5,7 @@ namespace SongTheoryApplication.Models;
 
 public class Song
 {
-    public Song(string? title, string? text, List<PresentationSlideDetail>? slides)
+    public Song(string title, string text, List<PresentationSlideDetail>? slides)
     {
         Guard.IsNotNullOrEmpty(title, nameof(title));
         Guard.IsNotNullOrEmpty(text, nameof(text));
@@ -18,5 +18,5 @@ public class Song
     public string Title { get; }
     public string Text { get; }
 
-    public List<PresentationSlideDetail> Slides { get; }
+    public List<PresentationSlideDetail>? Slides { get; }
 }

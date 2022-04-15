@@ -11,7 +11,7 @@ public class SongTests
     public void Constructor_ThrowsArgumentNullException_WhenSongTitleIsNull()
     {
         // Arrange
-        var act = () => new Song(null, null);
+        var act = () => new Song(null, null, null);
 
         // Act + Assert
         act.Should().Throw<ArgumentNullException>();
@@ -21,7 +21,7 @@ public class SongTests
     public void Constructor_ThrowsArgumentException_WhenSongTitleIsEmpty()
     {
         // Arrange
-        var act = () => new Song("", null);
+        var act = () => new Song("", null, null);
 
         // Act + Assert
         act.Should().Throw<ArgumentException>();
@@ -31,7 +31,7 @@ public class SongTests
     public void Constructor_ThrowsArgumentNullException_WhenSongTextIsNull()
     {
         // Arrange
-        var act = () => new Song("Song title", null);
+        var act = () => new Song("Song title", null, null);
 
         // Act + Assert
         act.Should().Throw<ArgumentNullException>();
@@ -41,7 +41,7 @@ public class SongTests
     public void Constructor_ThrowsArgumentException_WhenSongTextIsEmpty()
     {
         // Arrange
-        var act = () => new Song("Song title", "");
+        var act = () => new Song("Song title", "", null);
 
         // Act + Assert
         act.Should().Throw<ArgumentException>();
@@ -51,7 +51,7 @@ public class SongTests
     public void Constructor_Passes_WhenAllArgumentsAreValid()
     {
         // Arrange
-        var act = () => new Song("Song title", "Song text");
+        var act = () => new Song("Song title", "Song text", null);
 
         // Act + Assert
         act.Should().NotThrow();

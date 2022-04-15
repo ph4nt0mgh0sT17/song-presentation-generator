@@ -24,7 +24,7 @@ public class SongServiceTests
     [Fact(DisplayName = "CreateSong() should throw ThrowSongCannotBeCreatedException when song cannot be saved")]
     public void CreateSong_ShouldThrowSongCannotBeCreatedException_WhenSongCannotBeCreated()
     {
-        var songRequest = new CreateSongRequest("Song", "Song text");
+        var songRequest = new CreateSongRequest("Song", "Song text", null);
 
         // Assert
         _localSongRepository.Setup(x => x.SaveSong(It.IsAny<Song>()))

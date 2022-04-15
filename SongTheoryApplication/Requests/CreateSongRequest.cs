@@ -6,7 +6,7 @@ namespace SongTheoryApplication.Requests;
 
 public class CreateSongRequest
 {
-    public CreateSongRequest(string? songTitle, string? songText, List<PresentationSlideDetail>? slides)
+    public CreateSongRequest(string songTitle, string songText, List<PresentationSlideDetail>? slides)
     {
         Guard.IsNotNullOrEmpty(songTitle, nameof(songTitle));
         Guard.IsNotNullOrEmpty(songText, nameof(songText));

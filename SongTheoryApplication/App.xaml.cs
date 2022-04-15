@@ -2,6 +2,7 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using SongTheoryApplication.Extensions;
+using SongTheoryApplication.Models;
 using SongTheoryApplication.Views;
 
 namespace SongTheoryApplication;
@@ -27,6 +28,7 @@ public sealed partial class App : Application
         services.AddAllServices();
         services.AddAllRepositories();
         services.AddAllViewModels();
+
 
         return services.BuildServiceProvider();
     }
