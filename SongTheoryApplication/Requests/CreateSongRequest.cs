@@ -19,5 +19,5 @@ public class CreateSongRequest
     public string SongTitle { get; }
     public string SongText { get; }
 
-    public List<PresentationSlideDetail> Slides { get; }
+    public List<PresentationSlideDetail>? Slides { get; }
 }

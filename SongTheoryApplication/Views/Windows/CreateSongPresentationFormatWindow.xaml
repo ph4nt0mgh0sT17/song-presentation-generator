@@ -21,7 +21,7 @@
             <materialDesign:Card Padding="10" Margin="16">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                            Padding="15"
-                           Text="{Binding Path=SongTitle}"
+                           Text="{Binding Path=Title}"
                            TextWrapping="WrapWithOverflow"
                            FontSize="25">
                 </TextBlock>

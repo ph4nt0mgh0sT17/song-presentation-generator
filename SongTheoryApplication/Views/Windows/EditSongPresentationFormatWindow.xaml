@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:SongTheoryApplication.Views.Windows"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:vm2="clr-namespace:SongTheoryApplication.ViewModels.Windows"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance vm2:CreateSongPresentationFormatViewModel}"
+        d:DataContext="{d:DesignInstance vm2:EditSongPresentationFormatViewModel}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -21,7 +20,7 @@
             <materialDesign:Card Padding="10" Margin="16">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                            Padding="15"
-                           Text="{Binding Path=SongTitle}"
+                           Text="{Binding Path=Title}"
                            TextWrapping="WrapWithOverflow"
                            FontSize="25">
                 </TextBlock>

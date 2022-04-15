@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
@@ -14,9 +15,8 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
 {
     private int _currentPresentationSlideNumber;
     private PresentationSlideDetail _currentPresentationSlide;
-    public CreateSongPresentationFormatWindow? CreateSongPresentationFormatWindow { get; set; }
-    public string? SongTitle { get; set; }
-    public string? SongText { get; set; }
+    public CreateSongPresentationFormatWindow CreateSongPresentationFormatWindow { get; }
+    public string Title { get; }
 
     public int CurrentPresentationSlideNumber
     {
@@ -53,11 +53,22 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
     public IRelayCommand<List<PresentationSlideDetail>>? OnSavePresentationFormatCommand { get; set; }
     public IRelayCommand OnLocalSavePresentationFormatCommand { get; }
 
-    public CreateSongPresentationFormatViewModel()
+    public CreateSongPresentationFormatViewModel(
+        string? songTitle, string? songText, 
+        CreateSongPresentationFormatWindow? createSongWindow, 
+        Action<List<PresentationSlideDetail>?> onSaveFormat)
     {
+        Guard.IsNotNull(songTitle, nameof(songTitle));
+        Guard.IsNotNull(songText, nameof(songText));
+        Guard.IsNotNull(createSongWindow, nameof(createSongWindow));
+        Guard.IsNotNull(onSaveFormat, nameof(onSaveFormat));
+        
+        Title = $"{songTitle} - Vlastní šablona pro formát prezentace písničky";
+        CreateSongPresentationFormatWindow = createSongWindow;
+        
         PresentationSlides = new ObservableCollection<PresentationSlideDetail>
         {
-            new(PresentationFormatStyles.First(), SongText ?? "Text písničky")
+            new(PresentationFormatStyles.First(), songText)
         };
 
         CurrentPresentationSlide = PresentationSlides.First();
@@ -65,6 +76,7 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
         OnAddNewSlideCommand = new RelayCommand(AddNewSlide);
         OnGoToPreviousSlideCommand = new RelayCommand(GoToPreviousSlide, () => CurrentPresentationSlideNumber > 1);
         OnGoToNextSlideCommand = new RelayCommand(GoToNextSlide, () => CurrentPresentationSlideNumber < PresentationSlides.Count);
+        OnSavePresentationFormatCommand = new RelayCommand<List<PresentationSlideDetail>>(onSaveFormat);
         OnLocalSavePresentationFormatCommand = new RelayCommand(SavePresentationFormat);
     }
 

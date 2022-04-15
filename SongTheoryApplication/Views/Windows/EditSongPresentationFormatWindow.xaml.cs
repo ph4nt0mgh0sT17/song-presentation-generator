@@ -18,29 +18,10 @@ public partial class EditSongPresentationFormatWindow : Window
         Action<List<PresentationSlideDetail>?> onSaveFormat)
     {
         InitializeComponent();
-        var editSongPresentationFormatViewModel = GetViewModel();
-        
-        editSongPresentationFormatViewModel.SongTitle = songTitle;
-        editSongPresentationFormatViewModel.SongText = songText;
-        editSongPresentationFormatViewModel.EditSongPresentationFormatWindow = this;
-        editSongPresentationFormatViewModel.OnSavePresentationFormatCommand = new RelayCommand<List<PresentationSlideDetail>>(
-            onSaveFormat
+        var editSongPresentationFormatViewModel = new EditSongPresentationFormatViewModel(
+            songTitle, this, onSaveFormat, slides
         );
-        editSongPresentationFormatViewModel.PresentationSlides =
-            new ObservableCollection<PresentationSlideDetail>(slides);
-        
-        editSongPresentationFormatViewModel.CurrentPresentationSlide =
-            editSongPresentationFormatViewModel.PresentationSlides.First();
-        
+
         DataContext = editSongPresentationFormatViewModel;
-    }
-
-    private EditSongPresentationFormatViewModel GetViewModel()
-    {
-        var currentViewModel = App.Current.Services.GetService<EditSongPresentationFormatViewModel>();
-
-        Guard.IsNotNull(currentViewModel, nameof(currentViewModel));
-
-        return currentViewModel;
     }
 }

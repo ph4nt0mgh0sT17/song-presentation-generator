@@ -12,28 +12,14 @@ namespace SongTheoryApplication.Views.Windows;
 public partial class CreateSongPresentationFormatWindow : Window
 {
     public CreateSongPresentationFormatWindow(
-        string songTitle, string songText, 
+        string songTitle, string songText,
         Action<List<PresentationSlideDetail>?> onSaveFormat)
     {
         InitializeComponent();
-        var createSongPresentationFormatViewModel = GetViewModel();
-        
-        createSongPresentationFormatViewModel.SongTitle = songTitle;
-        createSongPresentationFormatViewModel.SongText = songText;
-        createSongPresentationFormatViewModel.CreateSongPresentationFormatWindow = this;
-        createSongPresentationFormatViewModel.OnSavePresentationFormatCommand = new RelayCommand<List<PresentationSlideDetail>>(
-            onSaveFormat
+        var createSongPresentationFormatViewModel = new CreateSongPresentationFormatViewModel(
+            songTitle, songText, this, onSaveFormat
         );
-        
+
         DataContext = createSongPresentationFormatViewModel;
-    }
-
-    private CreateSongPresentationFormatViewModel GetViewModel()
-    {
-        var currentViewModel = App.Current.Services.GetService<CreateSongPresentationFormatViewModel>();
-
-        Guard.IsNotNull(currentViewModel, nameof(currentViewModel));
-
-        return currentViewModel;
     }
 }

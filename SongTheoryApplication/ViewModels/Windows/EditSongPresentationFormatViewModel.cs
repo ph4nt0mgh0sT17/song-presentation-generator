@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
@@ -13,9 +14,8 @@ public class EditSongPresentationFormatViewModel : BaseViewModel
 {
     private int _currentPresentationSlideNumber;
     private PresentationSlideDetail _currentPresentationSlide;
-    public EditSongPresentationFormatWindow? EditSongPresentationFormatWindow { get; set; }
-    public string? SongTitle { get; set; }
-    public string? SongText { get; set; }
+    public EditSongPresentationFormatWindow EditSongPresentationFormatWindow { get; }
+    public string Title { get;}
 
     public int CurrentPresentationSlideNumber
     {
@@ -28,7 +28,7 @@ public class EditSongPresentationFormatViewModel : BaseViewModel
         }
     }
 
-    public ObservableCollection<PresentationSlideDetail>? PresentationSlides { get; set; } = new();
+    public ObservableCollection<PresentationSlideDetail>? PresentationSlides { get; }
 
     public PresentationSlideDetail CurrentPresentationSlide
     {
@@ -49,14 +49,28 @@ public class EditSongPresentationFormatViewModel : BaseViewModel
     public IRelayCommand OnAddNewSlideCommand { get; }
     public IRelayCommand OnGoToPreviousSlideCommand { get; }
     public IRelayCommand OnGoToNextSlideCommand { get; }
-    public IRelayCommand<List<PresentationSlideDetail>>? OnSavePresentationFormatCommand { get; set; }
+    public IRelayCommand<List<PresentationSlideDetail>> OnSavePresentationFormatCommand { get; set; }
     public IRelayCommand OnLocalSavePresentationFormatCommand { get; }
 
-    public EditSongPresentationFormatViewModel()
+    public EditSongPresentationFormatViewModel(
+        string? songTitle, EditSongPresentationFormatWindow? editSongPresentationFormatWindow, 
+        Action<List<PresentationSlideDetail>?> onSaveFormat, List<PresentationSlideDetail>? slides)
     {
+        Guard.IsNotNull(songTitle, nameof(songTitle));
+        Guard.IsNotNull(editSongPresentationFormatWindow, nameof(editSongPresentationFormatWindow));
+        Guard.IsNotNull(onSaveFormat, nameof(onSaveFormat));
+        Guard.IsNotNull(slides, nameof(slides));
+        
+        Title = $"{songTitle} - Vlastní šablona pro formát prezentace písničky";
+        EditSongPresentationFormatWindow = editSongPresentationFormatWindow;
+
+        PresentationSlides = new ObservableCollection<PresentationSlideDetail>(slides);
+        CurrentPresentationSlide = PresentationSlides.First();
+        
         OnAddNewSlideCommand = new RelayCommand(AddNewSlide);
         OnGoToPreviousSlideCommand = new RelayCommand(GoToPreviousSlide, () => CurrentPresentationSlideNumber > 1);
         OnGoToNextSlideCommand = new RelayCommand(GoToNextSlide, () => CurrentPresentationSlideNumber < PresentationSlides.Count);
+        OnSavePresentationFormatCommand = new RelayCommand<List<PresentationSlideDetail>>(onSaveFormat);
         OnLocalSavePresentationFormatCommand = new RelayCommand(SavePresentationFormat);
     }
 
