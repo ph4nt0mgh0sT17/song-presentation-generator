@@ -15,6 +15,7 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
 {
     private int _currentPresentationSlideNumber;
     private PresentationSlideDetail _currentPresentationSlide;
+    private bool _displayForLowerResolution = false;
     public CreateSongPresentationFormatWindow CreateSongPresentationFormatWindow { get; }
     public string Title { get; }
 
@@ -52,6 +53,12 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
     public IRelayCommand OnGoToNextSlideCommand { get; }
     public IRelayCommand<List<PresentationSlideDetail>>? OnSavePresentationFormatCommand { get; set; }
     public IRelayCommand OnLocalSavePresentationFormatCommand { get; }
+
+    public bool DisplayForLowerResolution
+    {
+        get => _displayForLowerResolution;
+        set => SetProperty(ref _displayForLowerResolution, value);
+    }
 
     public CreateSongPresentationFormatViewModel(
         string? songTitle, string? songText, 

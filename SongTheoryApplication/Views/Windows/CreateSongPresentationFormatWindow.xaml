@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SongTheoryApplication.Views.Windows"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:vm2="clr-namespace:SongTheoryApplication.ViewModels.Windows"
+        xmlns:converters="clr-namespace:SongTheoryApplication.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:CreateSongPresentationFormatViewModel}"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -16,71 +17,90 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="CreateSongPresentationFormatWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <converters:IsLessThanOrEqualToConverter x:Key="IsLessThanOrEqualToConverter" />
+        <converters:IsGreaterThanOrEqualToConverter x:Key="IsGreaterThanOrEqualToConverter" />
+    </Window.Resources>
     <Grid>
-        <StackPanel Orientation="Vertical">
-            <materialDesign:Card Padding="10" Margin="16">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Padding="15"
-                           Text="{Binding Path=Title}"
-                           TextWrapping="WrapWithOverflow"
-                           FontSize="25">
-                </TextBlock>
-            </materialDesign:Card>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+                <materialDesign:Card Padding="10" Margin="16">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Padding="15"
+                               Text="{Binding Path=Title}"
+                               TextWrapping="WrapWithOverflow"
+                               FontSize="25">
+                    </TextBlock>
+                </materialDesign:Card>
 
-            <materialDesign:Card Padding="10" Margin="16">
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Margin="30">
-                        <TextBlock TextWrapping="Wrap">Formát slidu</TextBlock>
-                        <ComboBox Style="{DynamicResource MaterialDesignOutlinedComboBox}"
-                                  ItemsSource="{Binding Path=PresentationFormatStyles}"
-                                  SelectedValue="{Binding Path=CurrentPresentationSlide.PresentationFormatStyle}"
-                                  IsEditable="False">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Path=Name}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                <materialDesign:Card Padding="10" Margin="16">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Margin="30">
+                            <TextBlock TextWrapping="Wrap">Formát slidu</TextBlock>
+                            <ComboBox Style="{DynamicResource MaterialDesignOutlinedComboBox}"
+                                      ItemsSource="{Binding Path=PresentationFormatStyles}"
+                                      SelectedValue="{Binding Path=CurrentPresentationSlide.PresentationFormatStyle}"
+                                      IsEditable="False">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Path=Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Margin="30">
+                            <TextBlock TextWrapping="Wrap">Obsah slidu</TextBlock>
+                            <TextBox
+                                Text="{Binding Path=CurrentPresentationSlide.TextContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                TextWrapping="WrapWithOverflow"
+                                VerticalScrollBarVisibility="Visible"
+                                AcceptsReturn="True"
+                                Height="100">
+                            </TextBox>
+                        </StackPanel>
+
                     </StackPanel>
+                </materialDesign:Card>
 
-                    <StackPanel Margin="30">
-                        <TextBlock TextWrapping="Wrap">Obsah slidu</TextBlock>
-                        <TextBox Text="{Binding Path=CurrentPresentationSlide.TextContent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 TextWrapping="WrapWithOverflow"
-                                 VerticalScrollBarVisibility="Visible"
-                                 AcceptsReturn="True"
-                                 Height="100">
-                        </TextBox>
-                    </StackPanel>
+                <ContentControl Content="{Binding}">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Setter Property="ContentTemplate"
+                                    Value="{StaticResource Desktop_Template}" />
+                            
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsLessThanOrEqualToConverter}, ConverterParameter=500}"
+                                             Value="True">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource Laptop_Template}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsGreaterThanOrEqualToConverter}, ConverterParameter=500}"
+                                             Value="True">
+                                    <Setter Property="ContentTemplate" Value="{StaticResource Desktop_Template}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+                
+                
+                
 
+                <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=CurrentPresentationSlideNumber}" />
+                    <TextBlock TextWrapping="WrapWithOverflow" Text="/" />
+                    <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=PresentationSlides.Count}" />
                 </StackPanel>
-            </materialDesign:Card>
-            
-            <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Margin="10 0" Style="{DynamicResource MaterialDesignRaisedDarkButton}" 
-                        Content="Předchozí slide"
-                        Command="{Binding Path=OnGoToPreviousSlideCommand}"></Button>
-                <Button Margin="10 0" Style="{DynamicResource MaterialDesignRaisedAccentButton}" 
-                        Content="Přidat další slide"
-                        Command="{Binding Path=OnAddNewSlideCommand}"></Button>
-                <Button Margin="10 0" Style="{DynamicResource MaterialDesignRaisedDarkButton}" 
-                        Content="Další slide"
-                        Command="{Binding Path=OnGoToNextSlideCommand}"></Button>
+
+                <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                            Content="Uložit formát prezentace"
+                            Command="{Binding Path=OnLocalSavePresentationFormatCommand}" />
+                </StackPanel>
             </StackPanel>
-            
-            <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=CurrentPresentationSlideNumber}" />
-                        <TextBlock TextWrapping="WrapWithOverflow" Text="/" />
-                        <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=PresentationSlides.Count}" />
-            </StackPanel>
-            
-            <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Style="{DynamicResource MaterialDesignRaisedAccentButton}" 
-                        Content="Uložit formát prezentace"
-                        Command="{Binding Path=OnLocalSavePresentationFormatCommand}" />
-            </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>
