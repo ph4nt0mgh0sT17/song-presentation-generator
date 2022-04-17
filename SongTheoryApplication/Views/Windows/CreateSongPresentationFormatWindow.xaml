@@ -17,10 +17,6 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="CreateSongPresentationFormatWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <converters:IsLessThanOrEqualToConverter x:Key="IsLessThanOrEqualToConverter" />
-        <converters:IsGreaterThanOrEqualToConverter x:Key="IsGreaterThanOrEqualToConverter" />
-    </Window.Resources>
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
                       VerticalScrollBarVisibility="Auto">
@@ -70,24 +66,21 @@
                     <ContentControl.Style>
                         <Style TargetType="ContentControl">
                             <Setter Property="ContentTemplate"
-                                    Value="{StaticResource Desktop_Template}" />
+                                    Value="{StaticResource Desktop_Buttons}" />
                             
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsLessThanOrEqualToConverter}, ConverterParameter=500}"
                                              Value="True">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource Laptop_Template}" />
+                                    <Setter Property="ContentTemplate" Value="{StaticResource Laptop_Buttons}" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsGreaterThanOrEqualToConverter}, ConverterParameter=500}"
                                              Value="True">
-                                    <Setter Property="ContentTemplate" Value="{StaticResource Desktop_Template}" />
+                                    <Setter Property="ContentTemplate" Value="{StaticResource Desktop_Buttons}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </ContentControl.Style>
                 </ContentControl>
-                
-                
-                
 
                 <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Center">
                     <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Path=CurrentPresentationSlideNumber}" />

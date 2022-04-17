@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NetOffice.PowerPointApi;
 using SongTheoryApplication.Models;
@@ -11,37 +13,22 @@ using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
-public class CreateSongPresentationFormatViewModel : BaseViewModel
+public partial class CreateSongPresentationFormatViewModel : BaseViewModel
 {
-    private int _currentPresentationSlideNumber;
+    [ObservableProperty]
+    [AlsoNotifyChangeFor(nameof(CurrentPresentationSlideNumber))]
     private PresentationSlideDetail _currentPresentationSlide;
-    private bool _displayForLowerResolution = false;
+
+    [ObservableProperty]
+    private bool _displayForLowerResolution;
+    
     public CreateSongPresentationFormatWindow CreateSongPresentationFormatWindow { get; }
+    
     public string Title { get; }
 
-    public int CurrentPresentationSlideNumber
-    {
-        get => _currentPresentationSlideNumber;
-        private set
-        {
-            SetProperty(ref _currentPresentationSlideNumber, value);
-            OnGoToNextSlideCommand?.NotifyCanExecuteChanged();
-            OnGoToPreviousSlideCommand?.NotifyCanExecuteChanged();
-        }
-    }
+    public int CurrentPresentationSlideNumber => PresentationSlides.IndexOf(CurrentPresentationSlide) + 1;
 
     public ObservableCollection<PresentationSlideDetail> PresentationSlides { get; }
-
-    public PresentationSlideDetail CurrentPresentationSlide
-    {
-        get => _currentPresentationSlide;
-        private set
-        {
-            SetProperty(ref _currentPresentationSlide, value);
-            var slideNumber = PresentationSlides.IndexOf(value);
-            CurrentPresentationSlideNumber = slideNumber + 1;
-        }
-    }
 
     public List<PresentationFormatStyle> PresentationFormatStyles { get; } = new()
     {
@@ -51,19 +38,13 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
     public IRelayCommand OnAddNewSlideCommand { get; }
     public IRelayCommand OnGoToPreviousSlideCommand { get; }
     public IRelayCommand OnGoToNextSlideCommand { get; }
-    public IRelayCommand<List<PresentationSlideDetail>>? OnSavePresentationFormatCommand { get; set; }
+    public IRelayCommand<List<PresentationSlideDetail>> OnSavePresentationFormatCommand { get; set; }
     public IRelayCommand OnLocalSavePresentationFormatCommand { get; }
-
-    public bool DisplayForLowerResolution
-    {
-        get => _displayForLowerResolution;
-        set => SetProperty(ref _displayForLowerResolution, value);
-    }
 
     public CreateSongPresentationFormatViewModel(
         string? songTitle, string? songText, 
         CreateSongPresentationFormatWindow? createSongWindow, 
-        Action<List<PresentationSlideDetail>?> onSaveFormat)
+        Action<List<PresentationSlideDetail>> onSaveFormat)
     {
         Guard.IsNotNull(songTitle, nameof(songTitle));
         Guard.IsNotNull(songText, nameof(songText));
@@ -79,12 +60,24 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
         };
 
         CurrentPresentationSlide = PresentationSlides.First();
-        CurrentPresentationSlideNumber = 1;
         OnAddNewSlideCommand = new RelayCommand(AddNewSlide);
         OnGoToPreviousSlideCommand = new RelayCommand(GoToPreviousSlide, () => CurrentPresentationSlideNumber > 1);
         OnGoToNextSlideCommand = new RelayCommand(GoToNextSlide, () => CurrentPresentationSlideNumber < PresentationSlides.Count);
         OnSavePresentationFormatCommand = new RelayCommand<List<PresentationSlideDetail>>(onSaveFormat);
         OnLocalSavePresentationFormatCommand = new RelayCommand(SavePresentationFormat);
+    }
+    
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        switch (e.PropertyName)
+        {
+            case nameof(CurrentPresentationSlide):
+                OnGoToNextSlideCommand?.NotifyCanExecuteChanged();
+                OnGoToPreviousSlideCommand?.NotifyCanExecuteChanged();
+                break;
+        }
     }
 
     private void AddNewSlide()
@@ -101,12 +94,12 @@ public class CreateSongPresentationFormatViewModel : BaseViewModel
 
     private void GoToPreviousSlide()
     {
-        CurrentPresentationSlide = PresentationSlides.ElementAt(_currentPresentationSlideNumber - 2);
+        CurrentPresentationSlide = PresentationSlides.ElementAt(CurrentPresentationSlideNumber - 2);
     }
     
     private void GoToNextSlide()
     {
-        CurrentPresentationSlide = PresentationSlides.ElementAt(_currentPresentationSlideNumber);
+        CurrentPresentationSlide = PresentationSlides.ElementAt(CurrentPresentationSlideNumber);
     }
 
     private void SavePresentationFormat()

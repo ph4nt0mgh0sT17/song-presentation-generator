@@ -6,8 +6,10 @@ namespace SongTheoryApplication.Views.Controls;
 public partial class LoadingSpinnerControl : UserControl
 {
     public static readonly DependencyProperty LoadingTitleProperty =
-        DependencyProperty.Register(nameof(LoadingTitle), typeof(string), typeof(FooterControl),
-            new PropertyMetadata("1.00"));
+        DependencyProperty.Register(nameof(LoadingTitle), typeof(string), typeof(LoadingSpinnerControl),
+            new PropertyMetadata("Načítá se ..."));
+    
+    
 
     public LoadingSpinnerControl()
     {

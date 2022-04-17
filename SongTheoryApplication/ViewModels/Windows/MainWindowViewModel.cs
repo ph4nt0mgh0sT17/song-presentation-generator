@@ -20,9 +20,6 @@ public class MainWindowViewModel : BaseViewModel
 
     private void OpenSongListWindow()
     {
-        new DialogWindow(
-                "Není implementovaná operace",
-                "Tato operace není ještě implementována. Prosím kontaktuje administrátora.")
-            .ShowDialog();
+        new SongListWindow().ShowDialog();
     }
 }

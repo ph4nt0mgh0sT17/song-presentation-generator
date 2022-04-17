@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Repositories;
@@ -22,7 +23,18 @@ public class LocalSongRepository : ILocalSongRepository
         }
     }
 
-    private List<Song> RetrieveAllSongs()
+    public List<Song> RetrieveAllSongs()
+    {
+        if (!File.Exists(Constants.Constants.SONGS_JSON_FILENAME))
+            return new List<Song>();
+
+        var songsJsonText = RetrieveJsonFromSongsJsonFile();
+
+        return JsonSerializer.Deserialize<List<Song>>(songsJsonText) ??
+               throw new InvalidOperationException("The songs could not be retrieved.");
+    }
+
+    public async Task<List<Song>> RetrieveAllSongsAsync()
     {
         if (!File.Exists(Constants.Constants.SONGS_JSON_FILENAME))
             return new List<Song>();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Mime;
 using System.Printing;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using SongTheoryApplication.Models;
@@ -17,14 +19,22 @@ using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
-public class CreateSongWindowViewModel : BaseViewModel
+public partial class CreateSongWindowViewModel : BaseViewModel
 {
+    [ObservableProperty]
+    [AlsoNotifyChangeFor(nameof(CanCreateSong))]
     private string? _songTitle;
+    
+    [ObservableProperty]
+    [AlsoNotifyChangeFor(nameof(CanCreateSong))]
     private string? _songText;
-    private bool _canCreateSong;
+
+    [ObservableProperty]
     private bool _presentationIsBeingGenerated;
-    private bool _windowIsIdle;
+    
+    [ObservableProperty]
     private bool _presentationFormatIsCreated;
+    
     private List<PresentationSlideDetail>? _slides;
 
     private readonly ISongService _songService;
@@ -34,6 +44,20 @@ public class CreateSongWindowViewModel : BaseViewModel
     public IAsyncRelayCommand CreateSongCommand { get; }
     public IRelayCommand CreateSongPresentationFormatCommand { get; }
     public IRelayCommand EditSongPresentationFormatCommand { get; }
+    
+    public bool CanCreateSong => CheckCanCreateSong();
+
+    public CreateSongWindow? CreateSongWindow { get; set; }
+
+    private List<PresentationSlideDetail>? Slides
+    {
+        get => _slides;
+        set
+        {
+            _slides = value;
+            PresentationFormatIsCreated = true;
+        }
+    }
 
 
     public CreateSongWindowViewModel(
@@ -48,80 +72,22 @@ public class CreateSongWindowViewModel : BaseViewModel
             EditSongPresentationFormat, 
             () => PresentationFormatIsCreated
         );
-        WindowIsIdle = true;
     }
 
-    public string? SongTitle
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {
-        get => _songTitle;
+        base.OnPropertyChanged(e);
 
-        set
+        switch (e.PropertyName)
         {
-            SetProperty(ref _songTitle, value);
-            CanCreateSong = CheckCanCreateSong();
-        }
-    }
-
-    public string? SongText
-    {
-        get => _songText;
-
-        set
-        {
-            SetProperty(ref _songText, value);
-            CanCreateSong = CheckCanCreateSong();
-        }
-    }
-
-    public bool CanCreateSong
-    {
-        get => _canCreateSong;
-
-        set
-        {
-            SetProperty(ref _canCreateSong, value);
-            CreateSongCommand.NotifyCanExecuteChanged();
-            CreateSongPresentationFormatCommand.NotifyCanExecuteChanged();
-        }
-    }
-
-    public bool PresentationIsBeingGenerated
-    {
-        get => _presentationIsBeingGenerated;
-
-        set
-        {
-            SetProperty(ref _presentationIsBeingGenerated, value);
-            WindowIsIdle = !PresentationIsBeingGenerated;
-        }
-    }
-
-    public bool WindowIsIdle
-    {
-        get => _windowIsIdle;
-
-        set => SetProperty(ref _windowIsIdle, value);
-    }
-
-    public CreateSongWindow? CreateSongWindow { get; set; }
-
-    private List<PresentationSlideDetail>? Slides
-    {
-        get => _slides;
-        set
-        {
-            _slides = value;
-            PresentationFormatIsCreated = true;
-        }
-    }
-
-    public bool PresentationFormatIsCreated
-    {
-        get => _presentationFormatIsCreated;
-        set
-        {
-            SetProperty(ref _presentationFormatIsCreated, value);
-            EditSongPresentationFormatCommand.NotifyCanExecuteChanged();
+            case nameof(SongTitle):
+            case nameof(SongText):
+                CreateSongCommand.NotifyCanExecuteChanged();
+                CreateSongPresentationFormatCommand.NotifyCanExecuteChanged();
+                break;
+            case nameof(PresentationFormatIsCreated):
+                EditSongPresentationFormatCommand.NotifyCanExecuteChanged();
+                break;
         }
     }
 

@@ -23,14 +23,12 @@
         MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
         Left="{Binding Path=LeftWindow, Mode=OneWay}" Top="{Binding Path=TopWindow, Mode=OneWay}"
         x:Name="CreateSong">
-    <Window.Resources>
-        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <converters:ReversedBoolToVisibilityConverter x:Key="ReversedBoolToVisibilityConverter" />
-    </Window.Resources>
     <Grid>
         <StackPanel Orientation="Vertical"
-                    Visibility="{Binding Path=WindowIsIdle, Converter={StaticResource BoolToVisibilityConverter}}">
-
+                    Visibility="{
+                        Binding Path=PresentationIsBeingGenerated, 
+                        Converter={StaticResource ReversedBoolToVisibilityConverter}
+                    }">
             <materialDesign:Card Padding="10" Margin="16">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                            Padding="15"

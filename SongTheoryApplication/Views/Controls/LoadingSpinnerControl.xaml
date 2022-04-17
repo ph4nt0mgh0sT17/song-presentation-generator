@@ -6,16 +6,16 @@
              xmlns:local="clr-namespace:SongTheoryApplication.Views.Controls"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=local:LoadingSpinnerControl, IsDesignTimeCreatable=True}">
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock FontSize="25" 
                        TextWrapping="WrapWithOverflow"
                        HorizontalAlignment="Center" 
                        VerticalAlignment="Center" 
-                       Margin="30">
-                Právě se generuje prezentace...
-            </TextBlock>
+                       Margin="30" 
+                       Text="{Binding Path=LoadingTitle}"/>
 
             <fa:ImageAwesome Icon="CircleOutlineNotch" Width="50" Spin="True" SpinDuration="4"></fa:ImageAwesome>
         </StackPanel>

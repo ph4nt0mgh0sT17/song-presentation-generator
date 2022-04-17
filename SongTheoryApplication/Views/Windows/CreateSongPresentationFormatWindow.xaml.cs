@@ -13,7 +13,7 @@ public partial class CreateSongPresentationFormatWindow : Window
 {
     public CreateSongPresentationFormatWindow(
         string songTitle, string songText,
-        Action<List<PresentationSlideDetail>?> onSaveFormat)
+        Action<List<PresentationSlideDetail>> onSaveFormat)
     {
         InitializeComponent();
         var createSongPresentationFormatViewModel = new CreateSongPresentationFormatViewModel(
