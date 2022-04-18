@@ -21,6 +21,13 @@ public partial class SongListViewModel : BaseViewModel
     [ObservableProperty] private ObservableCollection<Song> _songs = new();
     [ObservableProperty] private bool _songsAreLoading;
 
+    private readonly ILocalSongRepository _localSongRepository;
+
+    public SongListViewModel(ILocalSongRepository localSongRepository)
+    {
+        _localSongRepository = localSongRepository;
+    }
+
     [ICommand]
     private async Task OnLoadedAsync()
     {

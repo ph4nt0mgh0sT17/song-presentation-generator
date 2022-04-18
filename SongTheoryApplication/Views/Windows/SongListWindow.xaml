@@ -55,7 +55,7 @@
                                             Content="Upravit" />
                                     <Button Style="{DynamicResource DangerButton}"
                                             Content="Smazat"
-                                            Command="{Binding Path=DataContext.DeleteSongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
+                                            Command="{Binding Path=ViewModel.DeleteSongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                                             CommandParameter="{Binding}"/>
                                 </StackPanel>
 

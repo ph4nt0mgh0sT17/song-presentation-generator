@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using CommunityToolkit.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SongTheoryApplication.ViewModels.Windows;
 
 namespace SongTheoryApplication.Views.Windows;
@@ -17,7 +17,7 @@ public partial class CreateSongWindow : Window
 
     private CreateSongWindowViewModel GetViewModel()
     {
-        var createSongWindowViewModel = App.Current.Services.GetService<CreateSongWindowViewModel>();
+        var createSongWindowViewModel = Ioc.Default.GetService<CreateSongWindowViewModel>();
         Guard.IsNotNull(createSongWindowViewModel, nameof(createSongWindowViewModel));
         createSongWindowViewModel.CreateSongWindow = this;
         return createSongWindowViewModel;

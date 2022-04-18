@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using SongTheoryApplication.ViewModels.Windows;
 
 namespace SongTheoryApplication;
@@ -11,6 +12,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        DataContext = App.Current.Services.GetService(typeof(MainWindowViewModel));
+        DataContext = Ioc.Default.GetService(typeof(MainWindowViewModel));
     }
 }

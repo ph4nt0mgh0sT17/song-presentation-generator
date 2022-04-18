@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
@@ -14,12 +15,8 @@ public sealed partial class App : Application
 {
     public App()
     {
-        Services = ConfigureServices();
+        Ioc.Default.ConfigureServices(ConfigureServices());
     }
-
-    public new static App Current => (App) Application.Current;
-
-    public IServiceProvider Services { get; }
 
     private static IServiceProvider ConfigureServices()
     {
