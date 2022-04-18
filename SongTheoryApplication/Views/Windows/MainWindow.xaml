@@ -41,9 +41,9 @@
                     <TextBlock HorizontalAlignment="Center" FontSize="25">
                         Vytvoření písničky v systému
                     </TextBlock>
-                    <Button Margin="50" Command="{Binding Path=OpenCreateSongWindowCommand}">
-                        <TextBlock Text="Vytvořit písničku" FontSize="20" HorizontalAlignment="Center"></TextBlock>
-                    </Button>
+                    <Button Margin="50" Style="{StaticResource PrimaryButton}"
+                            Command="{Binding Path=OpenCreateSongWindowCommand}" 
+                            Content="Vytvořit písničku" />
                 </StackPanel>
             </materialDesign:Card>
             
@@ -53,9 +53,10 @@
                     <TextBlock HorizontalAlignment="Center" FontSize="25">
                         Zobrazení evidence písniček v systému
                     </TextBlock>
-                    <Button Margin="50" Command="{Binding Path=OpenSongListWindowCommand}">
-                        <TextBlock Text="Zobrazit evidenci písniček" FontSize="20" HorizontalAlignment="Center"></TextBlock>
-                    </Button>
+                    <Button Margin="50" 
+                            Style="{StaticResource PrimaryButton}" 
+                            Command="{Binding Path=OpenSongListWindowCommand}"
+                            Content="Zobrazit evidenci písniček" />
                 </StackPanel>
             </materialDesign:Card>
         </WrapPanel>

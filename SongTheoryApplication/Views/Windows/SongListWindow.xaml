@@ -12,46 +12,58 @@
         d:DataContext="{d:DesignInstance vm2:SongListViewModel}"
         Title="SongListWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <behaviors:Interaction.Triggers>
-        <behaviors:EventTrigger EventName="ContentRendered">
+        <behaviors:EventTrigger EventName="Loaded">
             <behaviors:InvokeCommandAction Command="{Binding Path=OnLoadedCommand}" />
         </behaviors:EventTrigger>
     </behaviors:Interaction.Triggers>
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <StackPanel Orientation="Vertical"
-                            Visibility="{Binding Path=OnLoadedCommand.IsRunning, Converter={StaticResource ReversedBoolToVisibilityConverter}}">
-                    <materialDesign:Card Padding="10" Margin="16">
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Padding="15"
-                                   Text="{Binding Path = TitleName}"
-                                   TextWrapping="WrapWithOverflow"
-                                   FontSize="25">
-                        </TextBlock>
-                    </materialDesign:Card>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical">
+                <materialDesign:Card Padding="10" Margin="16">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Padding="15"
+                               Text="Evidence písní"
+                               TextWrapping="WrapWithOverflow"
+                               FontSize="25">
+                    </TextBlock>
+                </materialDesign:Card>
+            </StackPanel>
 
-                    <materialDesign:Card Padding="10" Margin="16">
-                        <ListView ItemsSource="{Binding Path=Songs}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Path=Title}" />
-                                        <Button Margin="30,0,0,0"
-                                                Style="{DynamicResource DangerButton}"
-                                                Content="Smazat" />
-                                    </StackPanel>
+            <materialDesign:Card Padding="10" Margin="16" Grid.Row="1">
+                <ListView ItemsSource="{Binding Path=Songs}" ScrollViewer.CanContentScroll="True"
+                          HorizontalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </materialDesign:Card>
-                </StackPanel>
-                <controls:LoadingSpinnerControl 
-                    Visibility="{Binding Path=OnLoadedCommand.IsRunning, Converter={StaticResource BoolToVisibilityConverter}}" />
-            </Grid>
+                                <TextBlock Grid.Column="0" Text="{Binding Path=Title}" />
+                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                    <Button Style="{DynamicResource PrimaryButton}"
+                                            Margin="0,0,30,0"
+                                            Content="Sdílet" />
+                                    <Button Style="{DynamicResource SecondaryButton}"
+                                            Margin="0,0,30,0"
+                                            Content="Upravit" />
+                                    <Button Style="{DynamicResource DangerButton}"
+                                            Content="Smazat"
+                                            Command="{Binding Path=DataContext.DeleteSongCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"
+                                            CommandParameter="{Binding}"/>
+                                </StackPanel>
 
-        </ScrollViewer>
-
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListView>
+            </materialDesign:Card>
+        </Grid>
     </Grid>
 </Window>

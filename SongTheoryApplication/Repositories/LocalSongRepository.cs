@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SongTheoryApplication.Models;
@@ -18,6 +19,20 @@ public class LocalSongRepository : ILocalSongRepository
 
         var fileStream = new FileStream(Constants.Constants.SONGS_JSON_FILENAME, FileMode.Create);
         using (var streamWriter = new StreamWriter(fileStream))
+        {
+            streamWriter.Write(songsJsonText);
+        }
+    }
+
+    public async Task DeleteSongAsync(string songTitle)
+    {
+        var songs = await RetrieveAllSongsAsync();
+        songs = songs.Where(x => x.Title != songTitle).ToList();
+        
+        var songsJsonText = JsonSerializer.Serialize(songs);
+
+        var fileStream = new FileStream(Constants.Constants.SONGS_JSON_FILENAME, FileMode.Create);
+        await using (var streamWriter = new StreamWriter(fileStream))
         {
             streamWriter.Write(songsJsonText);
         }

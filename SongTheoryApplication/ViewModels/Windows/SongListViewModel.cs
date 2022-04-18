@@ -11,24 +11,42 @@ using CommunityToolkit.Mvvm.Input;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Repositories;
 using SongTheoryApplication.ViewModels.Base;
+using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
 public partial class SongListViewModel : BaseViewModel
 {
     [ObservableProperty] private string? titleName;
-    public RangeObservableCollection<Song> Songs { get; } = new();
+    [ObservableProperty] private ObservableCollection<Song> _songs = new();
     [ObservableProperty] private bool _songsAreLoading;
 
     [ICommand]
     private async Task OnLoadedAsync()
     {
-        await Task.Run(async () =>
-        {
-            var songs = await new LocalSongRepository().RetrieveAllSongsAsync();
-            songs = songs.Take(10).ToList();
+        SongsAreLoading = true;
+        var songs = await new LocalSongRepository().RetrieveAllSongsAsync();
 
-            Songs.AddRange(songs);
-        });
+        Songs = new ObservableCollection<Song>(songs);
+        SongsAreLoading = false;
+    }
+
+    [ICommand]
+    private async Task DeleteSong(Song song)
+    {
+        var dialogWindow = new DialogWindow(
+            "Požadavek o smazání písničky",
+            $"Doopravdy chcete smazat písničku '{song.Title}'?",
+            DialogButtons.ACCEPT_CANCEL,
+            DialogIcons.INFORMATION
+        );
+
+        dialogWindow.ShowDialog();
+
+        if (dialogWindow.DialogResult.Accept)
+        {
+            await new LocalSongRepository().DeleteSongAsync(song.Title);
+            Songs.Remove(song);
+        }
     }
 }
