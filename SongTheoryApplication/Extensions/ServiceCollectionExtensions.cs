@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using SongTheoryApplication.Configuration;
 using SongTheoryApplication.Repositories;
 using SongTheoryApplication.Services;
 using SongTheoryApplication.ViewModels.Windows;
@@ -46,5 +48,27 @@ public static class ServiceCollectionExtensions
         services.AddTransient<CreateSongPresentationFormatViewModel>();
         services.AddTransient<EditSongPresentationFormatViewModel>();
         services.AddTransient<SongListViewModel>();
+    }
+
+    /// <summary>
+    ///     Adds all View Models into Dependency Injection Service Collection for use in the application.
+    /// </summary>
+    /// <param name="services">
+    ///     The <see cref="IServiceCollection" /> that contains all services, repositories and other
+    ///     objects.
+    /// </param>
+    public static void AddConfiguration(this IServiceCollection services)
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("ApplicationConfiguration.json")
+            .Build();
+
+        var presentationSettings = configuration
+            .GetSection("PresentationSettings")
+            .Get<PresentationSettings>();
+
+
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddSingleton<PresentationSettings>(presentationSettings);
     }
 }

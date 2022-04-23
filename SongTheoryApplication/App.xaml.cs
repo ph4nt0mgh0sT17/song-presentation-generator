@@ -22,10 +22,10 @@ public sealed partial class App : Application
     {
         var services = new ServiceCollection();
 
+        services.AddConfiguration();
         services.AddAllServices();
         services.AddAllRepositories();
         services.AddAllViewModels();
-
 
         return services.BuildServiceProvider();
     }
