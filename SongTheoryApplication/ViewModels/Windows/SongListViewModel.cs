@@ -8,6 +8,7 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Repositories;
 using SongTheoryApplication.ViewModels.Base;
@@ -15,6 +16,7 @@ using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
+[ViewModel]
 public partial class SongListViewModel : BaseViewModel
 {
     [ObservableProperty] private string? titleName;

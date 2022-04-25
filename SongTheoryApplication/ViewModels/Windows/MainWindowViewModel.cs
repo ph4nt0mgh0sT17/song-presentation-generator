@@ -3,12 +3,14 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Configuration;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Configuration;
 using SongTheoryApplication.ViewModels.Base;
 using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
+[ViewModel]
 public class MainWindowViewModel : BaseViewModel
 {
     public string MainWindowTitleText =>
@@ -26,13 +28,13 @@ public class MainWindowViewModel : BaseViewModel
         if (configuration is NullConfiguration)
         {
             BoundMessageQueue.Enqueue(
-                "Konfigurace aplikace nenalezena. Prezentace budou vytvořeny v defaultním nastavení.",
-                "Zavřít",
-                _ => { },
-                null,
-                false,
-                true,
-                TimeSpan.FromSeconds(60)
+                content: "Konfigurace aplikace nenalezena. Prezentace budou vytvořeny v defaultním nastavení.",
+                actionContent: "Zavřít",
+                actionHandler: _ => { },
+                actionArgument: null,
+                promote: true,
+                neverConsiderToBeDuplicate: true,
+                durationOverride: TimeSpan.FromSeconds(60)
             );
         }
     }

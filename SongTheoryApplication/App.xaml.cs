@@ -20,14 +20,14 @@ public sealed partial class App : Application
 
     private static IServiceProvider ConfigureServices()
     {
-        var services = new ServiceCollection();
+        var serviceCollection = new ServiceCollection();
+        serviceCollection
+            .AddLogger()
+            .AddConfiguration();
 
-        services.AddConfiguration();
-        services.AddAllServices();
-        services.AddAllRepositories();
-        services.AddAllViewModels();
+        serviceCollection.InstallAllServices();
 
-        return services.BuildServiceProvider();
+        return serviceCollection.BuildServiceProvider();
     }
 
     protected override void OnStartup(StartupEventArgs e)

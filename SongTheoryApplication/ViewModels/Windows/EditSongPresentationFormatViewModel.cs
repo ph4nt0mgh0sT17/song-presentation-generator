@@ -4,12 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.ViewModels.Base;
 using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
+[ViewModel]
 public class EditSongPresentationFormatViewModel : BaseViewModel
 {
     private int _currentPresentationSlideNumber;

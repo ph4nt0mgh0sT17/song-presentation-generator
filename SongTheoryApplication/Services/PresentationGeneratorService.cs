@@ -2,10 +2,12 @@
 using NetOffice.OfficeApi.Enums;
 using NetOffice.PowerPointApi;
 using NetOffice.PowerPointApi.Enums;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Services;
 
+[Service]
 public class PresentationGeneratorService : IPresentationGeneratorService
 {
     /// <inheritdoc cref="IPresentationGeneratorService.GenerateTestingPresentation" />

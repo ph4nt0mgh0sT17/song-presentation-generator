@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Configuration;
 using SongTheoryApplication.Repositories;
 using SongTheoryApplication.Services;
@@ -14,46 +18,20 @@ namespace SongTheoryApplication.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    ///     Adds all services into Dependency Injection Service Collection for use in the application.
-    /// </summary>
-    /// <param name="services">
-    ///     The <see cref="IServiceCollection" /> that contains all services, repositories and other
-    ///     objects.
-    /// </param>
-    public static void AddAllServices(this IServiceCollection services)
-    {
-        services.AddSingleton<ISongService, SongService>();
-        services.AddSingleton<IPresentationGeneratorService, PresentationGeneratorService>();
-    }
-
-    /// <summary>
     ///     Adds all repositories into Dependency Injection Service Collection for use in the application.
     /// </summary>
     /// <param name="services">
     ///     The <see cref="IServiceCollection" /> that contains all services, repositories and other
     ///     objects.
     /// </param>
-    public static void AddAllRepositories(this IServiceCollection services)
+    public static IServiceCollection AddAllRepositories(this IServiceCollection services)
     {
-        services.AddSingleton<ILocalSongRepository, LocalSongRepository>();
+        services.AddTransient<ILocalSongRepository, LocalSongRepository>();
+
+        return services;
     }
 
-    /// <summary>
-    ///     Adds all View Models into Dependency Injection Service Collection for use in the application.
-    /// </summary>
-    /// <param name="services">
-    ///     The <see cref="IServiceCollection" /> that contains all services, repositories and other
-    ///     objects.
-    /// </param>
-    public static void AddAllViewModels(this IServiceCollection services)
-    {
-        services.AddSingleton<CreateSongWindowViewModel>();
-        services.AddSingleton<MainWindowViewModel>();
-        services.AddSingleton<CreateSongPresentationFormatViewModel>();
-        services.AddSingleton<EditSongPresentationFormatViewModel>();
-        services.AddSingleton<SongListViewModel>();
-    }
-    
+
     /// <summary>
     /// Adds Serilog Logger to <see cref="IServiceCollection"/> to be used in services.
     /// </summary>
@@ -62,8 +40,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddLogger(this IServiceCollection services)
     {
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.File("SongTheoryApplication.log")
-            .WriteTo.Console(LogEventLevel.Information)
+            .WriteTo.File("SongTheoryApplication.log", LogEventLevel.Information)
+            .WriteTo.Console()
             .CreateLogger();
 
         services.AddLogging(configure => configure.AddSerilog());
@@ -72,7 +50,7 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    ///     Adds all View Models into Dependency Injection Service Collection for use in the application.
+    ///     Adds the configuration to the 
     /// </summary>
     /// <param name="services">
     ///     The <see cref="IServiceCollection" /> that contains all services, repositories and other
@@ -100,6 +78,8 @@ public static class ServiceCollectionExtensions
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("ApplicationConfiguration.json")
                 .Build();
+            
+            Log.Logger.Information("The application configuration has been found successfully");
 
             return configuration;
         }

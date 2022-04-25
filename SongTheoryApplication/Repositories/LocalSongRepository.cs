@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Repositories;
 
+[Repository]
 public class LocalSongRepository : ILocalSongRepository
 {
     public void SaveSong(Song song)

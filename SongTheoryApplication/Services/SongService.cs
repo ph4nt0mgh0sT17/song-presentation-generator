@@ -1,4 +1,5 @@
 ﻿using System;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Repositories;
@@ -6,6 +7,7 @@ using SongTheoryApplication.Requests;
 
 namespace SongTheoryApplication.Services;
 
+[Service]
 public class SongService : ISongService
 {
     private readonly ILocalSongRepository _localSongRepository;

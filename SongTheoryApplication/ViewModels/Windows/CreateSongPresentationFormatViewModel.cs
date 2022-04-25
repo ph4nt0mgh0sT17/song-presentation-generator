@@ -7,12 +7,14 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NetOffice.PowerPointApi;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.ViewModels.Base;
 using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
+[ViewModel]
 public partial class CreateSongPresentationFormatViewModel : BaseViewModel
 {
     [ObservableProperty]

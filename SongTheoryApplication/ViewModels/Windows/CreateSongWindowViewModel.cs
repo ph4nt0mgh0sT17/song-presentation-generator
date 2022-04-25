@@ -11,6 +11,7 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Configuration;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Requests;
@@ -20,6 +21,7 @@ using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
+[ViewModel]
 public partial class CreateSongWindowViewModel : BaseViewModel
 {
     [ObservableProperty]
@@ -63,8 +65,7 @@ public partial class CreateSongWindowViewModel : BaseViewModel
 
     public CreateSongWindowViewModel(
         ISongService songService,
-        IPresentationGeneratorService presentationGeneratorService,
-        PresentationSettings presentationSettings)
+        IPresentationGeneratorService presentationGeneratorService)
     {
         _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
