@@ -11,6 +11,8 @@ using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+using SongTheoryApplication.Attributes;
+using SongTheoryApplication.Configuration;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Requests;
 using SongTheoryApplication.Services;
@@ -19,22 +21,21 @@ using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
+[ViewModel]
 public partial class CreateSongWindowViewModel : BaseViewModel
 {
-    [ObservableProperty]
-    [AlsoNotifyChangeFor(nameof(CanCreateSong))]
+    [ObservableProperty] [AlsoNotifyChangeFor(nameof(CanCreateSong))]
     private string? _songTitle;
-    
-    [ObservableProperty]
-    [AlsoNotifyChangeFor(nameof(CanCreateSong))]
+
+    [ObservableProperty] [AlsoNotifyChangeFor(nameof(CanCreateSong))]
     private string? _songText;
 
     [ObservableProperty]
     private bool _presentationIsBeingGenerated;
-    
+
     [ObservableProperty]
     private bool _presentationFormatIsCreated;
-    
+
     private List<PresentationSlideDetail>? _slides;
 
     private readonly ISongService _songService;
@@ -44,7 +45,7 @@ public partial class CreateSongWindowViewModel : BaseViewModel
     public IAsyncRelayCommand CreateSongCommand { get; }
     public IRelayCommand CreateSongPresentationFormatCommand { get; }
     public IRelayCommand EditSongPresentationFormatCommand { get; }
-    
+
     public bool CanCreateSong => CheckCanCreateSong();
 
     public CreateSongWindow? CreateSongWindow { get; set; }
@@ -69,7 +70,7 @@ public partial class CreateSongWindowViewModel : BaseViewModel
         CreateSongCommand = new AsyncRelayCommand(CreateSong, () => CanCreateSong);
         CreateSongPresentationFormatCommand = new RelayCommand(CreateSongPresentationFormat, () => CanCreateSong);
         EditSongPresentationFormatCommand = new RelayCommand(
-            EditSongPresentationFormat, 
+            EditSongPresentationFormat,
             () => PresentationFormatIsCreated
         );
     }

@@ -11,7 +11,7 @@ public class CreateSongRequestTests
     public void Constructor_ThrowsArgumentNullException_WhenSongTitleIsNull()
     {
         // Arrange
-        var act = () => new CreateSongRequest(null, null,  null);
+        var act = () => new CreateSongRequest(null, null, null);
 
         // Act + Assert
         act.Should().Throw<ArgumentNullException>();
@@ -21,7 +21,7 @@ public class CreateSongRequestTests
     public void Constructor_ThrowsArgumentException_WhenSongTitleIsEmpty()
     {
         // Arrange
-        var act = () => new CreateSongRequest("", null,  null);
+        var act = () => new CreateSongRequest("", null, null);
 
         // Act + Assert
         act.Should().Throw<ArgumentException>();
@@ -31,7 +31,7 @@ public class CreateSongRequestTests
     public void Constructor_ThrowsArgumentNullException_WhenSongTextIsNull()
     {
         // Arrange
-        var act = () => new CreateSongRequest("Song title", null,  null);
+        var act = () => new CreateSongRequest("Song title", null, null);
 
         // Act + Assert
         act.Should().Throw<ArgumentNullException>();
@@ -41,7 +41,7 @@ public class CreateSongRequestTests
     public void Constructor_ThrowsArgumentException_WhenSongTextIsEmpty()
     {
         // Arrange
-        var act = () => new CreateSongRequest("Song title", "",  null);
+        var act = () => new CreateSongRequest("Song title", "", null);
 
         // Act + Assert
         act.Should().Throw<ArgumentException>();

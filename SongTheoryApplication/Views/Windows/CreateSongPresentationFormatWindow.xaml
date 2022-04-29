@@ -18,7 +18,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="CreateSongPresentationFormatWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical">
                 <materialDesign:Card Padding="10" Margin="16">
@@ -67,14 +67,16 @@
                         <Style TargetType="ContentControl">
                             <Setter Property="ContentTemplate"
                                     Value="{StaticResource Desktop_Buttons}" />
-                            
+
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsLessThanOrEqualToConverter}, ConverterParameter=500}"
-                                             Value="True">
+                                <DataTrigger
+                                    Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsLessThanOrEqualToConverter}, ConverterParameter=500}"
+                                    Value="True">
                                     <Setter Property="ContentTemplate" Value="{StaticResource Laptop_Buttons}" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsGreaterThanOrEqualToConverter}, ConverterParameter=500}"
-                                             Value="True">
+                                <DataTrigger
+                                    Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsGreaterThanOrEqualToConverter}, ConverterParameter=500}"
+                                    Value="True">
                                     <Setter Property="ContentTemplate" Value="{StaticResource Desktop_Buttons}" />
                                 </DataTrigger>
                             </Style.Triggers>

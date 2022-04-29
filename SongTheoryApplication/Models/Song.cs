@@ -9,7 +9,7 @@ public class Song
     {
         Guard.IsNotNullOrEmpty(title, nameof(title));
         Guard.IsNotNullOrEmpty(text, nameof(text));
-        
+
         Title = title;
         Text = text;
         Slides = slides;

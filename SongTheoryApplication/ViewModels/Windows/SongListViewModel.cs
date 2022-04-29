@@ -8,18 +8,27 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Repositories;
 using SongTheoryApplication.ViewModels.Base;
+using SongTheoryApplication.ViewModels.Dialogs;
 using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
+[ViewModel]
 public partial class SongListViewModel : BaseViewModel
 {
-    [ObservableProperty] private string? titleName;
-    [ObservableProperty] private ObservableCollection<Song> _songs = new();
-    [ObservableProperty] private bool _songsAreLoading;
+    [ObservableProperty]
+    private string? titleName;
+
+    [ObservableProperty]
+    private ObservableCollection<Song> _songs = new();
+
+    [ObservableProperty]
+    private bool _songsAreLoading;
 
     private readonly ILocalSongRepository _localSongRepository;
 
@@ -41,19 +50,36 @@ public partial class SongListViewModel : BaseViewModel
     [ICommand]
     private async Task DeleteSong(Song song)
     {
-        var dialogWindow = new DialogWindow(
-            "Požadavek o smazání písničky",
-            $"Doopravdy chcete smazat písničku '{song.Title}'?",
-            DialogButtons.ACCEPT_CANCEL,
-            DialogIcons.INFORMATION
+        var result = await DialogHost.Show(
+            new DialogQuestionViewModel(
+                $"Chcete doopravdy smazat píseň '{song.Title}'?",
+                $"Chcete doopravdy smazat píseň '{song.Title}'?"
+            ),
+            "SongListDialog"
         );
 
-        dialogWindow.ShowDialog();
-
-        if (dialogWindow.DialogResult.Accept)
+        if (result is true)
         {
             await new LocalSongRepository().DeleteSongAsync(song.Title);
             Songs.Remove(song);
         }
+    }
+
+    [ICommand]
+    private void ShareSong()
+    {
+        DialogHost.Show(
+            new ErrorNotificationDialogViewModel("Sdílení písniček není zatím implementováno.", "Chyba"),
+            "SongListDialog"
+        );
+    }
+
+    [ICommand]
+    private void EditSong()
+    {
+        DialogHost.Show(
+            new ErrorNotificationDialogViewModel("Úprava písniček není zatím implementováno.", "Chyba"),
+            "SongListDialog"
+        );
     }
 }

@@ -2,10 +2,12 @@
 using NetOffice.OfficeApi.Enums;
 using NetOffice.PowerPointApi;
 using NetOffice.PowerPointApi.Enums;
+using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Services;
 
+[Service]
 public class PresentationGeneratorService : IPresentationGeneratorService
 {
     /// <inheritdoc cref="IPresentationGeneratorService.GenerateTestingPresentation" />
@@ -78,7 +80,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     public void GeneratePresentation(Song? song, string fileName)
     {
         Guard.IsNotNull(song, nameof(song));
-        
+
         var powerpointApplication = new Application();
 
         var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
@@ -89,7 +91,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
             GenerateTextSlide(currentSlideFormat.TextContent, presentation, slideIndex);
             slideIndex++;
         });
-        
+
         presentation.SaveAs($"{fileName}.pptx");
 
         ExitPowerpointApplication(powerpointApplication);
