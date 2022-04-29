@@ -32,7 +32,7 @@ public partial class FooterControl : UserControl
     /// </summary>
     public string FooterVersion
     {
-        get => (string) GetValue(FooterVersionProperty);
+        get => (string)GetValue(FooterVersionProperty);
         set => SetValue(FooterVersionProperty, value);
     }
 
@@ -41,7 +41,7 @@ public partial class FooterControl : UserControl
     /// </summary>
     public string ApplicationAuthor
     {
-        get => (string) GetValue(ApplicationAuthorProperty);
+        get => (string)GetValue(ApplicationAuthorProperty);
         set => SetValue(ApplicationAuthorProperty, value);
     }
 
@@ -50,7 +50,7 @@ public partial class FooterControl : UserControl
     /// </summary>
     public int FooterWidth
     {
-        get => (int) GetValue(FooterWidthProperty);
+        get => (int)GetValue(FooterWidthProperty);
         set => SetValue(FooterWidthProperty, value);
     }
 }

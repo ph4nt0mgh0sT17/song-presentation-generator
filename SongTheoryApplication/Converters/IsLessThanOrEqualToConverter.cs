@@ -7,7 +7,7 @@ namespace SongTheoryApplication.Converters;
 public class IsLessThanOrEqualToConverter : IValueConverter
 {
     public static readonly IValueConverter Instance = new IsLessThanOrEqualToConverter();
-    
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         var actualWidth = System.Convert.ToDouble(value);

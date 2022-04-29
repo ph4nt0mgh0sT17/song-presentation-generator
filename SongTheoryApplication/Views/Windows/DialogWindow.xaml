@@ -10,8 +10,8 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="DialogWindow" Height="400" Width="400" ResizeMode="NoResize" WindowStyle="None"
@@ -20,28 +20,28 @@
         d:DataContext="{d:DesignInstance Type=local:DialogWindow, IsDesignTimeCreatable=True}">
     <Grid>
         <Border BorderBrush="Black" Background="{StaticResource DarkBlue}" CornerRadius="10" BorderThickness="1">
-            <StackPanel Margin="30" Orientation="Vertical" >
+            <StackPanel Margin="30" Orientation="Vertical">
                 <Grid>
                     <fa:ImageAwesome Icon="CheckCircle" Width="30" Foreground="Green"
-                                      Visibility="{Binding Path=SuccessIconVisibility}" />
+                                     Visibility="{Binding Path=SuccessIconVisibility}" />
                     <fa:ImageAwesome Icon="InfoCircle" Width="30" Foreground="SkyBlue"
-                                      Visibility="{Binding Path=InformationIconVisibility}" />
+                                     Visibility="{Binding Path=InformationIconVisibility}" />
                 </Grid>
-                <TextBlock HorizontalAlignment="Center" 
-                           Foreground="{StaticResource PureWhite}" 
-                           FontSize="30" 
-                           TextWrapping="Wrap" 
+                <TextBlock HorizontalAlignment="Center"
+                           Foreground="{StaticResource PureWhite}"
+                           FontSize="30"
+                           TextWrapping="Wrap"
                            TextAlignment="Center"
-                           FontFamily="{StaticResource OpenSansRegular}" 
+                           FontFamily="{StaticResource OpenSansRegular}"
                            Text="{Binding Path=TitleText}">
                 </TextBlock>
-                <TextBlock HorizontalAlignment="Center" 
-                           Foreground="{StaticResource PureWhite}" 
-                           FontFamily="{StaticResource OpenSansRegular}" 
-                           TextAlignment="Center" 
-                           TextWrapping="Wrap" 
+                <TextBlock HorizontalAlignment="Center"
+                           Foreground="{StaticResource PureWhite}"
+                           FontFamily="{StaticResource OpenSansRegular}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
                            FontSize="20"
-                           Margin="0 20 0 0" 
+                           Margin="0 20 0 0"
                            Text="{Binding Path=DescriptionText}">
                 </TextBlock>
 
@@ -49,19 +49,27 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                                 Visibility="{Binding Path=OkButtonLayoutVisibility}"
                                 Margin="0 20 0 0">
-                        <Button Command="{Binding Path=OkButtonCommand}" FontWeight="Bold" FontSize="15" FontFamily="{StaticResource OpenSansRegular}" Foreground="White" Padding="10" Background="Orange"> OK</Button>
+                        <Button Command="{Binding Path=OkButtonCommand}" FontWeight="Bold" FontSize="15"
+                                FontFamily="{StaticResource OpenSansRegular}" Foreground="White" Padding="10"
+                                Background="Orange">
+                            OK
+                        </Button>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
                                 Visibility="{Binding Path=AcceptCancelButtonsLayoutVisiblity}"
                                 Margin="0 20 0 0">
-                        <Button Command="{Binding Path=AcceptButtonCommand}" 
-                                HorizontalContentAlignment="Center" 
-                                VerticalContentAlignment="Center">Souhlasím</Button>
+                        <Button Command="{Binding Path=AcceptButtonCommand}"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center">
+                            Souhlasím
+                        </Button>
                         <Button Command="{Binding Path=CancelButtonCommand}"
-                                HorizontalContentAlignment="Center" 
+                                HorizontalContentAlignment="Center"
                                 VerticalContentAlignment="Center"
-                                Margin="20 0 0 0" >Nesouhlasím</Button>
+                                Margin="20 0 0 0">
+                            Nesouhlasím
+                        </Button>
                     </StackPanel>
                 </Grid>
             </StackPanel>

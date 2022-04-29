@@ -8,8 +8,7 @@ public partial class LoadingSpinnerControl : UserControl
     public static readonly DependencyProperty LoadingTitleProperty =
         DependencyProperty.Register(nameof(LoadingTitle), typeof(string), typeof(LoadingSpinnerControl),
             new PropertyMetadata("Načítá se ..."));
-    
-    
+
 
     public LoadingSpinnerControl()
     {

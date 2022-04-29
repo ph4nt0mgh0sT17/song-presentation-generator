@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Models;
 
@@ -26,17 +27,19 @@ public class LocalSongRepository : ILocalSongRepository
         }
     }
 
-    public async Task DeleteSongAsync(string songTitle)
+    public async Task DeleteSongAsync(string? songTitle)
     {
+        Guard.IsNotNull(songTitle, nameof(songTitle));
+        
         var songs = await RetrieveAllSongsAsync();
         songs = songs.Where(x => x.Title != songTitle).ToList();
-        
+
         var songsJsonText = JsonSerializer.Serialize(songs);
 
         var fileStream = new FileStream(Constants.Constants.SONGS_JSON_FILENAME, FileMode.Create);
         await using (var streamWriter = new StreamWriter(fileStream))
         {
-            streamWriter.Write(songsJsonText);
+            await streamWriter.WriteAsync(songsJsonText);
         }
     }
 

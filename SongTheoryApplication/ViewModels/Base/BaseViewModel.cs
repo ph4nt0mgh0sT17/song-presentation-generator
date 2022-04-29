@@ -24,7 +24,7 @@ public abstract class BaseViewModel : ObservableObject
 
         CenterScreen();
     }
-    
+
     public void CenterScreen()
     {
         var screenWidth = (int)SystemParameters.PrimaryScreenWidth;
@@ -36,7 +36,7 @@ public abstract class BaseViewModel : ObservableObject
         LeftWindow = (screenWidth / 2) - (windowWidth / 2);
         TopWindow = (screenHeight / 2) - (windowHeight / 2);
     }
-    
+
     public int Width
     {
         get => _width;
@@ -47,7 +47,7 @@ public abstract class BaseViewModel : ObservableObject
             SetProperty(ref _width, value);
         }
     }
-    
+
     public int Height
     {
         get => _height;
@@ -58,31 +58,31 @@ public abstract class BaseViewModel : ObservableObject
             SetProperty(ref _height, value);
         }
     }
-    
+
     public int MinWidth
     {
         get => _minWidth;
         set => _minWidth = value;
     }
-    
+
     public int MinHeight
     {
         get => _minHeight;
         set => _minHeight = value;
     }
-    
+
     public int LeftWindow
     {
         get => _leftWindow;
         set => _leftWindow = value;
     }
-    
+
     public int TopWindow
     {
         get => _topWindow;
         set => _topWindow = value;
     }
-    
+
     public string ApplicationTitle
     {
         get => _applicationTitle;

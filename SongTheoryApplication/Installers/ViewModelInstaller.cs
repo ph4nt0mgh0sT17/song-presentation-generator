@@ -12,7 +12,7 @@ public class ViewModelInstaller : IInstaller
     public void ConfigureServices(IServiceCollection services)
     {
         var viewModelImplementations = GetAllViewModelImplementations();
-        
+
         viewModelImplementations.ForEach(viewModelImplementation =>
         {
             services.AddTransient(viewModelImplementation);

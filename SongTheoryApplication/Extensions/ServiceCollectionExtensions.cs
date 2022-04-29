@@ -78,7 +78,7 @@ public static class ServiceCollectionExtensions
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("ApplicationConfiguration.json")
                 .Build();
-            
+
             Log.Logger.Information("The application configuration has been found successfully");
 
             return configuration;

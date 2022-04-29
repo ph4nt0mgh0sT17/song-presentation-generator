@@ -10,8 +10,8 @@ public static class WindowExtensions
     /// <param name="window">The <see cref="Window" /> to be centered.</param>
     public static void CenterScreen(this Window window)
     {
-        var screenWidth = (int) SystemParameters.PrimaryScreenWidth;
-        var screenHeight = (int) SystemParameters.PrimaryScreenHeight;
+        var screenWidth = (int)SystemParameters.PrimaryScreenWidth;
+        var screenHeight = (int)SystemParameters.PrimaryScreenHeight;
 
         var windowWidth = window.Width;
         var windowHeight = window.Height;

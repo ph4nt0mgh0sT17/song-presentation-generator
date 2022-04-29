@@ -11,8 +11,8 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="{Binding Path=ApplicationTitle, Mode=OneWay}"
@@ -43,27 +43,27 @@
                         Vytvoření písničky v systému
                     </TextBlock>
                     <Button Margin="50" Style="{StaticResource PrimaryButton}"
-                            Command="{Binding Path=OpenCreateSongWindowCommand}" 
+                            Command="{Binding Path=OpenCreateSongWindowCommand}"
                             Content="Vytvořit písničku" />
                 </StackPanel>
             </materialDesign:Card>
-            
+
 
             <materialDesign:Card Padding="32" Margin="16">
                 <StackPanel Orientation="Vertical">
                     <TextBlock HorizontalAlignment="Center" FontSize="25">
                         Zobrazení evidence písniček v systému
                     </TextBlock>
-                    <Button Margin="50" 
-                            Style="{StaticResource PrimaryButton}" 
+                    <Button Margin="50"
+                            Style="{StaticResource PrimaryButton}"
                             Command="{Binding Path=OpenSongListWindowCommand}"
                             Content="Zobrazit evidenci písniček" />
                 </StackPanel>
             </materialDesign:Card>
         </WrapPanel>
 
-        <materialDesign:Snackbar Grid.Row="2" 
-                                 HorizontalAlignment="Stretch" 
+        <materialDesign:Snackbar Grid.Row="2"
+                                 HorizontalAlignment="Stretch"
                                  MessageQueue="{Binding BoundMessageQueue}">
         </materialDesign:Snackbar>
     </Grid>

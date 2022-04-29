@@ -17,7 +17,7 @@ public class MainWindowViewModel : BaseViewModel
         "Aplikace pro evidenci písniček a jejich vygenerování do PowerPoint prezentace";
 
     public bool IsConfigurationNotFound => true;
-    
+
     public SnackbarMessageQueue BoundMessageQueue { get; } = new();
 
     public ICommand OpenCreateSongWindowCommand => new RelayCommand(OpenCreateSongWindow);
