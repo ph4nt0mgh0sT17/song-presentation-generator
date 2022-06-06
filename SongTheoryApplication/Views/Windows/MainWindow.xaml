@@ -31,6 +31,7 @@
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                        TextWrapping="WrapWithOverflow"
                        Text="{Binding Path=MainWindowTitleText}"
+                       d:Text="Window title test"
                        FontSize="25">
             </TextBlock>
         </materialDesign:Card>

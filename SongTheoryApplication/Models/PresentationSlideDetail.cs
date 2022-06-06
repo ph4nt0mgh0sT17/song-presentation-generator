@@ -2,6 +2,7 @@
 
 public class PresentationSlideDetail
 {
+    public string? StyleName { get; set; }
     public PresentationFormatStyle PresentationFormatStyle { get; set; }
     public string TextContent { get; set; }
 

@@ -12,6 +12,12 @@
         <Setter Property="Foreground" Value="WhiteSmoke" />
     </Style>
 
+    <Style x:Key="SpecialButton" BasedOn="{StaticResource MaterialDesignRaisedDarkButton}" TargetType="Button">
+        <Setter Property="Background" Value="#05386B" />
+        <Setter Property="BorderBrush" Value="#05386B" />
+        <Setter Property="Foreground" Value="WhiteSmoke" />
+    </Style>
+
     <Style x:Key="PrimaryButton" BasedOn="{StaticResource MaterialDesignRaisedDarkButton}" TargetType="Button">
         <Setter Property="Background" Value="#0d6efd" />
         <Setter Property="BorderBrush" Value="#0d6efd" />

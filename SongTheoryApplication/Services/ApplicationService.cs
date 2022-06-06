@@ -1,13 +1,22 @@
-﻿using SongTheoryApplication.Attributes;
+﻿using System;
+using SongTheoryApplication.Attributes;
 
 namespace SongTheoryApplication.Services;
 
-[Service]
+[Service(true)]
 public class ApplicationService : IApplicationService
 {
-    /// <inheritdoc cref="IApplicationService.IsPowerPointInstalled"/>
-    public bool IsPowerPointInstalled()
+    private bool? _isPowerPointInstalled;
+
+    public bool IsPowerPointInstalled 
     {
-        return true;
+        get
+        {
+            if (_isPowerPointInstalled != null) return (bool)_isPowerPointInstalled;
+
+            _isPowerPointInstalled = Type.GetTypeFromProgID("Powerpoint.Application") != null;
+            return (bool)_isPowerPointInstalled;
+
+        }
     }
 }

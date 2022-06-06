@@ -13,6 +13,7 @@ public partial class LoadingSpinnerControl : UserControl
     public LoadingSpinnerControl()
     {
         InitializeComponent();
+        DataContext = this;
     }
 
     /// <summary>

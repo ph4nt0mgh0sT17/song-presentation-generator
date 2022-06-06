@@ -19,7 +19,7 @@ public class SongService : ISongService
 
     public void CreateSong(CreateSongRequest createSongRequest)
     {
-        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText, createSongRequest.Slides);
+        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText);
 
         try
         {

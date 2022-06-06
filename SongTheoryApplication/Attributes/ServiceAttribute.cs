@@ -9,4 +9,10 @@ namespace SongTheoryApplication.Attributes;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface)]
 public class ServiceAttribute : Attribute
 {
+    public bool IsSingleton { get; }
+
+    public ServiceAttribute(bool isSingleton = false)
+    {
+        IsSingleton = isSingleton;
+    }
 }

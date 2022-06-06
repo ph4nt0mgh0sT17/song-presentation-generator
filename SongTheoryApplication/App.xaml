@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Styles/Fonts.xaml" />
                 <ResourceDictionary Source="Styles/CreateSongPresentationFormatWindow/ThemeStyle.xaml" />
                 <ResourceDictionary Source="Styles/Buttons.xaml" />
+                <ResourceDictionary Source="Styles/Dialogs.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

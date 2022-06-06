@@ -5,18 +5,21 @@ namespace SongTheoryApplication.Models;
 
 public class Song
 {
-    public Song(string title, string text, List<PresentationSlideDetail>? slides)
+    public Song()
+    {
+        Title = "Title";
+        Text = "Text";
+    }
+
+    public Song(string title, string text)
     {
         Guard.IsNotNullOrEmpty(title, nameof(title));
         Guard.IsNotNullOrEmpty(text, nameof(text));
 
         Title = title;
         Text = text;
-        Slides = slides;
     }
 
-    public string Title { get; }
-    public string Text { get; }
-
-    public List<PresentationSlideDetail>? Slides { get; }
+    public string Title { get; set; }
+    public string Text { get; set; }
 }

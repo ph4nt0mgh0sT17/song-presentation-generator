@@ -2,7 +2,7 @@
 
 namespace SongTheoryApplication.ViewModels.Dialogs;
 
-public class ErrorNotificationDialogViewModel : ObservableObject
+public class ErrorNotificationDialogViewModel
 {
     public string Message { get; }
     public string Title { get; }

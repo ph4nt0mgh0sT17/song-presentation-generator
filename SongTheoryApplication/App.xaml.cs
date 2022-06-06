@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Views;
+using SongTheoryApplication.Views.Windows;
 
 namespace SongTheoryApplication;
 

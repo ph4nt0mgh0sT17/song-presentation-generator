@@ -1,7 +1,22 @@
 ﻿{
-  "PresentationSettings": {
-    "FontSize": 15,
-    "FontFamily": "JetBrains Mono",
-    "FontColor": "Red"
-  }
+  "PresentationSettings": [
+    {
+      "Name": "Default",
+      "FontSize": 15,
+      "FontFamily": "JetBrains Mono",
+      "FontColor": "Red"
+    },
+    {
+      "Name": "Style1",
+      "FontSize": 20,
+      "FontFamily": "JetBrains Mono",
+      "FontColor": "Blue"
+    },
+    {
+      "Name": "Style2",
+      "FontSize": 25,
+      "FontFamily": "JetBrains Mono",
+      "FontColor": "Green"
+    }
+  ]
 }

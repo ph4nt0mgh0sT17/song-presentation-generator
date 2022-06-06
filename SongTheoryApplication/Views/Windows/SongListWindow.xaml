@@ -10,79 +10,10 @@
         xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
         xmlns:dialogs="clr-namespace:SongTheoryApplication.ViewModels.Dialogs"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
+        xmlns:entities="clr-namespace:SongTheoryApplication.Models"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:SongListViewModel}"
         Title="SongListWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
-    <Window.Resources>
-        <ResourceDictionary>
-            <DataTemplate DataType="{x:Type dialogs:ErrorNotificationDialogViewModel}">
-                <StackPanel Margin="20">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <materialDesign:PackIcon Kind="Error"
-                                                 Foreground="Red"
-                                                 Height="48"
-                                                 Width="48"
-                                                 Margin="20, 25, 20, 20"
-                                                 Grid.Column="0" />
-                        <StackPanel Margin="20"
-                                    Grid.Column="1"
-                                    MinWidth="300">
-                            <TextBlock Text="{Binding Title}" FontSize="25" />
-                            <TextBlock Text="{Binding Message}"
-                                       Margin="0,20,0,0">
-                            </TextBlock>
-                        </StackPanel>
-                    </Grid>
-                    <Button Content="Ok" HorizontalAlignment="Center" VerticalAlignment="Center"
-                            Style="{StaticResource PrimaryButton}"
-                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" />
-                </StackPanel>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type dialogs:DialogQuestionViewModel}">
-                <StackPanel Margin="20">
-                    <materialDesign:PackIcon Kind="QuestionMark"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"
-                                             Foreground="SkyBlue"
-                                             Height="48"
-                                             Width="48"
-                                             Margin="20, 25, 20, 20" />
-
-                    <TextBlock Text="{Binding QuestionTitle}" FontSize="25" />
-                    <TextBlock Text="{Binding QuestionDescription}"
-                               Margin="0,20,0,0">
-                    </TextBlock>
-
-                    <StackPanel Orientation="Horizontal" Margin="0, 20, 0, 0"
-                                HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Style="{StaticResource PrimaryButton}"
-                                Margin="0,0,20,0"
-                                Content="Ano"
-                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
-                            <Button.CommandParameter>
-                                <system:Boolean>
-                                    True
-                                </system:Boolean>
-                            </Button.CommandParameter>
-                        </Button>
-                        <Button Style="{StaticResource DangerButton}"
-                                Content="Ne"
-                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
-                            <Button.CommandParameter>
-                                <system:Boolean>
-                                    False
-                                </system:Boolean>
-                            </Button.CommandParameter>
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-            </DataTemplate>
-        </ResourceDictionary>
-    </Window.Resources>
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded">
             <behaviors:InvokeCommandAction Command="{Binding Path=OnLoadedCommand}" />
@@ -112,13 +43,13 @@
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="250" />
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Path=Title}" />
-                                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                <TextBlock Grid.Column="0" Text="{Binding Path=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Style="{DynamicResource PrimaryButton}"
                                             Margin="0,0,30,0"
                                             Content="Sdílet"
@@ -131,6 +62,21 @@
                                                     }
                                                 }
                                             }" />
+
+                                    <Button Style="{DynamicResource SpecialButton}"
+                                            Margin="0,0,30,0"
+                                            Content="Generovat prezentaci"
+                                            Command="{
+                                                Binding Path=ViewModel.GenerateSongPresentationCommand, 
+                                                RelativeSource={
+                                                    RelativeSource FindAncestor, 
+                                                    AncestorType={
+                                                        x:Type Window
+                                                    }
+                                                }
+                                            }"
+                                            CommandParameter="{Binding}" />
+
                                     <Button Style="{DynamicResource SecondaryButton}"
                                             Command="{
                                                 Binding Path=ViewModel.EditSongCommand, 
@@ -160,6 +106,13 @@
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <d:ListView.ItemsSource>
+                        <x:Array Type="{x:Type entities:Song}">
+                            <entities:Song Title="Song title 1" Text="Sample text" />
+                            <entities:Song Title="Song title 2" Text="Sample text" />
+                            <entities:Song Title="Song title 3" Text="Sample text" />
+                        </x:Array>
+                    </d:ListView.ItemsSource>
                 </ListView>
             </materialDesign:Card>
         </Grid>

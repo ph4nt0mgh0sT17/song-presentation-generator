@@ -1,27 +1,33 @@
-﻿using CommunityToolkit.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CommunityToolkit.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using NetOffice.OfficeApi.Enums;
 using NetOffice.PowerPointApi;
 using NetOffice.PowerPointApi.Enums;
 using SongTheoryApplication.Attributes;
+using SongTheoryApplication.Configuration;
 using SongTheoryApplication.Models;
+using SongTheoryApplication.Requests;
 
 namespace SongTheoryApplication.Services;
 
 [Service]
 public class PresentationGeneratorService : IPresentationGeneratorService
 {
-    /// <inheritdoc cref="IPresentationGeneratorService.GenerateTestingPresentation" />
-    public void GenerateTestingPresentation(string? songTitle, string? songText, string fileName)
+    private readonly IConfiguration _configuration;
+
+    private Dictionary<string, int> COLORS = new()
     {
-        Guard.IsNotNull(songTitle, nameof(songTitle));
-        Guard.IsNotNull(songText, nameof(songText));
+        { "Red", 16711680 },
+        { "Blue", 255 },
+        { "Green", 32768 }
+    };
 
-        var powerpointApplication = new Application();
 
-        var presentation = GeneratePresentation(songTitle, songText, powerpointApplication);
-        presentation.SaveAs($"{fileName}.pptx");
-
-        ExitPowerpointApplication(powerpointApplication);
+    public PresentationGeneratorService(IConfiguration configuration)
+    {
+        _configuration = configuration;
     }
 
     /// <summary>
@@ -46,7 +52,13 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
 
         GenerateTitleSlide(songTitle, presentation);
-        GenerateTextSlide(songText, presentation);
+        GenerateTextSlide(
+            new PresentationSlideDetail(new PresentationFormatStyle("Center"), songText)
+            {
+                StyleName = "Default"
+            },
+            presentation
+        );
 
         return presentation;
     }
@@ -56,12 +68,20 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     /// </summary>
     /// <param name="songText">The text of the song</param>
     /// <param name="presentation">The <see cref="Presentation" /> object that will contain the slide.</param>
-    private void GenerateTextSlide(string songText, Presentation presentation, int slideIndex = 2)
+    private void GenerateTextSlide(PresentationSlideDetail slideDetail, Presentation presentation, int slideIndex = 2)
     {
+        var configuration = _configuration.Get<ApplicationConfiguration>();
+
+        var defaultSettings = configuration.PresentationSettings.First(x => x.Name == slideDetail.StyleName);
+
         var textSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutBlank);
         var songTextLabel =
-            textSlide.Shapes.AddLabel(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 600, 20);
-        songTextLabel.TextFrame.TextRange.Text = songText;
+            textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 500);
+        songTextLabel.TextFrame.TextRange.Text = slideDetail.TextContent;
+        songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
+        songTextLabel.TextFrame.TextRange.Font.Name = defaultSettings.FontFamily;
+        songTextLabel.TextFrame.TextRange.Font.Size = defaultSettings.FontSize;
+        songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor];
     }
 
     /// <summary>
@@ -77,18 +97,18 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         titleLabel.TextFrame.TextRange.Text = songTitle;
     }
 
-    public void GeneratePresentation(Song? song, string fileName)
+    public void GeneratePresentation(PresentationGenerationRequest? presentationGenerationRequest, string fileName)
     {
-        Guard.IsNotNull(song, nameof(song));
+        Guard.IsNotNull(presentationGenerationRequest, nameof(presentationGenerationRequest));
 
         var powerpointApplication = new Application();
 
         var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
 
         int slideIndex = 1;
-        song.Slides.ForEach(currentSlideFormat =>
+        presentationGenerationRequest.Slides.ForEach(currentSlide =>
         {
-            GenerateTextSlide(currentSlideFormat.TextContent, presentation, slideIndex);
+            GenerateTextSlide(currentSlide, presentation, slideIndex);
             slideIndex++;
         });
 

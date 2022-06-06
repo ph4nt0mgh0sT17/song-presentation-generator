@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using SongTheoryApplication.Attributes;
+using SongTheoryApplication.Constants;
 using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Repositories;
@@ -20,7 +21,7 @@ public class LocalSongRepository : ILocalSongRepository
 
         var songsJsonText = JsonSerializer.Serialize(songs);
 
-        var fileStream = new FileStream(Constants.Constants.SONGS_JSON_FILENAME, FileMode.Create);
+        var fileStream = new FileStream(ApplicationConstants.SONGS_JSON_FILENAME, FileMode.Create);
         using (var streamWriter = new StreamWriter(fileStream))
         {
             streamWriter.Write(songsJsonText);
@@ -36,7 +37,7 @@ public class LocalSongRepository : ILocalSongRepository
 
         var songsJsonText = JsonSerializer.Serialize(songs);
 
-        var fileStream = new FileStream(Constants.Constants.SONGS_JSON_FILENAME, FileMode.Create);
+        var fileStream = new FileStream(ApplicationConstants.SONGS_JSON_FILENAME, FileMode.Create);
         await using (var streamWriter = new StreamWriter(fileStream))
         {
             await streamWriter.WriteAsync(songsJsonText);
@@ -45,7 +46,7 @@ public class LocalSongRepository : ILocalSongRepository
 
     public List<Song> RetrieveAllSongs()
     {
-        if (!File.Exists(Constants.Constants.SONGS_JSON_FILENAME))
+        if (!File.Exists(Constants.ApplicationConstants.SONGS_JSON_FILENAME))
             return new List<Song>();
 
         var songsJsonText = RetrieveJsonFromSongsJsonFile();
@@ -56,17 +57,22 @@ public class LocalSongRepository : ILocalSongRepository
 
     public async Task<List<Song>> RetrieveAllSongsAsync()
     {
-        if (!File.Exists(Constants.Constants.SONGS_JSON_FILENAME))
+        if (!File.Exists(ApplicationConstants.SONGS_JSON_FILENAME))
             return new List<Song>();
 
-        var songsJsonText = RetrieveJsonFromSongsJsonFile();
+        var songsJsonText = await RetrieveJsonFromSongsJsonFileAsync();
 
         return JsonSerializer.Deserialize<List<Song>>(songsJsonText) ??
                throw new InvalidOperationException("The songs could not be retrieved.");
     }
 
-    private string RetrieveJsonFromSongsJsonFile()
+    private static string RetrieveJsonFromSongsJsonFile()
     {
-        return File.ReadAllText(Constants.Constants.SONGS_JSON_FILENAME);
+        return File.ReadAllText(ApplicationConstants.SONGS_JSON_FILENAME);
+    }
+
+    private static async Task<string> RetrieveJsonFromSongsJsonFileAsync()
+    {
+        return await File.ReadAllTextAsync(ApplicationConstants.SONGS_JSON_FILENAME);
     }
 }

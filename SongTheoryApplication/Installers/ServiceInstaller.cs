@@ -24,10 +24,20 @@ public class ServiceInstaller : IInstaller
                 .GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => p.IsInterface)
-                .FirstOrDefault(p => p.IsAssignableFrom(serviceImplementation));
+                .FirstOrDefault(p => p.IsAssignableFrom(serviceImplementation.Type));
 
-            if (serviceInterface != null)
-                services.AddScoped(serviceInterface, serviceImplementation);
+            if (serviceInterface == null) return;
+
+            if (serviceImplementation.IsSingleton)
+            {
+                services.AddSingleton(serviceInterface, serviceImplementation.Type);
+            }
+
+            else
+            {
+                services.AddScoped(serviceInterface, serviceImplementation.Type);
+            }
+
         });
     }
 
@@ -35,15 +45,19 @@ public class ServiceInstaller : IInstaller
     /// Gets all service implementations from the application.
     /// </summary>
     /// <returns>The <see cref="List{T}"/> of all service implementation types.</returns>
-    private List<Type> GetAllServiceImplementations()
+    private List<ServiceType> GetAllServiceImplementations()
     {
         var serviceImplementations = AppDomain.CurrentDomain
             .GetAssemblies()
             .SelectMany(s => s.GetTypes())
             .Where(p => !p.IsInterface)
             .Where(p => p.GetCustomAttribute(typeof(ServiceAttribute)) != null)
+            .Select(x => new ServiceType(x, x.GetCustomAttribute<ServiceAttribute>().IsSingleton))
             .ToList();
 
         return serviceImplementations;
     }
+
+    private record ServiceType(Type Type, bool IsSingleton);
+
 }

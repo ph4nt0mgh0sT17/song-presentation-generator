@@ -19,73 +19,63 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Vytvoření písničky"
-        Height="{Binding Path=Height, Mode=TwoWay}" Width="{Binding Path=Width, Mode=TwoWay}"
-        MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
-        Left="{Binding Path=LeftWindow, Mode=OneWay}" Top="{Binding Path=TopWindow, Mode=OneWay}"
+        Width="1280" Height="720"
         x:Name="CreateSong">
-    <Grid>
-        <StackPanel Orientation="Vertical"
-                    Visibility="{
+    <materialDesign:DialogHost>
+        <Grid>
+            <StackPanel Orientation="Vertical"
+                        Visibility="{
                         Binding Path=PresentationIsBeingGenerated, 
                         Converter={StaticResource ReversedBoolToVisibilityConverter}
                     }">
-            <materialDesign:Card Padding="10" Margin="16">
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                           Padding="15"
-                           Text="{Binding Path=CreateSongWindowTitleText}"
-                           TextWrapping="WrapWithOverflow"
-                           FontSize="25">
-                </TextBlock>
-            </materialDesign:Card>
+                <materialDesign:Card Padding="10" Margin="16">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Padding="15"
+                               Text="{Binding Path=CreateSongWindowTitleText}"
+                               d:Text="Create song form"
+                               TextWrapping="WrapWithOverflow"
+                               FontSize="25">
+                    </TextBlock>
+                </materialDesign:Card>
 
-            <StackPanel Margin="30">
-                <TextBlock TextWrapping="WrapWithOverflow">Název písničky</TextBlock>
-                <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            </StackPanel>
-
-            <StackPanel Margin="30">
-                <TextBlock TextWrapping="Wrap">Text písničky</TextBlock>
-                <TextBox Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                         TextWrapping="WrapWithOverflow"
-                         VerticalScrollBarVisibility="Visible"
-                         AcceptsReturn="True"
-                         Height="100">
-                </TextBox>
-            </StackPanel>
-
-            <Grid>
-                <StackPanel Margin="30" Orientation="Vertical" HorizontalAlignment="Left"
-                            Visibility="{Binding Path=PresentationFormatIsCreated, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <TextBlock Margin="0,0,0,20" Text="Vlastní formát prezentace je již vytvořen." />
-                    <Button
-                        Style="{DynamicResource MaterialDesignRaisedDarkButton}"
-                        Command="{Binding Path=EditSongPresentationFormatCommand}"
-                        Content="Upravit vlastní formát prezentace">
-                    </Button>
+                <StackPanel Margin="30">
+                    <TextBlock TextWrapping="WrapWithOverflow">Název písničky</TextBlock>
+                    <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                 </StackPanel>
 
-                <StackPanel Margin="30" Orientation="Horizontal" HorizontalAlignment="Right"
-                            Visibility="{Binding Path=PresentationFormatIsCreated, Converter={StaticResource ReversedBoolToVisibilityConverter}}">
+                <StackPanel Margin="30">
+                    <TextBlock TextWrapping="Wrap">Text písničky</TextBlock>
+                    <TextBox
+                        Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                    ValidatesOnDataErrors=True, 
+                    ValidatesOnNotifyDataErrors=True}"
+                        TextWrapping="WrapWithOverflow"
+                        VerticalScrollBarVisibility="Visible"
+                        AcceptsReturn="True"
+                        Height="100">
+                    </TextBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button
-                        Style="{DynamicResource MaterialDesignRaisedDarkButton}"
-                        Command="{Binding Path=CreateSongPresentationFormatCommand}"
-                        Content="Vytvořit vlastní formát prezentace">
+                        Margin="0,0,20,0"
+                        Style="{DynamicResource PrimaryButton}"
+                        Command="{Binding Path=CreateSongCommand}"
+                        Content="Uložit">
+                    </Button>
+                    <Button
+                        Style="{DynamicResource SecondaryButton}"
+                        Command="{Binding Path=GenerateSongPresentationCommand}"
+                        Content="Vygenerovat prezentaci">
                     </Button>
                 </StackPanel>
+            </StackPanel>
+
+            <Grid
+                Visibility="{Binding Path=PresentationIsBeingGenerated, Converter={StaticResource BoolToVisibilityConverter}}"
+                d:Visibility="Hidden">
+                <controls:LoadingSpinnerControl LoadingTitle="Právě se generuje prezentace..." />
             </Grid>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button
-                    Style="{DynamicResource MaterialDesignRaisedDarkButton}"
-                    Command="{Binding Path=CreateSongCommand}"
-                    Content="Uložit">
-                </Button>
-            </StackPanel>
-        </StackPanel>
-
-        <Grid
-            Visibility="{Binding Path=PresentationIsBeingGenerated, Converter={StaticResource BoolToVisibilityConverter}}">
-            <controls:LoadingSpinnerControl LoadingTitle="Právě se generuje prezentace..." />
         </Grid>
-    </Grid>
+    </materialDesign:DialogHost>
 </Window>
