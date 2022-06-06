@@ -21,7 +21,8 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     {
         { "Red", 16711680 },
         { "Blue", 255 },
-        { "Green", 32768 }
+        { "Green", 32768 },
+        { "Black", 0 }
     };
 
 
@@ -72,7 +73,16 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     {
         var configuration = _configuration.Get<ApplicationConfiguration>();
 
-        var defaultSettings = configuration.PresentationSettings.First(x => x.Name == slideDetail.StyleName);
+        var defaultSettings =
+            configuration.PresentationSettings?.FirstOrDefault(x => x.Name == slideDetail.StyleName) ??
+            configuration.PresentationSettings?.FirstOrDefault(x => x.Name == "Default") ??
+            new PresentationSetting
+            {
+                Name = "Default",
+                FontColor = "Black",
+                FontFamily = "Times New Roman",
+                FontSize = 15
+            };
 
         var textSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutBlank);
         var songTextLabel =
@@ -81,7 +91,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
         songTextLabel.TextFrame.TextRange.Font.Name = defaultSettings.FontFamily;
         songTextLabel.TextFrame.TextRange.Font.Size = defaultSettings.FontSize;
-        songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor];
+        songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor ?? "Black"];
     }
 
     /// <summary>
