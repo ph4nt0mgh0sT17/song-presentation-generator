@@ -9,11 +9,18 @@ namespace SongTheoryApplication;
 
 public static class SongUtility
 {
+    /// <summary>
+    /// Parses the song text into <see cref="List{T}"/> of <see cref="PresentationSlideDetail"/> objects.
+    /// </summary>
+    /// <param name="songText">The <see cref="string"/> text to be parsed.</param>
+    /// <returns><see cref="List{T}"/> of <see cref="PresentationSlideDetail"/> objcets.</returns>
+    /// <exception cref="SongTextParseException">When the text cannot be parsed.</exception>
     public static List<PresentationSlideDetail> ParseSongTextIntoSlides(string? songText)
     {
         Guard.IsNotNull(songText, nameof(songText));
 
-        var songTextLines = songText.Split('\n').Select(s => s.Trim()).ToList();
+        var songTextLines = SplitToLines(songText);
+
         var slides = new List<PresentationSlideDetail>();
 
         PresentationSlideDetail? currentPresentationSlide;
@@ -26,6 +33,7 @@ public static class SongUtility
                 StyleName = pattern.Groups[1].Value
             };
         }
+
         else
         {
             currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
@@ -60,17 +68,19 @@ public static class SongUtility
                     pattern = Regex.Match(currentTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
                     if (pattern.Success)
                     {
-                        currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-                        {
-                            StyleName = pattern.Groups[1].Value
-                        };
+                        currentPresentationSlide =
+                            new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
+                            {
+                                StyleName = pattern.Groups[1].Value
+                            };
                     }
                     else
                     {
-                        currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-                        {
-                            StyleName = "Default"
-                        };
+                        currentPresentationSlide =
+                            new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
+                            {
+                                StyleName = "Default"
+                            };
                     }
 
                     continue;
@@ -79,10 +89,11 @@ public static class SongUtility
                 if (currentTextLine.StartsWith("/new-slide"))
                 {
                     slides.Add(currentPresentationSlide);
-                    currentPresentationSlide = new PresentationSlideDetail(currentPresentationSlide.PresentationFormatStyle, "")
-                    {
-                        StyleName = currentPresentationSlide.StyleName
-                    };
+                    currentPresentationSlide =
+                        new PresentationSlideDetail(currentPresentationSlide.PresentationFormatStyle, "")
+                        {
+                            StyleName = currentPresentationSlide.StyleName
+                        };
 
                     continue;
                 }
@@ -97,5 +108,37 @@ public static class SongUtility
         }
 
         return slides;
+    }
+
+    private static List<string> SplitToLines(string songText)
+    {
+        var songTextLines = songText.Split('\n')
+            .Select(line => line.Trim())
+            .ToList();
+        return songTextLines;
+    }
+
+    private static PresentationSlideDetail CreateNewPresentationSlideDetail(string songTextLine)
+    {
+        var pattern = Regex.Match(songTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
+        if (pattern.Success)
+        {
+            return new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
+            {
+                StyleName = pattern.Groups[1].Value
+            };
+        }
+
+        var currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
+        {
+            StyleName = "Default"
+        };
+
+        if (!songTextLine.StartsWith("/use-style"))
+        {
+            currentPresentationSlide.TextContent += songTextLine + "\n";
+        }
+
+        return currentPresentationSlide;
     }
 }

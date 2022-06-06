@@ -22,20 +22,17 @@ public sealed partial class App : Application
 
     private static IServiceProvider ConfigureServices()
     {
-        var serviceCollection = new ServiceCollection();
-        serviceCollection
+        return new ServiceCollection()
             .AddLogger()
-            .AddConfiguration();
-
-        serviceCollection.InstallAllServices();
-
-        return serviceCollection.BuildServiceProvider();
+            .AddConfiguration()
+            .InstallAllServices()
+            .BuildServiceProvider();
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        var mainWindow = new ApplicationSettingsWindow();
+        var mainWindow = new MainWindow();
         mainWindow.Show();
     }
 }

@@ -13,10 +13,12 @@ public static class InstallerExtensions
     /// An extension that finds all IInstaller implementation classes and invokes their ConfigureServices method.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> that includes all injected services.</param>
-    public static void InstallAllServices(this IServiceCollection services)
+    public static IServiceCollection InstallAllServices(this IServiceCollection services)
     {
         var installers = GetAllInstallers();
         installers.ForEach(installer => installer.ConfigureServices(services));
+
+        return services;
     }
 
     private static List<IInstaller> GetAllInstallers()
