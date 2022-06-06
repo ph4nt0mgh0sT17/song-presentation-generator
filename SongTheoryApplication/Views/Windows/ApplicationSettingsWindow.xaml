@@ -43,6 +43,15 @@
                                           CommandParameter="{Binding Path=Name}">
                             </MouseBinding>
                         </Grid.InputBindings>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Cursor" Value="Hand" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
                         <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Center" VerticalAlignment="Center"
                                    TextAlignment="Center"
                                    FontSize="30" TextWrapping="Wrap"
