@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Models;
@@ -17,18 +20,34 @@ public class SongService : ISongService
         _localSongRepository = localSongRepository;
     }
 
-    public void CreateSong(CreateSongRequest createSongRequest)
+    public async Task CreateSongAsync(CreateSongRequest? createSongRequest)
     {
+        Guard.IsNotNull(createSongRequest);
+
+        var allSongs = await _localSongRepository.RetrieveAllSongsAsync();
+
+        if (allSongs.Any(song => song.Title == createSongRequest.SongTitle))
+        {
+            throw new SongAlreadyExistsException(createSongRequest.SongTitle);
+        }
+
         var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText);
 
         try
         {
-            _localSongRepository.SaveSong(song);
+            await _localSongRepository.SaveSongAsync(song);
         }
 
         catch (Exception ex)
         {
             throw new SongCannotBeCreatedException("Song cannot be created.", ex);
         }
+    }
+
+    public async Task DeleteSongAsync(DeleteSongRequest? deleteSongRequest)
+    {
+        Guard.IsNotNull(deleteSongRequest);
+
+        await _localSongRepository.DeleteSongAsync(deleteSongRequest.SongTitle);
     }
 }

@@ -33,15 +33,18 @@ public partial class SongListViewModel : BaseViewModel
     [ObservableProperty] private bool _songsAreLoading;
 
     private readonly ILocalSongRepository _localSongRepository;
+    private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
     private readonly ILogger<SongListViewModel> _logger;
 
     public SongListViewModel(
         ILocalSongRepository localSongRepository,
+        ISongService songService,
         IPresentationGeneratorService presentationGeneratorService,
         ILogger<SongListViewModel> logger)
     {
         _localSongRepository = localSongRepository;
+        _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
         _logger = logger;
     }
@@ -50,7 +53,7 @@ public partial class SongListViewModel : BaseViewModel
     private async Task OnLoadedAsync()
     {
         SongsAreLoading = true;
-        var songs = await new LocalSongRepository().RetrieveAllSongsAsync();
+        var songs = await _localSongRepository.RetrieveAllSongsAsync();
 
         Songs = new ObservableCollection<Song>(songs);
         SongsAreLoading = false;
@@ -69,7 +72,7 @@ public partial class SongListViewModel : BaseViewModel
 
         if (result is true)
         {
-            await _localSongRepository.DeleteSongAsync(song.Title);
+            await _songService.DeleteSongAsync(new DeleteSongRequest(song.Title));
             Songs.Remove(song);
         }
     }

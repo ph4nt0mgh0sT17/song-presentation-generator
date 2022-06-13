@@ -11,7 +11,7 @@ public interface ILocalSongRepository
     /// Saves a new song into the local song repository.
     /// </summary>
     /// <param name="song">The <see cref="Song" /> to be saved.</param>
-    void SaveSong(Song song);
+    Task SaveSongAsync(Song song);
 
     /// <summary>
     /// Deletes a song recognized by given songTitle.
@@ -20,5 +20,9 @@ public interface ILocalSongRepository
     /// <exception cref="ArgumentNullException">Thrown when songTitle is null.</exception>
     Task DeleteSongAsync(string? songTitle);
 
+    /// <summary>
+    /// Retrieves all songs stored in the system.
+    /// </summary>
+    /// <returns>The <see cref="List{T}"/> of <see cref="Song"/> objects.</returns>
     Task<List<Song>> RetrieveAllSongsAsync();
 }

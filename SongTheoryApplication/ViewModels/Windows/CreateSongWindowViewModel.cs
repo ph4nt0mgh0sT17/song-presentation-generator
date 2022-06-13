@@ -61,7 +61,6 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     public CreateSongWindow? CreateSongWindow { get; set; }
 
 
-
     public CreateSongWindowViewModel(
         ISongService songService,
         IPresentationGeneratorService presentationGeneratorService,
@@ -95,7 +94,20 @@ public partial class CreateSongWindowViewModel : ObservableValidator
 
         var createSongRequest = new CreateSongRequest(SongTitle, SongText);
 
-        await Task.Run(() => { _songService.CreateSong(createSongRequest); });
+        try
+        {
+            await _songService.CreateSongAsync(createSongRequest);
+        }
+
+        catch (SongAlreadyExistsException)
+        {
+            await DialogHost.Show(new ErrorNotificationDialogViewModel(
+                "Písnička nemohla být vytvořena, protože už existuje písnička se stejným jménem.",
+                "Písnička nemohla být vytvořena"
+            ));
+
+            return;
+        }
 
         if (CreateSongWindow == null)
         {
