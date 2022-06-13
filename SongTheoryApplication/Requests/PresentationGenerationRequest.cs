@@ -6,11 +6,16 @@ namespace SongTheoryApplication.Requests;
 
 public class PresentationGenerationRequest
 {
-    public PresentationGenerationRequest(List<PresentationSlideDetail>? slides)
+    public string SongTitle { get; }
+    public List<PresentationSlideDetail> Slides { get; }
+
+    public PresentationGenerationRequest(string? songTitle, List<PresentationSlideDetail>? slides)
     {
         Guard.IsNotNull(slides, nameof(slides));
+        Guard.IsNotNull(songTitle, nameof(songTitle));
+        SongTitle = songTitle;
         Slides = slides;
     }
 
-    public List<PresentationSlideDetail> Slides { get; }
+    
 }

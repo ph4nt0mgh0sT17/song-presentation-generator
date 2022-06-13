@@ -42,29 +42,6 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     }
 
     /// <summary>
-    ///     Generates the whole PowerPoint presentation.
-    /// </summary>
-    /// <param name="songTitle">The title of the song.</param>
-    /// <param name="songText">The text of the song.</param>
-    /// <param name="powerpointApplication">The PowerPoint application running in the background.</param>
-    /// <returns>The <see cref="Presentation" /> object that is used to save the presentation to specific file name location.</returns>
-    private Presentation GeneratePresentation(string songTitle, string songText, Application powerpointApplication)
-    {
-        var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
-
-        GenerateTitleSlide(songTitle, presentation);
-        GenerateTextSlide(
-            new PresentationSlideDetail(new PresentationFormatStyle("Center"), songText)
-            {
-                StyleName = "Default"
-            },
-            presentation
-        );
-
-        return presentation;
-    }
-
-    /// <summary>
     ///     Generates the slide with the text of the song.
     /// </summary>
     /// <param name="songText">The text of the song</param>
@@ -99,9 +76,9 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     /// </summary>
     /// <param name="songTitle">The title of the song</param>
     /// <param name="presentation">The <see cref="Presentation" /> object that will contain the slide.</param>
-    private void GenerateTitleSlide(string songTitle, Presentation presentation)
+    private void GenerateTitleSlide(string songTitle, Presentation presentation, int slideIndex = 1)
     {
-        var titleSlide = presentation.Slides.Add(1, PpSlideLayout.ppLayoutTitleOnly);
+        var titleSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutTitleOnly);
 
         var titleLabel = titleSlide.Shapes.Title;
         titleLabel.TextFrame.TextRange.Text = songTitle;
@@ -121,6 +98,49 @@ public class PresentationGeneratorService : IPresentationGeneratorService
             GenerateTextSlide(currentSlide, presentation, slideIndex);
             slideIndex++;
         });
+
+        presentation.SaveAs($"{fileName}.pptx");
+
+        ExitPowerpointApplication(powerpointApplication);
+    }
+
+    public void GenerateMultipleSongsPresentation(
+        List<PresentationGenerationRequest>? presentationGenerationRequests,
+        bool addEmptySlidesBetweenSongs,
+        string fileName)
+    {
+        Guard.IsNotNull(presentationGenerationRequests, nameof(presentationGenerationRequests));
+
+        var powerpointApplication = new Application();
+
+        var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
+
+        var slideIndex = 1;
+        for (var i = 0; i < presentationGenerationRequests.Count; i++)
+        {
+            if (i != 0)
+            {
+                GenerateTextSlide(
+                    new PresentationSlideDetail(new PresentationFormatStyle("Unknown"), ""),
+                    presentation, 
+                    slideIndex
+                );
+
+                slideIndex++;
+            }
+
+            var presentationGenerationRequest = presentationGenerationRequests[i];
+
+            GenerateTitleSlide(presentationGenerationRequest.SongTitle, presentation, slideIndex);
+            slideIndex++;
+
+            presentationGenerationRequest.Slides.ForEach(currentSlide =>
+            {
+                GenerateTextSlide(currentSlide, presentation, slideIndex);
+                slideIndex++;
+            });
+        }
+
 
         presentation.SaveAs($"{fileName}.pptx");
 

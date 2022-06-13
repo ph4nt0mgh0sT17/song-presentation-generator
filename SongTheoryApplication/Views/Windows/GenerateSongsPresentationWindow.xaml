@@ -1,0 +1,135 @@
+﻿<Window x:Class="SongTheoryApplication.Views.Windows.GenerateSongsPresentationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:windows="clr-namespace:SongTheoryApplication.ViewModels.Windows"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:entities="clr-namespace:SongTheoryApplication.Models"
+        xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance windows:GenerateSongPresentationViewModel}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Vygenerování prezentace písniček"
+        Width="1280" Height="720"
+        x:Name="GenerateSongsPresentation">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding Path=OnLoadedCommand}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    <materialDesign:DialogHost CloseOnClickAway="True" Identifier="GenerateSongPresentationDialog">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <materialDesign:Card Grid.Row="0" Padding="10" Margin="16">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Padding="15"
+                           Text="Vygenerování prezentace písniček"
+                           TextWrapping="WrapWithOverflow"
+                           FontSize="25">
+                </TextBlock>
+            </materialDesign:Card>
+            <Grid Grid.Row="1" Visibility="{Binding Path=PresentationIsGenerating, Converter={StaticResource ReversedBoolToVisibilityConverter}}"
+                  d:Visibility="Visible">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <materialDesign:Card Padding="10" Margin="16" Grid.Column="0">
+                    <ListView ItemsSource="{Binding Path=AllSongs}"
+                              SelectedItem="{Binding Path=SelectedSong}"
+                              ScrollViewer.CanContentScroll="True"
+                              HorizontalContentAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <materialDesign:Card Padding="10">
+                                    <TextBlock Padding="15" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Text="{Binding Path=Title}"
+                                               TextWrapping="WrapWithOverflow"
+                                               FontSize="25">
+                                    </TextBlock>
+                                </materialDesign:Card>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <d:ListView.ItemsSource>
+                            <x:Array Type="{x:Type entities:Song}">
+                                <entities:Song Title="Song title 1" Text="Sample text" />
+                                <entities:Song Title="Song title 2" Text="Sample text" />
+                                <entities:Song Title="Song title 3" Text="Sample text" />
+                            </x:Array>
+                        </d:ListView.ItemsSource>
+                    </ListView>
+                </materialDesign:Card>
+
+                <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center"
+                            HorizontalAlignment="Right">
+                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
+                            HorizontalAlignment="Center"
+                            Content="&#62;"
+                            Command="{Binding Path=SelectSongCommand}" />
+                    <Button Style="{DynamicResource PrimaryButton}"
+                            HorizontalAlignment="Center"
+                            Content="&#60;"
+                            Command="{Binding Path=DeselectSongCommand}" />
+                </StackPanel>
+
+                <materialDesign:Card Padding="10" Margin="16" Grid.Column="2">
+                    <ListView ItemsSource="{Binding Path=SelectedSongs}"
+                              SelectedItem="{Binding Path=SelectedSongToDeselect}"
+                              ScrollViewer.CanContentScroll="True"
+                              HorizontalContentAlignment="Stretch">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <materialDesign:Card Padding="10">
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               Padding="15"
+                                               Text="{Binding Path=Title}"
+                                               TextWrapping="WrapWithOverflow"
+                                               FontSize="25">
+                                    </TextBlock>
+                                </materialDesign:Card>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <d:ListView.ItemsSource>
+                            <x:Array Type="{x:Type entities:Song}">
+                                <entities:Song Title="Song title 1" Text="Sample text" />
+                                <entities:Song Title="Song title 2" Text="Sample text" />
+                                <entities:Song Title="Song title 3" Text="Sample text" />
+                            </x:Array>
+                        </d:ListView.ItemsSource>
+                    </ListView>
+                </materialDesign:Card>
+            </Grid>
+            <Grid Grid.Row="1"
+                Visibility="{Binding Path=PresentationIsGenerating, Converter={StaticResource BoolToVisibilityConverter}}"
+                d:Visibility="Hidden">
+                <controls:LoadingSpinnerControl LoadingTitle="Právě se generuje prezentace..." />
+            </Grid>
+            <StackPanel 
+                Visibility="{Binding Path=PresentationIsGenerating, Converter={StaticResource ReversedBoolToVisibilityConverter}}" 
+                HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Grid.Row="2">
+                <CheckBox Margin="0,0,0,10" 
+                          Content="Přidat prázdný slide mezi písničky"
+                          IsChecked="{Binding Path=IsAddEmptySlideBetweenSongsChecked}" 
+                          d:IsChecked="True" />
+                <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
+                        HorizontalAlignment="Center"
+                        Content="Generovat prezentaci"
+                        Command="{Binding Path=GeneratePresentationCommand}" />
+            </StackPanel>
+        </Grid>
+    </materialDesign:DialogHost>
+</Window>

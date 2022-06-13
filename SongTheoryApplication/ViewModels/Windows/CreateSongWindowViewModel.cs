@@ -145,7 +145,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
                 await Task.Run(() =>
                 {
                     _presentationGeneratorService.GeneratePresentation(
-                        new PresentationGenerationRequest(slideTexts),
+                        new PresentationGenerationRequest(SongTitle, slideTexts),
                         fileName
                     );
                 });

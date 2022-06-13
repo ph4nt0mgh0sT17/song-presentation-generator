@@ -108,7 +108,7 @@ public partial class SongListViewModel : BaseViewModel
                     var slides = SongUtility.ParseSongTextIntoSlides(song.Text);
 
                     _presentationGeneratorService.GeneratePresentation(
-                        new PresentationGenerationRequest(slides),
+                        new PresentationGenerationRequest(song.Title, slides),
                         fileName
                     );
                 });

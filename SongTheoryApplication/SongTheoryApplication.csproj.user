@@ -10,7 +10,7 @@
     <Compile Update="Views\UserControls\TestPage2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Windows\ApplicationSettingsWindow.xaml.cs">
+    <Compile Update="Views\Windows\GenerateSongsPresentationWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Windows\LayoutWindow.xaml.cs">
@@ -27,7 +27,7 @@
     <Page Update="Views\UserControls\TestPage2.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Windows\ApplicationSettingsWindow.xaml">
+    <Page Update="Views\Windows\GenerateSongsPresentationWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Windows\LayoutWindow.xaml">

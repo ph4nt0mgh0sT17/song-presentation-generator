@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SongTheoryApplication.Models;
 
@@ -18,4 +19,6 @@ public interface ILocalSongRepository
     /// <param name="songTitle">The title name of the song to be removed.</param>
     /// <exception cref="ArgumentNullException">Thrown when songTitle is null.</exception>
     Task DeleteSongAsync(string? songTitle);
+
+    Task<List<Song>> RetrieveAllSongsAsync();
 }

@@ -71,4 +71,10 @@ public partial class MainWindowViewModel : BaseViewModel
     {
         new SongListWindow().ShowDialog();
     }
+
+    [ICommand]
+    public void OpenGenerateSongsPresentationWindow()
+    {
+        new GenerateSongsPresentationWindow().ShowDialog();
+    }
 }

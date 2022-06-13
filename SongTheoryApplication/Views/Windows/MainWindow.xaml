@@ -61,6 +61,18 @@
                             Content="Zobrazit evidenci písniček" />
                 </StackPanel>
             </materialDesign:Card>
+
+            <materialDesign:Card Padding="32" Margin="16">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock HorizontalAlignment="Center" FontSize="25">
+                        Vygenerování prezentace písniček
+                    </TextBlock>
+                    <Button Margin="50"
+                            Style="{StaticResource PrimaryButton}"
+                            Command="{Binding Path=OpenGenerateSongsPresentationWindowCommand}"
+                            Content="Vygenerovat prezentaci písniček" />
+                </StackPanel>
+            </materialDesign:Card>
         </WrapPanel>
 
         <materialDesign:Snackbar Grid.Row="2"
