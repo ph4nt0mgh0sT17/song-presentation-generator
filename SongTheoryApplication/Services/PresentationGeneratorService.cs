@@ -17,7 +17,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
 {
     private readonly IConfiguration _configuration;
 
-    private Dictionary<string, int> COLORS = new()
+    private readonly Dictionary<string, int> COLORS = new()
     {
         { "Red", 16711680 },
         { "Blue", 255 },
@@ -116,34 +116,51 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
 
         var slideIndex = 1;
-        for (var i = 0; i < presentationGenerationRequests.Count; i++)
+        for (var index = 0; index < presentationGenerationRequests.Count; index++)
         {
-            if (i != 0)
+            if (CanAddEmptySlidesBetweenSongs(addEmptySlidesBetweenSongs, index))
             {
-                GenerateTextSlide(
-                    new PresentationSlideDetail(new PresentationFormatStyle("Unknown"), ""),
-                    presentation, 
-                    slideIndex
-                );
-
-                slideIndex++;
+                CreateEmptySlide(presentation, ref slideIndex);
             }
 
-            var presentationGenerationRequest = presentationGenerationRequests[i];
+            var presentationGenerationRequest = presentationGenerationRequests[index];
 
-            GenerateTitleSlide(presentationGenerationRequest.SongTitle, presentation, slideIndex);
-            slideIndex++;
-
-            presentationGenerationRequest.Slides.ForEach(currentSlide =>
-            {
-                GenerateTextSlide(currentSlide, presentation, slideIndex);
-                slideIndex++;
-            });
+            GenerateSongSlides(presentationGenerationRequest, presentation, ref slideIndex);
         }
-
 
         presentation.SaveAs($"{fileName}.pptx");
 
         ExitPowerpointApplication(powerpointApplication);
+    }
+
+    private void GenerateSongSlides(
+        PresentationGenerationRequest presentationGenerationRequest,
+        Presentation presentation,
+        ref int slideIndex)
+    {
+        GenerateTitleSlide(presentationGenerationRequest.SongTitle, presentation, slideIndex);
+        slideIndex++;
+
+        foreach (var currentSlide in presentationGenerationRequest.Slides)
+        {
+            GenerateTextSlide(currentSlide, presentation, slideIndex);
+            slideIndex++;
+        }
+    }
+
+    private static bool CanAddEmptySlidesBetweenSongs(bool addEmptySlidesBetweenSongs, int index)
+    {
+        return addEmptySlidesBetweenSongs && index != 0;
+    }
+
+    private void CreateEmptySlide(Presentation presentation, ref int slideIndex)
+    {
+        GenerateTextSlide(
+            new PresentationSlideDetail(new PresentationFormatStyle("Unknown"), ""),
+            presentation,
+            slideIndex
+        );
+
+        slideIndex++;
     }
 }

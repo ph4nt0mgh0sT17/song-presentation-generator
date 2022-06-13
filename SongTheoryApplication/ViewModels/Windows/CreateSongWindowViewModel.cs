@@ -97,6 +97,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
         try
         {
             await _songService.CreateSongAsync(createSongRequest);
+            await DisplaySuccessDialog();
         }
 
         catch (SongAlreadyExistsException)
@@ -105,10 +106,21 @@ public partial class CreateSongWindowViewModel : ObservableValidator
                 "Písnička nemohla být vytvořena, protože už existuje písnička se stejným jménem.",
                 "Písnička nemohla být vytvořena"
             ));
-
-            return;
         }
 
+        catch (SongCannotBeCreatedException)
+        {
+            await DialogHost.Show(new ErrorNotificationDialogViewModel(
+                "Písnička nemohla být vytvořena.",
+                "Písnička nemohla být vytvořena"
+            ));
+        }
+
+        
+    }
+
+    private async Task DisplaySuccessDialog()
+    {
         if (CreateSongWindow == null)
         {
             await DialogHost.Show(new SuccessNotificationDialogViewModel(
@@ -123,6 +135,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
                 "Písnička úspěšně vytvořena!",
                 "Písnička byla úspěšně vytvořena."
             ));
+
             CreateSongWindow.Close();
         }
     }
