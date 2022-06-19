@@ -7,41 +7,25 @@ namespace SongTheoryApplication.Tests.Models;
 
 public class SongTests
 {
-    [Fact(DisplayName = "Call constructor throws ArgumentNullException when null song title is supplied")]
-    public void Constructor_ThrowsArgumentNullException_WhenSongTitleIsNull()
+    [Theory(DisplayName = "Call constructor throws ArgumentNullException when parameters are null")]
+    [InlineData(null, null)]
+    [InlineData("Title", null)]
+    public void Constructor_ThrowsArgumentNullException_WhenParametersAreNull(string? songTitle, string? songText)
     {
         // Arrange
-        var act = () => new Song(null, null, null);
+        var act = () => new Song(songTitle, songText);
 
         // Act + Assert
         act.Should().Throw<ArgumentNullException>();
     }
 
-    [Fact(DisplayName = "Call constructor throws ArgumentException when empty song title is supplied")]
-    public void Constructor_ThrowsArgumentException_WhenSongTitleIsEmpty()
+    [Theory(DisplayName = "Call constructor throws ArgumentException when parameters are illegal")]
+    [InlineData("", null)]
+    [InlineData("Title", "")]
+    public void Constructor_ThrowsArgumentException_WhenParametersAreIllegal(string? songTitle, string? songText)
     {
         // Arrange
-        var act = () => new Song("", null, null);
-
-        // Act + Assert
-        act.Should().Throw<ArgumentException>();
-    }
-
-    [Fact(DisplayName = "Call constructor throws ArgumentNullException when null song text is supplied")]
-    public void Constructor_ThrowsArgumentNullException_WhenSongTextIsNull()
-    {
-        // Arrange
-        var act = () => new Song("Song title", null, null);
-
-        // Act + Assert
-        act.Should().Throw<ArgumentNullException>();
-    }
-
-    [Fact(DisplayName = "Call constructor throws ArgumentException when empty song text is supplied")]
-    public void Constructor_ThrowsArgumentException_WhenSongTextIsEmpty()
-    {
-        // Arrange
-        var act = () => new Song("Song title", "", null);
+        var act = () => new Song(songTitle, songText);
 
         // Act + Assert
         act.Should().Throw<ArgumentException>();
@@ -51,7 +35,7 @@ public class SongTests
     public void Constructor_Passes_WhenAllArgumentsAreValid()
     {
         // Arrange
-        var act = () => new Song("Song title", "Song text", null);
+        var act = () => new Song("Song title", "Song text");
 
         // Act + Assert
         act.Should().NotThrow();
