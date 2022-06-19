@@ -37,6 +37,7 @@ public partial class SongListViewModel : BaseViewModel
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
     private readonly ISaveFileDialogProvider _saveFileDialogProvider;
+    private readonly IDialogHostService _dialogHostService;
     private readonly ILogger<SongListViewModel> _logger;
 
     public SongListViewModel(
@@ -44,6 +45,7 @@ public partial class SongListViewModel : BaseViewModel
         ISongService songService,
         IPresentationGeneratorService presentationGeneratorService,
         ISaveFileDialogProvider saveFileDialogProvider,
+        IDialogHostService dialogHostService,
         ILogger<SongListViewModel> logger)
     {
         _localSongRepository = localSongRepository;
@@ -51,6 +53,7 @@ public partial class SongListViewModel : BaseViewModel
         _presentationGeneratorService = presentationGeneratorService;
         _logger = logger;
         _saveFileDialogProvider = saveFileDialogProvider;
+        _dialogHostService = dialogHostService;
     }
 
     [ICommand]
@@ -66,7 +69,7 @@ public partial class SongListViewModel : BaseViewModel
     [ICommand]
     private async Task DeleteSong(Song song)
     {
-        var result = await DialogHost.Show(
+        var result = await _dialogHostService.OpenDialog(
             new DialogQuestionViewModel(
                 $"Chcete doopravdy smazat píseň '{song.Title}'?",
                 $"Chcete doopravdy smazat píseň '{song.Title}'?"
@@ -125,7 +128,7 @@ public partial class SongListViewModel : BaseViewModel
                 foreach (var innerException in ex.InnerExceptions)
                 {
                     if (innerException is not Exception) continue;
-                    await DialogHost.Show(new ErrorNotificationDialogViewModel(
+                    await _dialogHostService.OpenDialog(new ErrorNotificationDialogViewModel(
                         "Prezentace písničky nemohla být úspěšně vygenerována. Kontaktujte administrátora.",
                         "Chyba"
                     ), "SongListDialog");
@@ -145,16 +148,16 @@ public partial class SongListViewModel : BaseViewModel
         catch (InvalidOperationException ex)
         {
             _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
-            await DialogHost.Show(new ErrorNotificationDialogViewModel(
+            await _dialogHostService.OpenDialog(new ErrorNotificationDialogViewModel(
                 "Prezentace nemůže být z neznámých důvodu spuštěna. Prosím spusťte ji manuálně.",
                 "Chyba"
             ), "SongListDialog");
         }
     }
 
-    private static async Task<object?> DisplaySuccessGeneratedPresentationDialog()
+    private async Task<object?> DisplaySuccessGeneratedPresentationDialog()
     {
-        var answer = await DialogHost.Show(new DialogQuestionViewModel(
+        var answer = await _dialogHostService.OpenDialog(new DialogQuestionViewModel(
             "Úspěch",
             "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
         ), "SongListDialog");
