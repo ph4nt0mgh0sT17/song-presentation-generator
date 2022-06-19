@@ -19,6 +19,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
 
     private readonly Dictionary<string, int> COLORS = new()
     {
+        // TODO: Add more colors (only basic ones) -> It is not expected to be some fancy colors
         { "Red", 16711680 },
         { "Blue", 255 },
         { "Green", 32768 },

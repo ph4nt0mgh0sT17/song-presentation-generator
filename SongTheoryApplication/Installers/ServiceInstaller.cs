@@ -37,7 +37,6 @@ public class ServiceInstaller : IInstaller
             {
                 services.AddScoped(serviceInterface, serviceImplementation.Type);
             }
-
         });
     }
 
@@ -59,5 +58,4 @@ public class ServiceInstaller : IInstaller
     }
 
     private record ServiceType(Type Type, bool IsSingleton);
-
 }

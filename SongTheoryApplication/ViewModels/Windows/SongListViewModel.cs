@@ -14,6 +14,7 @@ using Microsoft.Win32;
 using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
+using SongTheoryApplication.Providers;
 using SongTheoryApplication.Repositories;
 using SongTheoryApplication.Requests;
 using SongTheoryApplication.Services;
@@ -35,18 +36,21 @@ public partial class SongListViewModel : BaseViewModel
     private readonly ILocalSongRepository _localSongRepository;
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
+    private readonly ISaveFileDialogProvider _saveFileDialogProvider;
     private readonly ILogger<SongListViewModel> _logger;
 
     public SongListViewModel(
         ILocalSongRepository localSongRepository,
         ISongService songService,
         IPresentationGeneratorService presentationGeneratorService,
+        ISaveFileDialogProvider saveFileDialogProvider,
         ILogger<SongListViewModel> logger)
     {
         _localSongRepository = localSongRepository;
         _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
         _logger = logger;
+        _saveFileDialogProvider = saveFileDialogProvider;
     }
 
     [ICommand]
@@ -98,7 +102,7 @@ public partial class SongListViewModel : BaseViewModel
     [ICommand]
     private async Task GenerateSongPresentation(Song song)
     {
-        var saveFileDialog = new SaveFileDialog();
+        var saveFileDialog = _saveFileDialogProvider.ProvideSaveFileDialog();
 
         if (saveFileDialog.ShowDialog() == true)
         {
@@ -106,35 +110,13 @@ public partial class SongListViewModel : BaseViewModel
 
             try
             {
-                await Task.Run(() =>
-                {
-                    var slides = SongUtility.ParseSongTextIntoSlides(song.Text);
+                await GeneratePowerpointPresentation(song, fileName);
 
-                    _presentationGeneratorService.GeneratePresentation(
-                        new PresentationGenerationRequest(song.Title, slides),
-                        fileName
-                    );
-                });
-
-                var answer = await DialogHost.Show(new DialogQuestionViewModel(
-                    "Úspěch",
-                    "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
-                ), "SongListDialog");
+                var answer = await DisplaySuccessGeneratedPresentationDialog();
 
                 if (answer is true)
                 {
-                    try
-                    {
-                        ProcessExtensions.StartFileProcess($"{fileName}.pptx");
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
-                        await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                            "Prezentace nemůže být z neznámých důvodu spuštěna. Prosím spusťte ji manuálně.",
-                            "Chyba"
-                        ), "SongListDialog");
-                    }
+                    await OpenPresentation(fileName);
                 }
             }
 
@@ -152,5 +134,43 @@ public partial class SongListViewModel : BaseViewModel
                 }
             }
         }
+    }
+
+    private async Task OpenPresentation(string fileName)
+    {
+        try
+        {
+            ProcessExtensions.StartFileProcess($"{fileName}.pptx");
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
+            await DialogHost.Show(new ErrorNotificationDialogViewModel(
+                "Prezentace nemůže být z neznámých důvodu spuštěna. Prosím spusťte ji manuálně.",
+                "Chyba"
+            ), "SongListDialog");
+        }
+    }
+
+    private static async Task<object?> DisplaySuccessGeneratedPresentationDialog()
+    {
+        var answer = await DialogHost.Show(new DialogQuestionViewModel(
+            "Úspěch",
+            "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
+        ), "SongListDialog");
+        return answer;
+    }
+
+    private async Task GeneratePowerpointPresentation(Song song, string fileName)
+    {
+        await Task.Run(() =>
+        {
+            var slides = SongUtility.ParseSongTextIntoSlides(song.Text);
+
+            _presentationGeneratorService.GeneratePresentation(
+                new PresentationGenerationRequest(song.Title, slides),
+                fileName
+            );
+        });
     }
 }

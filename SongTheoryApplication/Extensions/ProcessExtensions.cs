@@ -10,7 +10,9 @@ public static class ProcessExtensions
     /// Starts the process.
     /// </summary>
     /// <param name="fileName">The file name of the file to be started.</param>
-    /// <exception cref="InvalidOperationException">When the process cannot be started.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// When the process cannot be started.
+    /// </exception>
     public static void StartFileProcess(string? fileName)
     {
         Guard.IsNotNull(fileName);

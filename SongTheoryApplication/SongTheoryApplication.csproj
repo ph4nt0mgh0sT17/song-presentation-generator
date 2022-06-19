@@ -40,6 +40,10 @@
         </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Providers\" />
+    </ItemGroup>
+
     <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

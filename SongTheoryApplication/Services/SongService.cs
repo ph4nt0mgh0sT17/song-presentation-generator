@@ -24,13 +24,12 @@ public class SongService : ISongService
     {
         Guard.IsNotNull(createSongRequest);
 
-        var allSongs = await _localSongRepository.RetrieveAllSongsAsync();
+        await ValidateSongDoesNotExist(createSongRequest);
+        await InternalCreateSong(createSongRequest);
+    }
 
-        if (allSongs.Any(song => song.Title == createSongRequest.SongTitle))
-        {
-            throw new SongAlreadyExistsException(createSongRequest.SongTitle);
-        }
-
+    private async Task InternalCreateSong(CreateSongRequest createSongRequest)
+    {
         var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText);
 
         try
@@ -41,6 +40,16 @@ public class SongService : ISongService
         catch (Exception ex)
         {
             throw new SongCannotBeCreatedException("Song cannot be created.", ex);
+        }
+    }
+
+    private async Task ValidateSongDoesNotExist(CreateSongRequest createSongRequest)
+    {
+        var allSongs = await _localSongRepository.RetrieveAllSongsAsync();
+
+        if (allSongs.Any(song => song.Title == createSongRequest.SongTitle))
+        {
+            throw new SongAlreadyExistsException(createSongRequest.SongTitle);
         }
     }
 

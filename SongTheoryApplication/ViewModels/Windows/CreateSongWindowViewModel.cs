@@ -2,26 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Win32;
 using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Constants;
 using SongTheoryApplication.Exceptions;
-using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Requests;
 using SongTheoryApplication.Services;
 using SongTheoryApplication.ViewModels.Dialogs;
 using SongTheoryApplication.Views.Windows;
+using static SongTheoryApplication.Extensions.ProcessExtensions;
 
 namespace SongTheoryApplication.ViewModels.Windows;
 
@@ -143,10 +139,82 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     [ICommand(CanExecute = nameof(CanGeneratePresentation), AllowConcurrentExecutions = false)]
     public async Task GenerateSongPresentation()
     {
-        var slideTexts = new List<PresentationSlideDetail>();
+        var slideTexts = await ParseSongIntoSlides();
+
+        if (slideTexts == null)
+            return;
+
+        var saveFileDialog = new SaveFileDialog();
+
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            await GeneratePresentation(saveFileDialog.FileName, slideTexts);
+        }
+    }
+
+    private async Task GeneratePresentation(string fileName, List<PresentationSlideDetail> slideTexts)
+    {
+        PresentationIsBeingGenerated = true;
+
         try
         {
-            slideTexts = SongUtility.ParseSongTextIntoSlides(SongText);
+            await Task.Run(() =>
+            {
+                _presentationGeneratorService.GeneratePresentation(
+                    new PresentationGenerationRequest(SongTitle, slideTexts),
+                    fileName
+                );
+            });
+
+            var answer = await DialogHost.Show(new DialogQuestionViewModel(
+                "Úspěch",
+                "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
+            ));
+
+            if (answer is true)
+            {
+                await OpenPresentationFile(fileName);
+            }
+        }
+
+        catch (AggregateException ex)
+        {
+            await DialogHost.Show(new ErrorNotificationDialogViewModel(
+                ApplicationConstants.PresentationCannotBeGeneratedDialog.DESCRIPTION,
+                ApplicationConstants.PresentationCannotBeGeneratedDialog.TITLE
+            ));
+
+            _logger.LogError(ex.InnerException, ApplicationConstants.Logs.CANNOT_GENERATE_PRESENTATION);
+        }
+
+        finally
+        {
+            PresentationIsBeingGenerated = false;
+        }
+    }
+
+    private async Task OpenPresentationFile(string fileName)
+    {
+        try
+        {
+            StartFileProcess($"{fileName}.pptx");
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
+            await DialogHost.Show(new ErrorNotificationDialogViewModel(
+                ApplicationConstants.PresentationCannotBeStartedDialog.DESCRIPTION,
+                ApplicationConstants.PresentationCannotBeStartedDialog.TITLE
+            ));
+        }
+    }
+
+    private async Task<List<PresentationSlideDetail>?> ParseSongIntoSlides()
+    {
+        try
+        {
+            var slideTexts = SongUtility.ParseSongTextIntoSlides(SongText);
+            return slideTexts;
         }
         catch (SongTextParseException ex)
         {
@@ -155,62 +223,8 @@ public partial class CreateSongWindowViewModel : ObservableValidator
                 ex.ApplicationErrorText,
                 "Písnička nemůže být vygenerována"
             ));
-            return;
-        }
 
-        var saveFileDialog = new SaveFileDialog();
-
-        if (saveFileDialog.ShowDialog() == true)
-        {
-            PresentationIsBeingGenerated = true;
-            var fileName = saveFileDialog.FileName;
-
-            try
-            {
-                await Task.Run(() =>
-                {
-                    _presentationGeneratorService.GeneratePresentation(
-                        new PresentationGenerationRequest(SongTitle, slideTexts),
-                        fileName
-                    );
-                });
-
-                var answer = await DialogHost.Show(new DialogQuestionViewModel(
-                    "Úspěch",
-                    "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
-                ));
-
-                if (answer is true)
-                {
-                    try
-                    {
-                        ProcessExtensions.StartFileProcess($"{fileName}.pptx");
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
-                        await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                            ApplicationConstants.PresentationCannotBeStartedDialog.DESCRIPTION,
-                            ApplicationConstants.PresentationCannotBeStartedDialog.TITLE
-                        ));
-                    }
-                }
-            }
-
-            catch (AggregateException ex)
-            {
-                await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                    ApplicationConstants.PresentationCannotBeGeneratedDialog.DESCRIPTION,
-                    ApplicationConstants.PresentationCannotBeGeneratedDialog.TITLE
-                ));
-
-                _logger.LogError(ex.InnerException, ApplicationConstants.Logs.CANNOT_GENERATE_PRESENTATION);
-            }
-
-            finally
-            {
-                PresentationIsBeingGenerated = false;
-            }
+            return null;
         }
     }
 }

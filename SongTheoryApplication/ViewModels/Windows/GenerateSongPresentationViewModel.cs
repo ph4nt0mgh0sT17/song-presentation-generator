@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MaterialDesignThemes.Wpf;
@@ -11,6 +13,7 @@ using Microsoft.Win32;
 using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
+using SongTheoryApplication.Providers;
 using SongTheoryApplication.Repositories;
 using SongTheoryApplication.Requests;
 using SongTheoryApplication.Services;
@@ -30,15 +33,16 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     [ObservableProperty]
     [AlsoNotifyCanExecuteFor(nameof(SelectSongCommand))]
     [AlsoNotifyCanExecuteFor(nameof(DeselectSongCommand))]
-    private Song _selectedSong;
+    private Song? _selectedSong;
 
     [ObservableProperty]
     [AlsoNotifyCanExecuteFor(nameof(SelectSongCommand))]
     [AlsoNotifyCanExecuteFor(nameof(DeselectSongCommand))]
-    private Song _selectedSongToDeselect;
+    private Song? _selectedSongToDeselect;
 
     private readonly ILocalSongRepository _localSongRepository;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
+    private readonly ISaveFileDialogProvider _saveFileDialogProvider;
     private readonly ILogger<SongListViewModel> _logger;
 
     public bool IsSongSelected => SelectedSong != null;
@@ -48,11 +52,13 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     public GenerateSongPresentationViewModel(
         ILocalSongRepository localSongRepository,
         IPresentationGeneratorService presentationGeneratorService,
+        ISaveFileDialogProvider saveFileDialogProvider,
         ILogger<SongListViewModel> logger)
     {
         _localSongRepository = localSongRepository;
         _presentationGeneratorService = presentationGeneratorService;
         _logger = logger;
+        _saveFileDialogProvider = saveFileDialogProvider;
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -85,6 +91,8 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     [ICommand(CanExecute = nameof(IsSongSelected))]
     public void SelectSong()
     {
+        Guard.IsNotNull(SelectedSong);
+
         SelectedSongs.Add(SelectedSong);
         AllSongs.Remove(SelectedSong);
         SelectedSong = null;
@@ -94,6 +102,8 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     [ICommand(CanExecute = nameof(IsSongToDeselectSelected))]
     public void DeselectSong()
     {
+        Guard.IsNotNull(SelectedSongToDeselect);
+
         AllSongs.Add(SelectedSongToDeselect);
         SelectedSongs.Remove(SelectedSongToDeselect);
         SelectedSongToDeselect = null;
@@ -103,7 +113,7 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     [ICommand(CanExecute = nameof(CanGeneratePresentation))]
     public async Task GeneratePresentation()
     {
-        var saveFileDialog = new SaveFileDialog();
+        var saveFileDialog = _saveFileDialogProvider.ProvideSaveFileDialog();
 
         if (saveFileDialog.ShowDialog() == true)
         {
@@ -114,44 +124,19 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
                 .Select(selectedSong => new PresentationGenerationRequest(
                     selectedSong.Title,
                     SongUtility.ParseSongTextIntoSlides(selectedSong.Text)
-                ))
-                .ToList();
+                )).ToList();
 
             try
             {
-                await Task.Run(() =>
-                {
-                    _presentationGeneratorService.GenerateMultipleSongsPresentation(
-                        presentationGenerationRequests,
-                        IsAddEmptySlideBetweenSongsChecked,
-                        fileName
-                    );
-                });
+                await GeneratePowerPointPresentation(presentationGenerationRequests, fileName);
 
                 PresentationIsGenerating = false;
 
-                var answer = await DialogHost.Show(
-                    new DialogQuestionViewModel(
-                        "Úspěch",
-                        "Prezentace písniček byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
-                    ), 
-                    "GenerateSongPresentationDialog"
-                );
+                var answer = await DisplaySuccessGenerationDialog();
 
                 if (answer is true)
                 {
-                    try
-                    {
-                        ProcessExtensions.StartFileProcess($"{fileName}.pptx");
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
-                        await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                            "Prezentace nemůže být z neznámých důvodu spuštěna. Prosím spusťte ji manuálně.",
-                            "Chyba"
-                        ), "SongListDialog");
-                    }
+                    await OpenPresentation(fileName);
                 }
             }
 
@@ -170,5 +155,45 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
                 }
             }
         }
+    }
+
+    private async Task OpenPresentation(string fileName)
+    {
+        try
+        {
+            ProcessExtensions.StartFileProcess($"{fileName}.pptx");
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
+            await DialogHost.Show(new ErrorNotificationDialogViewModel(
+                "Prezentace nemůže být z neznámých důvodu spuštěna. Prosím spusťte ji manuálně.",
+                "Chyba"
+            ), "SongListDialog");
+        }
+    }
+
+    private static async Task<object?> DisplaySuccessGenerationDialog()
+    {
+        var answer = await DialogHost.Show(
+            new DialogQuestionViewModel(
+                "Úspěch",
+                "Prezentace písniček byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
+            ),
+            "GenerateSongPresentationDialog"
+        );
+        return answer;
+    }
+
+    private async Task GeneratePowerPointPresentation(List<PresentationGenerationRequest> presentationGenerationRequests, string fileName)
+    {
+        await Task.Run(() =>
+        {
+            _presentationGeneratorService.GenerateMultipleSongsPresentation(
+                presentationGenerationRequests,
+                IsAddEmptySlideBetweenSongsChecked,
+                fileName
+            );
+        });
     }
 }

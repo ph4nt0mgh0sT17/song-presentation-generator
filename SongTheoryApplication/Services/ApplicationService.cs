@@ -3,7 +3,7 @@ using SongTheoryApplication.Attributes;
 
 namespace SongTheoryApplication.Services;
 
-[Service(true)]
+[Service(isSingleton: true)]
 public class ApplicationService : IApplicationService
 {
     private bool? _isPowerPointInstalled;
