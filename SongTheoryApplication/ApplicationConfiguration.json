@@ -4,19 +4,22 @@
       "Name": "Default",
       "FontSize": 15,
       "FontFamily": "JetBrains Mono",
-      "FontColor": "Red"
+      "FontColor": "Red",
+      "IsBold":  true
     },
     {
       "Name": "Style1",
       "FontSize": 20,
       "FontFamily": "JetBrains Mono",
-      "FontColor": "Blue"
+      "FontColor": "Blue",
+      "IsBold": true
     },
     {
       "Name": "Style2",
       "FontSize": 25,
       "FontFamily": "JetBrains Mono",
-      "FontColor": "Green"
+      "FontColor": "Green",
+      "IsBold": false
     }
   ]
 }

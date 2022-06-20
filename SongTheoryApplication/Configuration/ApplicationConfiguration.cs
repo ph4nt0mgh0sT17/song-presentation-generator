@@ -13,4 +13,5 @@ public class PresentationSetting
     public int FontSize { get; set; }
     public string? FontFamily { get; set; }
     public string? FontColor { get; set; }
+    public bool IsBold { get; set; }
 }

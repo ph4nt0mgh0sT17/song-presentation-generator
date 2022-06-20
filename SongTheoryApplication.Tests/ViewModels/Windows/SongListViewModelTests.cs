@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using Moq;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Providers;
@@ -96,5 +97,58 @@ public class SongListViewModelTests
 
         _songService.Verify(x => x.DeleteSongAsync(It.IsAny<DeleteSongRequest>()), Times.Once);
         _songListViewModel.Songs.Should().BeEmpty("The only song that was present is now deleted.");
+    }
+
+    [Fact(DisplayName = "ShareSong() opens dialog")]
+    public async Task ShareSong_OpensDialog()
+    {
+        // Arrange
+        _dialogHostService.Setup(x => x.OpenDialog(It.IsAny<object?>(), It.IsAny<string?>()))
+            .Returns(Task.FromResult((object?) false));
+
+        // Act
+        await _songListViewModel.ShareSongCommand.ExecuteAsync(null);
+
+        // Assert
+        _dialogHostService.Verify(
+            x => x.OpenDialog(It.IsAny<object?>(), It.IsAny<string?>()),
+            Times.Once
+        );
+    }
+
+    [Fact(DisplayName = "EditSong() opens dialog")]
+    public async Task EditSong_OpensDialog()
+    {
+        // Arrange
+        _dialogHostService.Setup(x => x.OpenDialog(It.IsAny<object?>(), It.IsAny<string?>()))
+            .Returns(Task.FromResult((object?) false));
+
+        // Act
+        await _songListViewModel.EditSongCommand.ExecuteAsync(null);
+
+        // Assert
+        _dialogHostService.Verify(
+            x => x.OpenDialog(It.IsAny<object?>(), It.IsAny<string?>()),
+            Times.Once
+        );
+    }
+
+    [Fact(DisplayName = "GenerateSongPresentation() does nothing when save file dialog is cancelled")]
+    public async Task GenerateSongPresentation_DoesNothing_WhenSaveFileDialogIsCancelled()
+    {
+        // Arrange
+        var saveFileDialogMock = new Mock<SaveFileDialog>();
+
+        saveFileDialogMock.Setup(x => x.ShowDialog()).Returns(false);
+        _saveFileDialogProvider.Setup(x => x.ProvideSaveFileDialog()).Returns(saveFileDialogMock.Object);
+
+        // Act
+        await _songListViewModel.GenerateSongPresentationCommand.ExecuteAsync(null);
+
+        // Assert
+        _presentationGeneratorService.Verify(
+            x => x.GeneratePresentation(It.IsAny<PresentationGenerationRequest?>(), It.IsAny<string>()), 
+            Times.Never
+       );
     }
 }

@@ -85,18 +85,18 @@ public partial class SongListViewModel : BaseViewModel
     }
 
     [ICommand]
-    private void ShareSong()
+    private async Task ShareSong()
     {
-        DialogHost.Show(
+        await _dialogHostService.OpenDialog(
             new ErrorNotificationDialogViewModel("Sdílení písniček není zatím implementováno.", "Chyba"),
             "SongListDialog"
         );
     }
 
     [ICommand]
-    private void EditSong()
+    private async Task EditSong()
     {
-        DialogHost.Show(
+        await _dialogHostService.OpenDialog(
             new ErrorNotificationDialogViewModel("Úprava písniček není zatím implementováno.", "Chyba"),
             "SongListDialog"
         );

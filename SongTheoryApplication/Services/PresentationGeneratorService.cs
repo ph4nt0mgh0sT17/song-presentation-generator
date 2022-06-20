@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -69,7 +70,24 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
         songTextLabel.TextFrame.TextRange.Font.Name = defaultSettings.FontFamily;
         songTextLabel.TextFrame.TextRange.Font.Size = defaultSettings.FontSize;
+
+        if (defaultSettings.FontColor == null)
+            throw new InvalidOperationException("The application configuration needs to have 'FontColor' parameter.");
+
+        if (!COLORS.ContainsKey(defaultSettings.FontColor))
+        {
+            songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS["Black"];
+            // TODO: Log there is no color like this.
+        }
+
+        else
+        {
+            songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor];
+        }
+
         songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor ?? "Black"];
+        songTextLabel.TextFrame.TextRange.Font.Bold =
+            defaultSettings.IsBold ? MsoTriState.msoTrue : MsoTriState.msoFalse;
     }
 
     /// <summary>
