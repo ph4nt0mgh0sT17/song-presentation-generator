@@ -2,5 +2,9 @@
 /SongTheoryApplication/obj/
 /SongTheoryApplication.Tests/obj
 /SongTheoryApplication.Tests/bin
+<<<<<<< HEAD
 /vs/
 /.idea/
+=======
+/.vs/
+>>>>>>> 642858780287cff519ad957fa0b2a8ea22470c39
