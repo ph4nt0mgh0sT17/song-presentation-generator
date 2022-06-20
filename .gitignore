@@ -2,3 +2,5 @@
 /SongTheoryApplication/obj/
 /SongTheoryApplication.Tests/obj
 /SongTheoryApplication.Tests/bin
+/vs/
+/.idea/
