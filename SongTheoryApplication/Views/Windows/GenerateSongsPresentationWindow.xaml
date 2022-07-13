@@ -80,10 +80,18 @@
                             HorizontalAlignment="Center"
                             Content="&#62;"
                             Command="{Binding Path=SelectSongCommand}" />
-                    <Button Style="{DynamicResource PrimaryButton}"
+                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
                             HorizontalAlignment="Center"
                             Content="&#60;"
                             Command="{Binding Path=DeselectSongCommand}" />
+                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
+                            HorizontalAlignment="Center"
+                            Content="&#708;"
+                            Command="{Binding Path=MoveSongUpCommand}" />
+                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
+                            HorizontalAlignment="Center"
+                            Content="&#709;"
+                            Command="{Binding Path=MoveSongDownCommand}" />
                 </StackPanel>
 
                 <materialDesign:Card Padding="10" Margin="16" Grid.Column="2">

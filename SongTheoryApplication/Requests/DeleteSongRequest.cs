@@ -4,11 +4,11 @@ namespace SongTheoryApplication.Requests;
 
 public class DeleteSongRequest
 {
-    public string SongTitle { get; }
+    public string Id { get; }
 
-    public DeleteSongRequest(string? songTitle)
+    public DeleteSongRequest(string? id)
     {
-        Guard.IsNotNull(songTitle);
-        SongTitle = songTitle;
+        Guard.IsNotNull(id);
+        Id = id;
     }
 }

@@ -13,12 +13,14 @@ public interface ILocalSongRepository
     /// <param name="song">The <see cref="Song" /> to be saved.</param>
     Task SaveSongAsync(Song song);
 
+    Task UpdateSongAsync(string? id, Song? song);
+
     /// <summary>
     /// Deletes a song recognized by given songTitle.
     /// </summary>
-    /// <param name="songTitle">The title name of the song to be removed.</param>
+    /// <param name="id">The ID of the song to be removed.</param>
     /// <exception cref="ArgumentNullException">Thrown when songTitle is null.</exception>
-    Task DeleteSongAsync(string? songTitle);
+    Task DeleteSongAsync(string? id);
 
     /// <summary>
     /// Retrieves all songs stored in the system.

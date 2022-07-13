@@ -13,7 +13,7 @@
         xmlns:entities="clr-namespace:SongTheoryApplication.Models"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:SongListViewModel}"
-        Title="SongListWindow" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="SongListWindow" Height="450" Width="1258" WindowStartupLocation="CenterScreen">
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded">
             <behaviors:InvokeCommandAction Command="{Binding Path=OnLoadedCommand}" />
@@ -24,6 +24,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Vertical">
                 <materialDesign:Card Padding="10" Margin="16">
@@ -50,18 +51,57 @@
 
                                 <TextBlock Grid.Column="0" Text="{Binding Path=Title}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" />
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Style="{DynamicResource PrimaryButton}"
-                                            Margin="0,0,30,0"
-                                            Content="Sdílet"
-                                            Command="{
-                                                Binding Path=ViewModel.ShareSongCommand, 
-                                                RelativeSource={
-                                                    RelativeSource FindAncestor, 
-                                                    AncestorType={
-                                                        x:Type Window
+                                    
+                                        <Button Style="{DynamicResource PrimaryButton}"
+                                                Margin="0,0,30,0"
+                                                Content="Sdílet"
+                                                Command="{
+                                                    Binding Path=ViewModel.ShareSongCommand, 
+                                                    RelativeSource={
+                                                        RelativeSource FindAncestor, 
+                                                        AncestorType={
+                                                            x:Type Window
+                                                        }
                                                     }
-                                                }
-                                            }" />
+                                                }" 
+                                                CommandParameter="{Binding}" 
+                                                Visibility="{Binding Path=IsSongShared,Converter={StaticResource ReversedBoolToVisibilityConverter}}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                        />
+
+                                        <Button Style="{DynamicResource PrimaryButton}"
+                                                Margin="0,0,30,0"
+                                                Content="Zrušit sdílení písničky"
+                                                Command="{
+                                                    Binding Path=ViewModel.DeleteSharingSongCommand, 
+                                                    RelativeSource={
+                                                        RelativeSource FindAncestor, 
+                                                        AncestorType={
+                                                            x:Type Window
+                                                        }
+                                                    }
+                                                }"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=IsSongShared,Converter={StaticResource BoolToVisibilityConverter}}"
+                                        />
+
+                                        <Button Style="{DynamicResource PrimaryButton}"
+                                                Margin="0,0,30,0"
+                                                Content="Zobrazit ID sdílené písničky"
+                                                Command="{
+                                                    Binding Path=ViewModel.ShowSharedSongIdCommand, 
+                                                    RelativeSource={
+                                                        RelativeSource FindAncestor, 
+                                                        AncestorType={
+                                                            x:Type Window
+                                                        }
+                                                    }
+                                                }"
+                                                CommandParameter="{Binding}"
+                                                Visibility="{Binding Path=IsSongShared,Converter={StaticResource BoolToVisibilityConverter}}"
+                                        />
+                                    
 
                                     <Button Style="{DynamicResource SpecialButton}"
                                             Margin="0,0,30,0"
@@ -87,6 +127,7 @@
                                                     }
                                                 }
                                             }"
+                                            CommandParameter="{Binding}"
                                             Margin="0,0,30,0"
                                             Content="Upravit" />
                                     <Button Style="{DynamicResource DangerButton}"
@@ -108,13 +149,21 @@
                     </ListBox.ItemTemplate>
                     <d:ListView.ItemsSource>
                         <x:Array Type="{x:Type entities:Song}">
-                            <entities:Song Title="Song title 1" Text="Sample text" />
-                            <entities:Song Title="Song title 2" Text="Sample text" />
-                            <entities:Song Title="Song title 3" Text="Sample text" />
+                            <entities:Song Title="Song title 1" Text="Sample text" IsSongShared="True" />
+                            <entities:Song Title="Song title 2" Text="Sample text" IsSongShared="False" />
+                            <entities:Song Title="Song title 3" Text="Sample text" IsSongShared="False" />
                         </x:Array>
                     </d:ListView.ItemsSource>
                 </ListView>
             </materialDesign:Card>
+            <Button Style="{DynamicResource PrimaryButton}" 
+                    Grid.Row="2" 
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Command="{Binding Path=AddSharedSongCommand}"
+                    Margin="10">
+                Přidat sdílenou písničku
+            </Button>
         </Grid>
     </materialDesign:DialogHost>
 

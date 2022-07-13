@@ -30,7 +30,7 @@ public class SongService : ISongService
 
     private async Task InternalCreateSong(CreateSongRequest createSongRequest)
     {
-        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText);
+        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText, createSongRequest.IsSongShared, createSongRequest.SharedSongId);
 
         try
         {
@@ -53,10 +53,27 @@ public class SongService : ISongService
         }
     }
 
+    public async Task UpdateSongAsync(EditSongRequest? editSongRequest)
+    {
+        Guard.IsNotNull(editSongRequest);
+
+        var song = new Song(editSongRequest.SongTitle, editSongRequest.SongText, editSongRequest.IsSongShared, editSongRequest.SharedSongId);
+
+        try
+        {
+            await _localSongRepository.UpdateSongAsync(editSongRequest.Id, song);
+        }
+
+        catch (Exception ex)
+        {
+            throw new SongCannotBeCreatedException("Song cannot be created.", ex);
+        }
+    }
+
     public async Task DeleteSongAsync(DeleteSongRequest? deleteSongRequest)
     {
         Guard.IsNotNull(deleteSongRequest);
 
-        await _localSongRepository.DeleteSongAsync(deleteSongRequest.SongTitle);
+        await _localSongRepository.DeleteSongAsync(deleteSongRequest.Id);
     }
 }

@@ -32,12 +32,12 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
 
     [ObservableProperty]
     [AlsoNotifyCanExecuteFor(nameof(SelectSongCommand))]
-    [AlsoNotifyCanExecuteFor(nameof(DeselectSongCommand))]
     private Song? _selectedSong;
 
     [ObservableProperty]
     [AlsoNotifyCanExecuteFor(nameof(SelectSongCommand))]
     [AlsoNotifyCanExecuteFor(nameof(DeselectSongCommand))]
+    [AlsoNotifyCanExecuteFor(nameof(MoveSongDownCommand), nameof(MoveSongUpCommand))]
     private Song? _selectedSongToDeselect;
 
     private readonly ILocalSongRepository _localSongRepository;
@@ -108,6 +108,24 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
         SelectedSongs.Remove(SelectedSongToDeselect);
         SelectedSongToDeselect = null;
         GeneratePresentationCommand.NotifyCanExecuteChanged();
+    }
+
+    [ICommand(CanExecute = nameof(IsSongToDeselectSelected))]
+    public void MoveSongUp()
+    {
+        var currentSongIndex = SelectedSongs.IndexOf(SelectedSongToDeselect);
+        var newSongIndex = Math.Max(0, currentSongIndex - 1);
+
+        SelectedSongs.Move(currentSongIndex, newSongIndex);
+    }
+
+    [ICommand(CanExecute = nameof(IsSongToDeselectSelected))]
+    public void MoveSongDown()
+    {
+        var currentSongIndex = SelectedSongs.IndexOf(SelectedSongToDeselect);
+        var newSongIndex = Math.Min(SelectedSongs.Count - 1, currentSongIndex + 1);
+
+        SelectedSongs.Move(currentSongIndex, newSongIndex);
     }
 
     [ICommand(CanExecute = nameof(CanGeneratePresentation))]

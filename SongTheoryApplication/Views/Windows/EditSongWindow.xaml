@@ -1,0 +1,78 @@
+﻿<Window x:Class="SongTheoryApplication.Views.Windows.EditSongWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SongTheoryApplication.Views.Windows"
+        xmlns:windows="clr-namespace:SongTheoryApplication.ViewModels.Windows"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance windows:EditSongWindowViewModel}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="Úprava písničky"
+        Width="1280" Height="720">
+    <materialDesign:DialogHost>
+        <Grid>
+            <StackPanel Orientation="Vertical"
+                        Visibility="{
+                        Binding Path=PresentationIsBeingGenerated, 
+                        Converter={StaticResource ReversedBoolToVisibilityConverter}
+                    }">
+                <materialDesign:Card Padding="10" Margin="16">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Padding="15"
+                               Text="{Binding Path=EditSongWindowTitleText}"
+                               d:Text="Create song form"
+                               TextWrapping="WrapWithOverflow"
+                               FontSize="25">
+                    </TextBlock>
+                </materialDesign:Card>
+
+                <StackPanel Margin="30">
+                    <TextBlock TextWrapping="WrapWithOverflow">Název písničky</TextBlock>
+                    <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+
+                <StackPanel Margin="30">
+                    <TextBlock TextWrapping="Wrap">Text písničky</TextBlock>
+                    <TextBox
+                        Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                    ValidatesOnDataErrors=True, 
+                    ValidatesOnNotifyDataErrors=True}"
+                        TextWrapping="WrapWithOverflow"
+                        VerticalScrollBarVisibility="Visible"
+                        AcceptsReturn="True"
+                        Height="100">
+                    </TextBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button
+                        Margin="0,0,20,0"
+                        Style="{DynamicResource PrimaryButton}"
+                        Command="{Binding Path=UpdateSongCommand}"
+                        Content="Uložit změny">
+                    </Button>
+                    <Button
+                        Style="{DynamicResource SecondaryButton}"
+                        Command="{Binding Path=GenerateSongPresentationCommand}"
+                        Content="Vygenerovat prezentaci">
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <Grid
+                Visibility="{Binding Path=PresentationIsBeingGenerated, Converter={StaticResource BoolToVisibilityConverter}}"
+                d:Visibility="Hidden">
+                <controls:LoadingSpinnerControl LoadingTitle="Právě se generuje prezentace..." />
+            </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
+</Window>

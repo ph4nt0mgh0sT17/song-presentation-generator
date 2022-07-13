@@ -5,4 +5,5 @@
     <converters:IsGreaterThanOrEqualToConverter x:Key="IsGreaterThanOrEqualToConverter" />
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <converters:ReversedBoolToVisibilityConverter x:Key="ReversedBoolToVisibilityConverter" />
+    <converters:ReversedBoolConverter x:Key="ReversedBoolConverter" />
 </ResourceDictionary>

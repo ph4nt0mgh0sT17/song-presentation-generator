@@ -11,6 +11,8 @@ public interface ISongService
     /// <param name="createSongRequest">The request for creating new song.</param>
     Task CreateSongAsync(CreateSongRequest? createSongRequest);
 
+    Task UpdateSongAsync(EditSongRequest? editSongRequest);
+
     /// <summary>
     /// Deletes a song identified by its title.
     /// </summary>

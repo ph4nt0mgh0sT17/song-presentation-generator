@@ -61,6 +61,76 @@
         </StackPanel>
     </DataTemplate>
 
+    <!-- Information dialog -->
+    <DataTemplate DataType="{x:Type dialogs:DisplaySharedSongIdDialogViewModel}">
+        <StackPanel Margin="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="ExclamationBold"
+                                         Foreground="DeepSkyBlue"
+                                         Height="48"
+                                         Width="48"
+                                         Margin="20, 25, 20, 20"
+                                         Grid.Column="0" />
+                <StackPanel Margin="20"
+                            Grid.Column="1"
+                            MinWidth="300">
+                    <TextBlock Text="{Binding Title}" FontSize="35" />
+                    <TextBlock Text="{Binding Message}" FontSize="17"
+                               Margin="0,20,0,0">
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Margin="0, 20, 0, 0"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Content="Ok"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" Margin="0,0,20,0"/>
+                <Button Content="Zkopírovat ID" 
+                        Style="{StaticResource PrimaryButton}" 
+                        Command="{Binding Path=CopySharedSongIdIntoClipboardCommand}"/>
+            </StackPanel>
+            
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- Information dialog -->
+    <DataTemplate DataType="{x:Type dialogs:AddSharedSongDialogViewModel}">
+        <StackPanel Margin="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="ExclamationBold"
+                                         Foreground="DeepSkyBlue"
+                                         Height="48"
+                                         Width="48"
+                                         Margin="20, 25, 20, 20"
+                                         Grid.Column="0" />
+                <StackPanel Margin="20"
+                            Grid.Column="1"
+                            MinWidth="300">
+                    <TextBlock Text="Přidání sdílené písničky" FontSize="35" />
+                    <TextBox Text="{Binding Path=SharedSongId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+            </Grid>
+            <Grid Visibility="{Binding Path=SharedSongIdAlreadyInLocalRepository,Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Foreground="Red">Písnička již existuje ve vašem počítači.</TextBlock>
+            </Grid>
+            <StackPanel Orientation="Horizontal" Margin="0, 20, 0, 0"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Content="Přidat sdílenou píseň"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding Path=AddSharedSongCommand}"/>
+            </StackPanel>
+            
+        </StackPanel>
+    </DataTemplate>
+
     <!-- Question dialog -->
     <DataTemplate DataType="{x:Type dialogs:DialogQuestionViewModel}">
         <StackPanel Margin="20">

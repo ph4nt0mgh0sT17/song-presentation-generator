@@ -27,12 +27,33 @@ public class LocalSongRepository : ILocalSongRepository
         await streamWriter.WriteAsync(songsJsonText);
     }
 
-    public async Task DeleteSongAsync(string? songTitle)
+    public async Task UpdateSongAsync(string? id, Song? song)
     {
-        Guard.IsNotNull(songTitle, nameof(songTitle));
+        Guard.IsNotNull(id);
+        Guard.IsNotNull(song);
+
+        var songs = await RetrieveAllSongsAsync();
+
+        var existingSong = songs.Find(x => x.Id == id);
+        existingSong.Title = song.Title;
+        existingSong.Text = song.Text;
+        existingSong.IsSongShared = song.IsSongShared;
+        existingSong.SharedSongId = song.SharedSongId;
+
+        var songsJsonText = JsonSerializer.Serialize(songs);
+
+        var fileStream = new FileStream(ApplicationConstants.SONGS_JSON_FILENAME, FileMode.Create);
+
+        await using var streamWriter = new StreamWriter(fileStream);
+        await streamWriter.WriteAsync(songsJsonText);
+    }
+
+    public async Task DeleteSongAsync(string? id)
+    {
+        Guard.IsNotNull(id);
         
         var songs = await RetrieveAllSongsAsync();
-        songs = songs.Where(x => x.Title != songTitle).ToList();
+        songs = songs.Where(x => x.Id != id).ToList();
 
         var songsJsonText = JsonSerializer.Serialize(songs);
 

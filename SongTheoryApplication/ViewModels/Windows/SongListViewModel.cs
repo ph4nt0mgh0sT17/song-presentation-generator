@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,7 @@ public partial class SongListViewModel : BaseViewModel
     [ObservableProperty] private bool _songsAreLoading;
 
     private readonly ILocalSongRepository _localSongRepository;
+    private readonly IShareService _shareService;
     private readonly ISongService _songService;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
     private readonly ISaveFileDialogProvider _saveFileDialogProvider;
@@ -46,12 +48,13 @@ public partial class SongListViewModel : BaseViewModel
         IPresentationGeneratorService presentationGeneratorService,
         ISaveFileDialogProvider saveFileDialogProvider,
         IDialogHostService dialogHostService,
-        ILogger<SongListViewModel> logger)
+        ILogger<SongListViewModel> logger, IShareService shareService)
     {
         _localSongRepository = localSongRepository;
         _songService = songService;
         _presentationGeneratorService = presentationGeneratorService;
         _logger = logger;
+        _shareService = shareService;
         _saveFileDialogProvider = saveFileDialogProvider;
         _dialogHostService = dialogHostService;
     }
@@ -79,27 +82,72 @@ public partial class SongListViewModel : BaseViewModel
 
         if (result is true)
         {
-            await _songService.DeleteSongAsync(new DeleteSongRequest(song.Title));
+            await _songService.DeleteSongAsync(new DeleteSongRequest(song.Id));
             Songs.Remove(song);
         }
     }
 
     [ICommand]
-    private async Task ShareSong()
+    private async Task ShareSong(Song song)
     {
+        var sharedSongId = await _shareService.ShareSong(new ShareSongRequest(song.Title, song.Text));
+        await _songService.UpdateSongAsync(new EditSongRequest(song.Id, song.Title, song.Text, true, sharedSongId));
+        song.IsSongShared = true;
+        song.SharedSongId = sharedSongId;
+
+        var songIndex = Songs.IndexOf(song);
+        Songs.RemoveAt(songIndex);
+        Songs.Insert(songIndex, song);
+
         await _dialogHostService.OpenDialog(
-            new ErrorNotificationDialogViewModel("Sdílení písniček není zatím implementováno.", "Chyba"),
+            new SuccessNotificationDialogViewModel("Písnička je úspěšně sdílena.", "Úspěch"),
             "SongListDialog"
         );
     }
 
     [ICommand]
-    private async Task EditSong()
+    private async Task DeleteSharingSongAsync(Song song)
     {
+        await _shareService.DeleteSongAsync(song.SharedSongId);
+
+        await _songService.UpdateSongAsync(new EditSongRequest(song.Id, song.Title, song.Text, false, null));
+        song.IsSongShared = false;
+        song.SharedSongId = null;
+
+        var songIndex = Songs.IndexOf(song);
+        Songs.RemoveAt(songIndex);
+        Songs.Insert(songIndex, song);
+
         await _dialogHostService.OpenDialog(
-            new ErrorNotificationDialogViewModel("Úprava písniček není zatím implementováno.", "Chyba"),
+            new SuccessNotificationDialogViewModel("Písnička je odstraněna ze sdílení.", "Úspěch"),
             "SongListDialog"
         );
+    }
+
+    [ICommand]
+    private async Task ShowSharedSongIdAsync(Song song)
+    {
+        await _dialogHostService.OpenDialog(
+            new DisplaySharedSongIdDialogViewModel("ID sdílené písničky", $"ID sdílené písničky je: {song.SharedSongId}", song.SharedSongId),
+            "SongListDialog"
+        );
+    }
+
+    [ICommand]
+    private async Task AddSharedSong()
+    {
+        await _dialogHostService.OpenDialog(
+            Ioc.Default.GetService<AddSharedSongDialogViewModel>(),
+            "SongListDialog"
+        );
+    }
+
+    [ICommand]
+    private async Task EditSong(Song song)
+    {
+        new EditSongWindow(song).ShowDialog();
+
+        Songs = new ObservableCollection<Song>(await _localSongRepository.RetrieveAllSongsAsync());
     }
 
     [ICommand]

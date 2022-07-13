@@ -1,21 +1,21 @@
-﻿using System;
-using System.Globalization;
-using System.Windows;
+﻿using System.Globalization;
 using System.Windows.Data;
+using System.Windows;
+using System;
 
 namespace SongTheoryApplication.Converters;
 
-public class ReversedBoolToVisibilityConverter : IValueConverter
+public class ReversedBoolConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         if (value is bool val)
         {
-            return val ? Visibility.Collapsed : Visibility.Visible;
+            return !val;
         }
 
         throw new InvalidOperationException(
-            "The ReversedBoolToVisibilityConverter only accepts bool values to convert it into Visibility objects."
+            "The ReversedBoolConverter only accepts bool values to convert it into reversed bool objects."
         );
     }
 

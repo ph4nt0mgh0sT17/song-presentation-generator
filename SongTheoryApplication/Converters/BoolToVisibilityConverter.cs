@@ -11,7 +11,7 @@ public class BoolToVisibilityConverter : IValueConverter
     {
         if (value is bool val)
         {
-            return val ? Visibility.Visible : Visibility.Hidden;
+            return val ? Visibility.Visible : Visibility.Collapsed;
         }
 
         throw new InvalidOperationException(
