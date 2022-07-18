@@ -41,11 +41,14 @@ public partial class EditSongWindowViewModel : ObservableValidator
     private readonly IPresentationGeneratorService _presentationGeneratorService;
     private readonly ILogger<EditSongWindowViewModel> _logger;
     private readonly IApplicationService _applicationService;
+    private readonly IShareService _shareService;
 
     public string EditSongWindowTitleText => "Formulář pro úpravu písničky";
     public IAsyncRelayCommand UpdateSongCommand { get; }
 
     public EditSongWindow EditSongWindow { get; }
+
+    private readonly Song _song;
 
     public bool CanUpdateSong => CheckCanUpdateSong();
 
@@ -66,7 +69,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
         IPresentationGeneratorService presentationGeneratorService,
         IApplicationService applicationService,
         ILogger<EditSongWindowViewModel> logger,
-        EditSongWindow? editSongWindow)
+        EditSongWindow? editSongWindow, IShareService shareService)
     {
         Guard.IsNotNull(song);
         Guard.IsNotNull(editSongWindow);
@@ -76,12 +79,15 @@ public partial class EditSongWindowViewModel : ObservableValidator
         _logger = logger;
         _applicationService = applicationService;
 
+        _song = song;
+
         SongTitle = song.Title;
         SongText = song.Text;
         SongId = song.Id;
         _isSongShared = song.IsSongShared;
 
         EditSongWindow = editSongWindow;
+        _shareService = shareService;
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -102,11 +108,15 @@ public partial class EditSongWindowViewModel : ObservableValidator
     {
         if (!CanUpdateSong) return;
 
-        var editSongRequest = new EditSongRequest(SongId, SongTitle, SongText, _isSongShared);
+        var editSongRequest = new EditSongRequest(SongId, SongTitle, SongText, _isSongShared, _song.SharedSongId);
 
         try
         {
             await _songService.UpdateSongAsync(editSongRequest);
+            if (_song.IsSongShared)
+            {
+                await _shareService.UpdateSongAsync(_song.SharedSongId, new ShareSongRequest(SongTitle, SongText));
+            }
             await DisplaySuccessDialog();
         }
 

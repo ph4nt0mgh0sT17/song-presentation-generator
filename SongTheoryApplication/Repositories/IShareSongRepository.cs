@@ -15,4 +15,6 @@ public interface IShareSongRepository
     Task DeleteSongAsync(string? shareSongId);
 
     Task<ShareSong> GetSongAsync(string? shareSongId);
+
+    Task UpdateSongAsync(string? shareSongId, ShareSong? shareSong);
 }

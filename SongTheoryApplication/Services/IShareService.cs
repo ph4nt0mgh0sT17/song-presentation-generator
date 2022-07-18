@@ -9,4 +9,6 @@ public interface IShareService
     Task<string> ShareSong(ShareSongRequest? shareSongRequest);
     Task DeleteSongAsync(string? sharedSongId);
     Task AddSharedSong(string? sharedSongId);
+    Task UpdateSongAsync(string? sharedSongId, ShareSongRequest? updateShareSongRequest);
+    Task UpdateDownloadedSongAsync(string? sharedSongId);
 }

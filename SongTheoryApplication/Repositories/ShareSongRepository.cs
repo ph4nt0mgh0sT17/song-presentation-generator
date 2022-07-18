@@ -61,4 +61,22 @@ public class ShareSongRepository : IShareSongRepository
             .Child(shareSongId)
             .OnceSingleAsync<ShareSong>();
     }
+
+    public async Task UpdateSongAsync(string? shareSongId, ShareSong? shareSong)
+    {
+        Guard.IsNotNull(shareSongId);
+        Guard.IsNotNull(shareSong);
+
+        var firebaseClient = new FirebaseClient(
+            "https://song-presentation-generator-default-rtdb.europe-west1.firebasedatabase.app",
+            new FirebaseOptions
+            {
+                AuthTokenAsyncFactory = () => Task.FromResult("Cc0MrBW4v3LnZf9rq8agesobF5ToYM8E0soj0Mns")
+            });
+
+        await firebaseClient
+            .Child("shared-songs")
+            .Child(shareSongId)
+            .PutAsync(shareSong);
+    }
 }

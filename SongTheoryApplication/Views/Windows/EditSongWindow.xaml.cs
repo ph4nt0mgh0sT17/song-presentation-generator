@@ -35,7 +35,7 @@ public partial class EditSongWindow : Window
             Ioc.Default.GetRequiredService<IPresentationGeneratorService>(),
             Ioc.Default.GetRequiredService<IApplicationService>(),
             Ioc.Default.GetRequiredService<ILogger<EditSongWindowViewModel>>(),
-            this
+            this, Ioc.Default.GetRequiredService<IShareService>()
         );
 
         DataContext = editSongWindowViewModel;

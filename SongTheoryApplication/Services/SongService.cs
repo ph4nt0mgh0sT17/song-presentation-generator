@@ -30,7 +30,7 @@ public class SongService : ISongService
 
     private async Task InternalCreateSong(CreateSongRequest createSongRequest)
     {
-        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText, createSongRequest.IsSongShared, createSongRequest.SharedSongId);
+        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText, createSongRequest.IsSongShared, createSongRequest.SharedSongId, createSongRequest.IsSongDownloaded);
 
         try
         {
@@ -75,5 +75,16 @@ public class SongService : ISongService
         Guard.IsNotNull(deleteSongRequest);
 
         await _localSongRepository.DeleteSongAsync(deleteSongRequest.Id);
+    }
+
+    public async Task<Song> FindSongAsync(Func<Song, bool>? predicate)
+    {
+        Guard.IsNotNull(predicate);
+
+        var allSongs = await _localSongRepository.RetrieveAllSongsAsync();
+
+        var song = allSongs.Where(predicate).First();
+
+        return song;
     }
 }

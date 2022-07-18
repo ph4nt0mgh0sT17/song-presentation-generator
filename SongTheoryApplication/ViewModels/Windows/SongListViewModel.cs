@@ -13,6 +13,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using SongTheoryApplication.Attributes;
+using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Providers;
@@ -138,6 +139,42 @@ public partial class SongListViewModel : BaseViewModel
     {
         await _dialogHostService.OpenDialog(
             Ioc.Default.GetService<AddSharedSongDialogViewModel>(),
+            "SongListDialog"
+        );
+
+        await OnLoadedAsync();
+    }
+
+    [ICommand]
+    private async Task UpdateDownloadedSongAsync(Song song)
+    {
+        try
+        {
+            await _shareService.UpdateDownloadedSongAsync(song.SharedSongId);
+        }
+        catch (SharedSongDoesNotExist)
+        {
+            await _dialogHostService.OpenDialog(
+                new ErrorNotificationDialogViewModel(
+                    "Písnička nemůže být aktualizována, protože sdílená píseň již neexistuje.", "Chyba"),
+                "SongListDialog"
+            );
+            return;
+        }
+        catch (SongDoesNotExist)
+        {
+            await _dialogHostService.OpenDialog(
+                new ErrorNotificationDialogViewModel(
+                    "Písnička nemůže být aktualizována, protože píseň neexistuje ve vašem počítači.", "Chyba"),
+                "SongListDialog"
+            );
+            return;
+        }
+
+        await OnLoadedAsync();
+
+        await _dialogHostService.OpenDialog(
+            new SuccessNotificationDialogViewModel("Písnička je úspěšně aktualizována.", "Úspěch"),
             "SongListDialog"
         );
     }
