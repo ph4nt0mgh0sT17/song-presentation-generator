@@ -11,7 +11,7 @@ public interface ISongService
     /// Creates a new song in the system.
     /// </summary>
     /// <param name="createSongRequest">The request for creating new song.</param>
-    Task CreateSongAsync(CreateSongRequest? createSongRequest);
+    Task<Song> CreateSongAsync(CreateSongRequest? createSongRequest);
 
     Task UpdateSongAsync(EditSongRequest? editSongRequest);
 

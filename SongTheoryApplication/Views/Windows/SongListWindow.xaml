@@ -157,7 +157,7 @@
                                             }"
                                             CommandParameter="{Binding}" />
 
-                                    <Button 
+                                    <Button Style="{DynamicResource PrimaryButton}"
                                             Command="{
                                                 Binding Path=ViewModel.EditSongCommand, 
                                                 RelativeSource={
@@ -170,16 +170,6 @@
                                             CommandParameter="{Binding}"
                                             Margin="0,0,30,0"
                                             Content="Upravit">
-                                        <Button.Style>
-                                            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButton}">
-                                                <Setter Property="IsEnabled" Value="True" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsSongDownloaded}" Value="True">
-                                                        <Setter Property="IsEnabled" Value="False" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
                                     </Button>
                                     <Button Style="{DynamicResource DangerButton}"
                                             Content="Smazat"

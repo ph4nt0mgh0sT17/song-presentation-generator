@@ -104,7 +104,8 @@ public partial class SongListViewModel : BaseViewModel
     {
         await _shareService.DeleteSongAsync(song.SharedSongId);
 
-        await _songService.UpdateSongAsync(new EditSongRequest(song.Id, song.Title, song.Text, song.Source, false, null));
+        await _songService.UpdateSongAsync(
+            new EditSongRequest(song.Id, song.Title, song.Text, song.Source, false, null));
         song.IsSongShared = false;
         song.SharedSongId = null;
 
@@ -122,7 +123,8 @@ public partial class SongListViewModel : BaseViewModel
     private async Task ShowSharedSongIdAsync(Song song)
     {
         await _dialogHostService.OpenDialog(
-            new DisplaySharedSongIdDialogViewModel("ID sdílené písničky", $"ID sdílené písničky je: {song.SharedSongId}", song.SharedSongId),
+            new DisplaySharedSongIdDialogViewModel("ID sdílené písničky",
+                $"ID sdílené písničky je: {song.SharedSongId}", song.SharedSongId),
             "SongListDialog"
         );
     }
@@ -175,6 +177,24 @@ public partial class SongListViewModel : BaseViewModel
     [ICommand]
     private async Task EditSong(Song song)
     {
+        if (song.IsSongDownloaded)
+        {
+            var result = await _dialogHostService.OpenDialog(
+                new DialogQuestionViewModel("Vytvoření kopie písničky",
+                    "Přejete si vytvořit kopii písničky, abyste ji mohli editovat?"),
+                "SongListDialog"
+            );
+
+            if (result is true)
+            {
+                song = await _songService.CreateSongAsync(new CreateSongRequest(song.Title, song.Text, song.Source));
+            }
+            else
+            {
+                return;
+            }
+        }
+
         new EditSongWindow(song).ShowDialog();
 
         Songs = new ObservableCollection<Song>(await _localSongRepository.RetrieveAllSongsAsync());

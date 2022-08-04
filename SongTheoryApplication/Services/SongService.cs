@@ -20,15 +20,14 @@ public class SongService : ISongService
         _localSongRepository = localSongRepository;
     }
 
-    public async Task CreateSongAsync(CreateSongRequest? createSongRequest)
+    public async Task<Song> CreateSongAsync(CreateSongRequest? createSongRequest)
     {
         Guard.IsNotNull(createSongRequest);
 
-        await ValidateSongDoesNotExist(createSongRequest);
-        await InternalCreateSong(createSongRequest);
+        return await InternalCreateSong(createSongRequest);
     }
 
-    private async Task InternalCreateSong(CreateSongRequest createSongRequest)
+    private async Task<Song> InternalCreateSong(CreateSongRequest createSongRequest)
     {
         var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText, createSongRequest.SongSource, createSongRequest.IsSongShared, createSongRequest.SharedSongId, createSongRequest.IsSongDownloaded);
 
@@ -41,6 +40,8 @@ public class SongService : ISongService
         {
             throw new SongCannotBeCreatedException("Song cannot be created.", ex);
         }
+
+        return song;
     }
 
     private async Task ValidateSongDoesNotExist(CreateSongRequest createSongRequest)
