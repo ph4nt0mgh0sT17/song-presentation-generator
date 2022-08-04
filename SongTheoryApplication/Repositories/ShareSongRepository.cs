@@ -3,6 +3,7 @@ using CommunityToolkit.Diagnostics;
 using Firebase.Database;
 using Firebase.Database.Query;
 using SongTheoryApplication.Attributes;
+using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Models;
 
 namespace SongTheoryApplication.Repositories;
@@ -10,9 +11,10 @@ namespace SongTheoryApplication.Repositories;
 [Repository]
 public class ShareSongRepository : IShareSongRepository
 {
-    public async Task<string> SaveSongAsync(ShareSong? song)
+    public async Task SaveSongAsync(string? shareSongId, ShareSong? song)
     {
         Guard.IsNotNull(song);
+        Guard.IsNotNull(shareSongId);
 
         var firebaseClient = new FirebaseClient(
             "https://song-presentation-generator-default-rtdb.europe-west1.firebasedatabase.app",
@@ -21,11 +23,17 @@ public class ShareSongRepository : IShareSongRepository
                 AuthTokenAsyncFactory = () => Task.FromResult("Cc0MrBW4v3LnZf9rq8agesobF5ToYM8E0soj0Mns")
             });
 
-        var result = await firebaseClient
-            .Child("shared-songs")
-            .PostAsync(song);
+        var shareSong = await GetSongAsync(shareSongId);
 
-        return result.Key;
+        if (shareSong != null)
+        {
+            throw new SharedSongAlreadyExistsException(shareSongId);
+        }
+
+        await firebaseClient
+            .Child("shared-songs")
+            .Child(shareSongId)
+            .PutAsync(song);
     }
 
     public async Task DeleteSongAsync(string? shareSongId)

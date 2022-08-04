@@ -147,6 +147,52 @@
         </StackPanel>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type dialogs:ShareSongDialogViewModel}">
+        <StackPanel Margin="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <materialDesign:PackIcon Kind="ExclamationBold"
+                                         Foreground="DeepSkyBlue"
+                                         Height="48"
+                                         Width="48"
+                                         Margin="20, 25, 20, 20"
+                                         Grid.Column="0" />
+                <StackPanel Margin="20"
+                            Grid.Column="1"
+                            MinWidth="300">
+                    <TextBlock Text="Sdílení písničky" FontSize="35" />
+                    <TextBox Text="{Binding Path=SharedSongId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Visibility="{Binding Path=IsSongShared,Converter={StaticResource ReversedBoolToVisibilityConverter}}"></TextBox>
+                </StackPanel>
+            </Grid>
+            <Grid Visibility="{Binding Path=SharedSongIdIsOccupied,Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Foreground="Red">ID, které jste vybrali pro sdílení písničky, je obsazeno.</TextBlock>
+            </Grid>
+            <Grid Visibility="{Binding Path=IsSongShared,Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock Foreground="Green">Písnička je úspěšně sdílena.</TextBlock>
+            </Grid>
+            <StackPanel Visibility="{Binding Path=IsSongShared,Converter={StaticResource ReversedBoolToVisibilityConverter}}"
+                        Orientation="Horizontal" Margin="0, 20, 0, 0"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Content="Sdílet píseň"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding Path=ShareSongCommand}"/>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding Path=IsSongShared,Converter={StaticResource BoolToVisibilityConverter}}"
+                        Orientation="Horizontal" Margin="0, 20, 0, 0"
+                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Content="Zavřít"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+            </StackPanel>
+            
+        </StackPanel>
+    </DataTemplate>
+
     <!-- Question dialog -->
     <DataTemplate DataType="{x:Type dialogs:DialogQuestionViewModel}">
         <StackPanel Margin="20">

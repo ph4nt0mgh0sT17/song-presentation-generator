@@ -21,12 +21,15 @@ public class ShareService : IShareService
         _songService = songService;
     }
 
-    public async Task<string> ShareSong(ShareSongRequest? shareSongRequest)
+    public async Task ShareSong(ShareSongRequest? shareSongRequest)
     {
         Guard.IsNotNull(shareSongRequest);
 
-        return await _shareSongRepository.SaveSongAsync(new ShareSong(shareSongRequest.SongTitle,
-            shareSongRequest.SongText));
+        await _shareSongRepository.SaveSongAsync(
+            shareSongRequest.ShareSongId, 
+            new ShareSong(shareSongRequest.SongTitle,
+            shareSongRequest.SongText, shareSongRequest.SongSource)
+       );
     }
 
     public async Task DeleteSongAsync(string? sharedSongId)
@@ -45,7 +48,7 @@ public class ShareService : IShareService
         if (shareSong == null)
             throw new InvalidOperationException($"The share song with id {shareSong} does not exist.");
 
-        await _songService.CreateSongAsync(new CreateSongRequest(shareSong.Title, shareSong.Title, false, sharedSongId, true));
+        await _songService.CreateSongAsync(new CreateSongRequest(shareSong.Title, shareSong.Title, shareSong.Source, false, sharedSongId, true));
     }
 
     public async Task UpdateSongAsync(string? sharedSongId, ShareSongRequest? updateShareSongRequest)
@@ -57,7 +60,8 @@ public class ShareService : IShareService
             sharedSongId,
             new ShareSong(
                 updateShareSongRequest.SongTitle,
-                updateShareSongRequest.SongText
+                updateShareSongRequest.SongText,
+                updateShareSongRequest.SongSource
             )
         );
     }
@@ -78,7 +82,7 @@ public class ShareService : IShareService
 
         await _songService.UpdateSongAsync(
             new EditSongRequest(
-                song.Id, sharedSong.Title, sharedSong.Text, false, song.SharedSongId, true
+                song.Id, sharedSong.Title, sharedSong.Text, sharedSong.Source, false, song.SharedSongId, true
             )
         );
     }

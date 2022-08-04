@@ -6,7 +6,7 @@ namespace SongTheoryApplication.Services;
 
 public interface IShareService
 {
-    Task<string> ShareSong(ShareSongRequest? shareSongRequest);
+    Task ShareSong(ShareSongRequest? shareSongRequest);
     Task DeleteSongAsync(string? sharedSongId);
     Task AddSharedSong(string? sharedSongId);
     Task UpdateSongAsync(string? sharedSongId, ShareSongRequest? updateShareSongRequest);

@@ -30,7 +30,7 @@ public class SongService : ISongService
 
     private async Task InternalCreateSong(CreateSongRequest createSongRequest)
     {
-        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText, createSongRequest.IsSongShared, createSongRequest.SharedSongId, createSongRequest.IsSongDownloaded);
+        var song = new Song(createSongRequest.SongTitle, createSongRequest.SongText, createSongRequest.SongSource, createSongRequest.IsSongShared, createSongRequest.SharedSongId, createSongRequest.IsSongDownloaded);
 
         try
         {
@@ -57,7 +57,7 @@ public class SongService : ISongService
     {
         Guard.IsNotNull(editSongRequest);
 
-        var song = new Song(editSongRequest.SongTitle, editSongRequest.SongText, editSongRequest.IsSongShared, editSongRequest.SharedSongId);
+        var song = new Song(editSongRequest.SongTitle, editSongRequest.SongText, editSongRequest.SongSource, editSongRequest.IsSongShared, editSongRequest.SharedSongId);
 
         try
         {

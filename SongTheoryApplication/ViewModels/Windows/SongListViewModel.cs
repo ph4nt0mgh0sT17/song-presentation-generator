@@ -91,19 +91,12 @@ public partial class SongListViewModel : BaseViewModel
     [ICommand]
     private async Task ShareSong(Song song)
     {
-        var sharedSongId = await _shareService.ShareSong(new ShareSongRequest(song.Title, song.Text));
-        await _songService.UpdateSongAsync(new EditSongRequest(song.Id, song.Title, song.Text, true, sharedSongId));
-        song.IsSongShared = true;
-        song.SharedSongId = sharedSongId;
-
-        var songIndex = Songs.IndexOf(song);
-        Songs.RemoveAt(songIndex);
-        Songs.Insert(songIndex, song);
-
         await _dialogHostService.OpenDialog(
-            new SuccessNotificationDialogViewModel("Písnička je úspěšně sdílena.", "Úspěch"),
+            new ShareSongDialogViewModel(_shareService, _songService, song),
             "SongListDialog"
         );
+
+        await OnLoadedAsync();
     }
 
     [ICommand]
@@ -111,7 +104,7 @@ public partial class SongListViewModel : BaseViewModel
     {
         await _shareService.DeleteSongAsync(song.SharedSongId);
 
-        await _songService.UpdateSongAsync(new EditSongRequest(song.Id, song.Title, song.Text, false, null));
+        await _songService.UpdateSongAsync(new EditSongRequest(song.Id, song.Title, song.Text, song.Source, false, null));
         song.IsSongShared = false;
         song.SharedSongId = null;
 

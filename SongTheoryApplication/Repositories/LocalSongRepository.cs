@@ -37,6 +37,7 @@ public class LocalSongRepository : ILocalSongRepository
         var existingSong = songs.Find(x => x.Id == id);
         existingSong.Title = song.Title;
         existingSong.Text = song.Text;
+        existingSong.Source = song.Source;
         existingSong.IsSongShared = song.IsSongShared;
         existingSong.SharedSongId = song.SharedSongId;
 

@@ -33,6 +33,11 @@ public partial class EditSongWindowViewModel : ObservableValidator
     [MinLength(2, ErrorMessage = "Text písničky musí být nejméně 2 znaky dlouhé")]
     private string _songText = "";
 
+    [ObservableProperty]
+    [Required(ErrorMessage = "Zdroj písničky je požadován")]
+    [MinLength(2, ErrorMessage = "Zdroj písničky musí být nejméně 2 znaky dlouhý")]
+    private string _songSource = "";
+
     private string SongId { get; }
 
     [ObservableProperty] private bool _presentationIsBeingGenerated;
@@ -55,7 +60,8 @@ public partial class EditSongWindowViewModel : ObservableValidator
     private bool CheckCanUpdateSong()
     {
         return !string.IsNullOrEmpty(SongTitle) &&
-               !string.IsNullOrEmpty(SongText);
+               !string.IsNullOrEmpty(SongText) &&
+               !string.IsNullOrEmpty(SongSource);
     }
 
     public bool CanGeneratePresentation => CanUpdateSong && _applicationService.IsPowerPointInstalled;
@@ -84,6 +90,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
         SongTitle = song.Title;
         SongText = song.Text;
         SongId = song.Id;
+        SongSource = song.Source;
         _isSongShared = song.IsSongShared;
 
         EditSongWindow = editSongWindow;
@@ -98,6 +105,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
         {
             case nameof(SongTitle):
             case nameof(SongText):
+            case nameof(SongSource):
                 UpdateSongCommand.NotifyCanExecuteChanged();
                 GenerateSongPresentationCommand.NotifyCanExecuteChanged();
                 break;
@@ -108,15 +116,18 @@ public partial class EditSongWindowViewModel : ObservableValidator
     {
         if (!CanUpdateSong) return;
 
-        var editSongRequest = new EditSongRequest(SongId, SongTitle, SongText, _isSongShared, _song.SharedSongId);
+        var editSongRequest =
+            new EditSongRequest(SongId, SongTitle, SongText, SongSource, _isSongShared, _song.SharedSongId);
 
         try
         {
             await _songService.UpdateSongAsync(editSongRequest);
             if (_song.IsSongShared)
             {
-                await _shareService.UpdateSongAsync(_song.SharedSongId, new ShareSongRequest(SongTitle, SongText));
+                await _shareService.UpdateSongAsync(_song.SharedSongId,
+                    new ShareSongRequest(_song.SharedSongId, SongTitle, SongText, SongSource));
             }
+
             await DisplaySuccessDialog();
         }
 

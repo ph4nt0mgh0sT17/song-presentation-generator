@@ -9,7 +9,7 @@ public interface IShareSongRepository
     /// Saves a new song into the firebase shared-songs repository.
     /// </summary>
     /// <param name="song">The <see cref="ShareSong" /> to be saved.</param>
-    Task<string> SaveSongAsync(ShareSong? song);
+    Task SaveSongAsync(string? shareSongId, ShareSong? song);
 
 
     Task DeleteSongAsync(string? shareSongId);

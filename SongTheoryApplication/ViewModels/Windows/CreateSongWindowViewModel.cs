@@ -31,8 +31,13 @@ public partial class CreateSongWindowViewModel : ObservableValidator
 
     [ObservableProperty]
     [Required(ErrorMessage = "Text písničky je požadováno")]
-    [MinLength(2, ErrorMessage = "Text písničky musí být nejméně 2 znaky dlouhé")]
+    [MinLength(2, ErrorMessage = "Text písničky musí být nejméně 2 znaky dlouhý")]
     private string _songText = "";
+
+    [ObservableProperty]
+    [Required(ErrorMessage = "Zdroj písničky je požadován")]
+    [MinLength(2, ErrorMessage = "Zdroj písničky musí být nejméně 2 znaky dlouhý")]
+    private string _songSource = "";
 
     [ObservableProperty] private bool _presentationIsBeingGenerated;
 
@@ -49,7 +54,8 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     private bool CheckCanCreateSong()
     {
         return !string.IsNullOrEmpty(SongTitle) &&
-               !string.IsNullOrEmpty(SongText);
+               !string.IsNullOrEmpty(SongText) &&
+               !string.IsNullOrEmpty(SongSource);
     }
 
     public bool CanGeneratePresentation => CanCreateSong && _applicationService.IsPowerPointInstalled;
@@ -78,6 +84,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
         {
             case nameof(SongTitle):
             case nameof(SongText):
+            case nameof(SongSource):
                 CreateSongCommand.NotifyCanExecuteChanged();
                 GenerateSongPresentationCommand.NotifyCanExecuteChanged();
                 break;
@@ -88,7 +95,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     {
         if (!CanCreateSong) return;
 
-        var createSongRequest = new CreateSongRequest(SongTitle, SongText);
+        var createSongRequest = new CreateSongRequest(SongTitle, SongText, SongSource);
 
         try
         {
@@ -111,8 +118,6 @@ public partial class CreateSongWindowViewModel : ObservableValidator
                 "Písnička nemohla být vytvořena"
             ));
         }
-
-        
     }
 
     private async Task DisplaySuccessDialog()

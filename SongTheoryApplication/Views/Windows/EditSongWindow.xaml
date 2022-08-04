@@ -53,6 +53,11 @@
                     </TextBox>
                 </StackPanel>
 
+                <StackPanel Margin="30">
+                    <TextBlock TextWrapping="WrapWithOverflow">Zdroj písničky</TextBlock>
+                    <TextBox Text="{Binding Path=SongSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                </StackPanel>
+
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button
                         Margin="0,0,20,0"
