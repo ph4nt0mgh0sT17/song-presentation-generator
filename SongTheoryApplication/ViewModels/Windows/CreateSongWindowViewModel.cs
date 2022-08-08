@@ -55,7 +55,8 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     {
         return !string.IsNullOrEmpty(SongTitle) &&
                !string.IsNullOrEmpty(SongText) &&
-               !string.IsNullOrEmpty(SongSource);
+               !string.IsNullOrEmpty(SongSource) &&
+               !HasErrors;
     }
 
     public bool CanGeneratePresentation => CanCreateSong && _applicationService.IsPowerPointInstalled;
