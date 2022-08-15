@@ -82,7 +82,7 @@ public class ShareService : IShareService
 
         await _songService.UpdateSongAsync(
             new EditSongRequest(
-                song.Id, sharedSong.Title, sharedSong.Text, sharedSong.Source, false, song.SharedSongId, true
+                song.Id, sharedSong.Title, sharedSong.Text, sharedSong.Source, false, song.SharedSongId, true, song.CopySongId
             )
         );
     }

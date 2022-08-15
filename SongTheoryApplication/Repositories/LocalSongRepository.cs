@@ -40,6 +40,7 @@ public class LocalSongRepository : ILocalSongRepository
         existingSong.Source = song.Source;
         existingSong.IsSongShared = song.IsSongShared;
         existingSong.SharedSongId = song.SharedSongId;
+        existingSong.CopySongId = song.CopySongId;
 
         var songsJsonText = JsonSerializer.Serialize(songs);
 

@@ -105,7 +105,7 @@ public partial class SongListViewModel : BaseViewModel
         await _shareService.DeleteSongAsync(song.SharedSongId);
 
         await _songService.UpdateSongAsync(
-            new EditSongRequest(song.Id, song.Title, song.Text, song.Source, false, null));
+            new EditSongRequest(song.Id, song.Title, song.Text, song.Source, false, null, song.IsSongDownloaded, song.CopySongId));
         song.IsSongShared = false;
         song.SharedSongId = null;
 
@@ -177,25 +177,41 @@ public partial class SongListViewModel : BaseViewModel
     [ICommand]
     private async Task EditSong(Song song)
     {
+        var newCopySong = song;
         if (song.IsSongDownloaded)
         {
-            var result = await _dialogHostService.OpenDialog(
-                new DialogQuestionViewModel("Vytvoření kopie písničky",
-                    "Přejete si vytvořit kopii písničky, abyste ji mohli editovat?"),
-                "SongListDialog"
-            );
-
-            if (result is true)
+            if (song.CopySongId != null)
             {
-                song = await _songService.CreateSongAsync(new CreateSongRequest(song.Title, song.Text, song.Source));
+                newCopySong = await _songService.FindSongAsync(currentSong => currentSong.Id == song.CopySongId);
             }
             else
             {
-                return;
+
+                var result = await _dialogHostService.OpenDialog(
+                    new DialogQuestionViewModel("Vytvoření kopie písničky",
+                        "Přejete si vytvořit kopii písničky, abyste ji mohli editovat?"),
+                    "SongListDialog"
+                );
+
+                if (result is true)
+                {
+                    newCopySong =
+                        await _songService.CreateSongAsync(new CreateSongRequest(song.Title, song.Text, song.Source));
+                    await _songService.UpdateSongAsync(
+                        new EditSongRequest(
+                            song.Id, song.Title, song.Text, song.Source, song.IsSongShared, song.SharedSongId,
+                            song.IsSongDownloaded, newCopySong.Id
+                        )
+                    );
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
-        new EditSongWindow(song).ShowDialog();
+        new EditSongWindow(newCopySong).ShowDialog();
 
         Songs = new ObservableCollection<Song>(await _localSongRepository.RetrieveAllSongsAsync());
     }

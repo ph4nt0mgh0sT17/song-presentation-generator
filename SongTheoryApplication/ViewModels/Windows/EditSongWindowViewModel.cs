@@ -117,8 +117,11 @@ public partial class EditSongWindowViewModel : ObservableValidator
     {
         if (!CanUpdateSong) return;
 
-        var editSongRequest =
-            new EditSongRequest(SongId, SongTitle, SongText, SongSource, _isSongShared, _song.SharedSongId);
+        var editSongRequest = new EditSongRequest(
+            SongId, SongTitle, SongText, SongSource, 
+            _isSongShared, _song.SharedSongId, _song.IsSongDownloaded, 
+            _song.CopySongId
+        );
 
         try
         {
@@ -126,7 +129,8 @@ public partial class EditSongWindowViewModel : ObservableValidator
             if (_song.IsSongShared)
             {
                 await _shareService.UpdateSongAsync(_song.SharedSongId,
-                    new ShareSongRequest(_song.SharedSongId, SongTitle, SongText, SongSource));
+                    new ShareSongRequest(_song.SharedSongId, SongTitle, SongText, SongSource)
+                );
             }
 
             await DisplaySuccessDialog();

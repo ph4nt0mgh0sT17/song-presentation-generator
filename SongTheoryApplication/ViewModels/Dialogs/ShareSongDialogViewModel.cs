@@ -53,7 +53,7 @@ public partial class ShareSongDialogViewModel : ObservableObject
         try
         {
             await _songService.UpdateSongAsync(new EditSongRequest(_song.Id, _song.Title, _song.Text, _song.Source,
-                true, _sharedSongId));
+                true, _sharedSongId, _song.IsSongDownloaded, _song.CopySongId));
         }
         catch (Exception ex)
         {

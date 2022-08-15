@@ -14,7 +14,7 @@ public class Song
     }
 
     public Song(string? title, string? text, string? source, bool isSongShared = false, string? sharedSongId = null, 
-        bool isSongDownloaded = false)
+        bool isSongDownloaded = false, string? copySongId = null)
     {
         Guard.IsNotNullOrEmpty(title, nameof(title));
         Guard.IsNotNullOrEmpty(text, nameof(text));
@@ -27,6 +27,7 @@ public class Song
         IsSongShared = isSongShared;
         SharedSongId = sharedSongId;
         IsSongDownloaded = isSongDownloaded;
+        CopySongId = copySongId;
     }
 
     public string Id { get; set; }
@@ -36,4 +37,5 @@ public class Song
     public bool IsSongShared { get; set; }
     public string? SharedSongId { get; set; }
     public bool IsSongDownloaded { get; set; }
+    public string? CopySongId { get; set; }
 }

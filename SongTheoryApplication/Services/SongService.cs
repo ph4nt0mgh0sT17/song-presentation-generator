@@ -58,7 +58,7 @@ public class SongService : ISongService
     {
         Guard.IsNotNull(editSongRequest);
 
-        var song = new Song(editSongRequest.SongTitle, editSongRequest.SongText, editSongRequest.SongSource, editSongRequest.IsSongShared, editSongRequest.SharedSongId);
+        var song = new Song(editSongRequest.SongTitle, editSongRequest.SongText, editSongRequest.SongSource, editSongRequest.IsSongShared, editSongRequest.SharedSongId, editSongRequest.IsSongDownloaded, editSongRequest.CopySongId);
 
         try
         {
