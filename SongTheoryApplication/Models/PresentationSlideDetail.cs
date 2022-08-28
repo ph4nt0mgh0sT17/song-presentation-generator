@@ -1,14 +1,17 @@
-﻿namespace SongTheoryApplication.Models;
+﻿using System.Collections.Generic;
+using System.Windows.Documents;
+
+namespace SongTheoryApplication.Models;
 
 public class PresentationSlideDetail
 {
-    public string? StyleName { get; set; }
+    public List<PresentationTextStyle> PresentationTextStyles { get; }
     public PresentationFormatStyle PresentationFormatStyle { get; set; }
-    public string TextContent { get; set; }
+    
 
-    public PresentationSlideDetail(PresentationFormatStyle presentationFormatStyle, string textContent)
+    public PresentationSlideDetail(PresentationFormatStyle presentationFormatStyle)
     {
         PresentationFormatStyle = presentationFormatStyle;
-        TextContent = textContent;
+        PresentationTextStyles = new List<PresentationTextStyle>();
     }
 }

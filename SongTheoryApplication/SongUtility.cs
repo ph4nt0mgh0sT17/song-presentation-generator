@@ -24,26 +24,24 @@ public static class SongUtility
         var slides = new List<PresentationSlideDetail>();
 
         PresentationSlideDetail? currentPresentationSlide;
+        PresentationTextStyle? currentPresentationTextStyle;
 
         var pattern = Regex.Match(songTextLines[0], @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
         if (pattern.Success)
         {
-            currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-            {
-                StyleName = pattern.Groups[1].Value
-            };
+            currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
+            currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"));
+            currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
         }
 
         else
         {
-            currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-            {
-                StyleName = "Default"
-            };
+            currentPresentationTextStyle = new PresentationTextStyle("", "Default");
+            currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"));
 
             if (!songTextLines[0].StartsWith("/use-style"))
             {
-                currentPresentationSlide.TextContent += songTextLines[0] + "\n";
+                currentPresentationTextStyle.TextContent += songTextLines[0] + "\n";
             }
         }
 
@@ -57,30 +55,32 @@ public static class SongUtility
                 //       However, /use-style cannot be used twice in the same style
                 if (currentTextLine.StartsWith("/use-style"))
                 {
-                    if (currentPresentationSlide.TextContent.Length > 0)
+                    if (currentPresentationTextStyle.TextContent != "")
                     {
-                        throw new SongTextParseException(
-                            "Parse invalid.",
-                            "Písnička nemůže být vytvořena/vygenerována, protože nemůžete použít 2 styly ve stejném slidu ve kterém už je nějaký text."
-                        );
-                    }
-
-                    pattern = Regex.Match(currentTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
-                    if (pattern.Success)
-                    {
-                        currentPresentationSlide =
-                            new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-                            {
-                                StyleName = pattern.Groups[1].Value
-                            };
+                        pattern = Regex.Match(currentTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
+                        if (pattern.Success)
+                        {
+                            currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
+                            currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+                        }
+                        else
+                        {
+                            currentPresentationTextStyle = new PresentationTextStyle("", "Default");
+                            currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+                        }
                     }
                     else
                     {
-                        currentPresentationSlide =
-                            new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-                            {
-                                StyleName = "Default"
-                            };
+
+                        pattern = Regex.Match(currentTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
+                        if (pattern.Success)
+                        {
+                            currentPresentationTextStyle.StyleName = pattern.Groups[1].Value;
+                        }
+                        else
+                        {
+                            currentPresentationTextStyle.StyleName = "Default";
+                        }
                     }
 
                     continue;
@@ -90,16 +90,17 @@ public static class SongUtility
                 {
                     slides.Add(currentPresentationSlide);
                     currentPresentationSlide =
-                        new PresentationSlideDetail(currentPresentationSlide.PresentationFormatStyle, "")
-                        {
-                            StyleName = currentPresentationSlide.StyleName
-                        };
+                        new PresentationSlideDetail(currentPresentationSlide.PresentationFormatStyle);
+                    currentPresentationTextStyle =
+                        new PresentationTextStyle("", currentPresentationTextStyle.StyleName);
+
+                    currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
 
                     continue;
                 }
             }
 
-            currentPresentationSlide.TextContent += currentTextLine + "\n";
+            currentPresentationTextStyle.TextContent += currentTextLine + "\n";
         }
 
         if (!slides.Contains(currentPresentationSlide))
@@ -116,29 +117,5 @@ public static class SongUtility
             .Select(line => line.Trim())
             .ToList();
         return songTextLines;
-    }
-
-    private static PresentationSlideDetail CreateNewPresentationSlideDetail(string songTextLine)
-    {
-        var pattern = Regex.Match(songTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
-        if (pattern.Success)
-        {
-            return new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-            {
-                StyleName = pattern.Groups[1].Value
-            };
-        }
-
-        var currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"), "")
-        {
-            StyleName = "Default"
-        };
-
-        if (!songTextLine.StartsWith("/use-style"))
-        {
-            currentPresentationSlide.TextContent += songTextLine + "\n";
-        }
-
-        return currentPresentationSlide;
     }
 }

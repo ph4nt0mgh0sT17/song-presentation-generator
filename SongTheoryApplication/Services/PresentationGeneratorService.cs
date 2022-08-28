@@ -52,42 +52,49 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     {
         var configuration = _configuration.Get<ApplicationConfiguration>();
 
-        var defaultSettings =
-            configuration.PresentationSettings?.FirstOrDefault(x => x.Name == slideDetail.StyleName) ??
-            configuration.PresentationSettings?.FirstOrDefault(x => x.Name == "Default") ??
-            new PresentationSetting
-            {
-                Name = "Default",
-                FontColor = "Black",
-                FontFamily = "Times New Roman",
-                FontSize = 15
-            };
-
         var textSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutBlank);
         var songTextLabel =
             textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 500);
-        songTextLabel.TextFrame.TextRange.Text = slideDetail.TextContent;
         songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
-        songTextLabel.TextFrame.TextRange.Font.Name = defaultSettings.FontFamily;
-        songTextLabel.TextFrame.TextRange.Font.Size = defaultSettings.FontSize;
 
-        if (defaultSettings.FontColor == null)
-            throw new InvalidOperationException("The application configuration needs to have 'FontColor' parameter.");
-
-        if (!COLORS.ContainsKey(defaultSettings.FontColor))
+        foreach (var textStyle in slideDetail.PresentationTextStyles)
         {
-            songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS["Black"];
-            // TODO: Log there is no color like this.
-        }
+            var defaultSettings =
+                configuration.PresentationSettings?.FirstOrDefault(x => x.Name == textStyle.StyleName) ??
+                configuration.PresentationSettings?.FirstOrDefault(x => x.Name == "Default") ??
+                new PresentationSetting
+                {
+                    Name = "Default",
+                    FontColor = "Black",
+                    FontFamily = "Times New Roman",
+                    FontSize = 15
+                };
 
-        else
-        {
-            songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor];
-        }
+            var currentTextRange = songTextLabel.TextFrame.TextRange.InsertAfter(textStyle.TextContent);
+            
+            
+            currentTextRange.Font.Name = defaultSettings.FontFamily;
+            currentTextRange.Font.Size = defaultSettings.FontSize;
 
-        songTextLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor ?? "Black"];
-        songTextLabel.TextFrame.TextRange.Font.Bold =
-            defaultSettings.IsBold ? MsoTriState.msoTrue : MsoTriState.msoFalse;
+            if (defaultSettings.FontColor == null)
+                throw new InvalidOperationException("The application configuration needs to have 'FontColor' parameter.");
+
+            if (!COLORS.ContainsKey(defaultSettings.FontColor))
+            {
+                currentTextRange.Font.Color.RGB = COLORS["Black"];
+                // TODO: Log there is no color like this.
+            }
+
+            else
+            {
+                currentTextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor];
+            }
+
+            currentTextRange.Font.Color.RGB = COLORS[defaultSettings.FontColor ?? "Black"];
+            currentTextRange.Font.Bold =
+                defaultSettings.IsBold ? MsoTriState.msoTrue : MsoTriState.msoFalse;
+
+        }
     }
 
     /// <summary>
@@ -175,7 +182,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     private void CreateEmptySlide(Presentation presentation, ref int slideIndex)
     {
         GenerateTextSlide(
-            new PresentationSlideDetail(new PresentationFormatStyle("Unknown"), ""),
+            new PresentationSlideDetail(new PresentationFormatStyle("Unknown")),
             presentation,
             slideIndex
         );
