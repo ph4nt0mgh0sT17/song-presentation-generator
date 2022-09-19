@@ -103,6 +103,11 @@ public static class SongUtility
             currentPresentationTextStyle.TextContent += currentTextLine + "\n";
         }
 
+        if (!currentPresentationSlide.PresentationTextStyles.Contains(currentPresentationTextStyle))
+        {
+            currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+        }
+
         if (!slides.Contains(currentPresentationSlide))
         {
             slides.Add(currentPresentationSlide);
