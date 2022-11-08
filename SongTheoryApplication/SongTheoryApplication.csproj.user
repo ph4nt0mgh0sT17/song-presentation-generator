@@ -24,6 +24,9 @@
     <Page Update="Styles\Dialogs.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Styles\SongListWindow\ThemeStyle.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\UserControls\TestPage1.xaml">
       <SubType>Designer</SubType>
     </Page>

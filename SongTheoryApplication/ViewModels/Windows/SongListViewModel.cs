@@ -10,9 +10,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using SongTheoryApplication.Attributes;
+using SongTheoryApplication.Configuration;
 using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
@@ -35,6 +37,9 @@ public partial class SongListViewModel : BaseViewModel
 
     [ObservableProperty] private bool _songsAreLoading;
 
+    [ObservableProperty]
+    private string? _searchSongQuery = null;
+
     private readonly ILocalSongRepository _localSongRepository;
     private readonly IShareService _shareService;
     private readonly ISongService _songService;
@@ -43,13 +48,16 @@ public partial class SongListViewModel : BaseViewModel
     private readonly IDialogHostService _dialogHostService;
     private readonly ILogger<SongListViewModel> _logger;
 
+    public SnackbarMessageQueue BoundMessageQueue { get; } = new();
+
     public SongListViewModel(
         ILocalSongRepository localSongRepository,
         ISongService songService,
         IPresentationGeneratorService presentationGeneratorService,
         ISaveFileDialogProvider saveFileDialogProvider,
         IDialogHostService dialogHostService,
-        ILogger<SongListViewModel> logger, IShareService shareService)
+        ILogger<SongListViewModel> logger, IShareService shareService,
+        IConfiguration configuration, IApplicationService applicationService)
     {
         _localSongRepository = localSongRepository;
         _songService = songService;
@@ -58,6 +66,41 @@ public partial class SongListViewModel : BaseViewModel
         _shareService = shareService;
         _saveFileDialogProvider = saveFileDialogProvider;
         _dialogHostService = dialogHostService;
+
+        CheckConfigurationIsFound(configuration);
+        CheckPowerPointIsInstalled(applicationService);
+    }
+
+    private void CheckConfigurationIsFound(IConfiguration configuration)
+    {
+        if (configuration is NullConfiguration)
+        {
+            BoundMessageQueue.Enqueue(
+                content: "Konfigurace aplikace nenalezena. Prezentace budou vytvořeny v defaultním nastavení.",
+                actionContent: "Zavřít",
+                actionHandler: _ => { },
+                actionArgument: null,
+                promote: true,
+                neverConsiderToBeDuplicate: true,
+                durationOverride: TimeSpan.FromSeconds(60)
+            );
+        }
+    }
+
+    private void CheckPowerPointIsInstalled(IApplicationService applicationService)
+    {
+        if (!applicationService.IsPowerPointInstalled)
+        {
+            BoundMessageQueue.Enqueue(
+                content: "Aplikace PowerPoint nebyla nalezena ve vašem počítači. Nebudete moci vygenerovat písničky.",
+                actionContent: "Zavřít",
+                actionHandler: _ => { },
+                actionArgument: null,
+                promote: true,
+                neverConsiderToBeDuplicate: true,
+                durationOverride: TimeSpan.FromSeconds(60)
+            );
+        }
     }
 
     [ICommand]
@@ -289,5 +332,50 @@ public partial class SongListViewModel : BaseViewModel
                 fileName
             );
         });
+    }
+
+    [ICommand]
+    private void OpenCreateSongWindow()
+    {
+        new CreateSongWindow().ShowDialog();
+    }
+
+    [ICommand]
+    public void OpenGenerateSongsPresentationWindow()
+    {
+        new GenerateSongsPresentationWindow().ShowDialog();
+    }
+
+    [ICommand]
+    public async Task SearchSongs()
+    {
+        if (SearchSongQuery == null || SearchSongQuery.Length == 0)
+            return;
+
+        var songs = await _localSongRepository.RetrieveAllSongsAsync();
+
+        var filteredSongs = songs.Where(DoesSongMatchesSongQuery).ToList();
+
+        Songs = new ObservableCollection<Song>(filteredSongs);
+    }
+
+    [ICommand]
+    public async Task ResetSongList()
+    {
+        var songs = await _localSongRepository.RetrieveAllSongsAsync();
+
+        Songs = new ObservableCollection<Song>(songs);
+
+        SearchSongQuery = null;
+    }
+
+    private bool DoesSongMatchesSongQuery(Song song)
+    {
+        if (SearchSongQuery == null || SearchSongQuery.Length == 0)
+            return true;
+
+        return song.Title.Contains(SearchSongQuery.Trim(), StringComparison.CurrentCultureIgnoreCase) ||
+            song.Text.Contains(SearchSongQuery.Trim(), StringComparison.CurrentCultureIgnoreCase) ||
+            song.Tags != null && song.Tags.Contains(SearchSongQuery.Trim(), StringComparison.CurrentCultureIgnoreCase);
     }
 }

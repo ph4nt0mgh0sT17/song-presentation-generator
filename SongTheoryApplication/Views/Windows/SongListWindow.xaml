@@ -7,14 +7,19 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:vm2="clr-namespace:SongTheoryApplication.ViewModels.Windows"
         xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:converters="clr-namespace:SongTheoryApplication.Converters"
         xmlns:controls="clr-namespace:SongTheoryApplication.Views.Controls"
         xmlns:dialogs="clr-namespace:SongTheoryApplication.ViewModels.Dialogs"
         xmlns:system="clr-namespace:System;assembly=System.Runtime"
         xmlns:entities="clr-namespace:SongTheoryApplication.Models"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:SongListViewModel}"
-        Title="SongListWindow" Height="450" Width="1258" 
-        MinWidth="375" MinHeight="500" WindowStartupLocation="CenterScreen">
+        Title="SongListWindow" Height="450" Width="400" 
+        MinWidth="375" MinHeight="550" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <converters:IsLessThanOrEqualToConverter x:Key="IsLessThanOrEqualToConverter" />
+        <converters:IsGreaterThanOrEqualToConverter x:Key="IsGreaterThanOrEqualToConverter" />
+    </Window.Resources>
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded">
             <behaviors:InvokeCommandAction Command="{Binding Path=OnLoadedCommand}" />
@@ -22,54 +27,80 @@
     </behaviors:Interaction.Triggers>
     <materialDesign:DialogHost CloseOnClickAway="True" Identifier="SongListDialog">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-            </Grid.RowDefinitions>
-            <StackPanel Orientation="Vertical">
-                <materialDesign:Card Padding="10" Margin="16">
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Padding="15"
-                               Text="Evidence písní"
-                               TextWrapping="WrapWithOverflow"
-                               FontSize="25">
-                    </TextBlock>
-                </materialDesign:Card>
-            </StackPanel>
 
-            <materialDesign:Card Padding="10" Margin="16" Grid.Row="1">
-                <ListView ItemsSource="{Binding Path=Songs}" ScrollViewer.CanContentScroll="True"
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+
+                <Grid>
+                    <StackPanel Orientation="Vertical" Grid.Row="1">
+
+                        <StackPanel Margin="30,0,30,0">
+                            <TextBlock TextWrapping="Wrap">Vyhledat písničku podle názvu, textu či tagu</TextBlock>
+                            <TextBox
+                        Text="{Binding Path=SearchSongQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                    ValidatesOnDataErrors=True, 
+                    ValidatesOnNotifyDataErrors=True}"
+                        TextWrapping="WrapWithOverflow"
+                        AcceptsReturn="True">
+                            </TextBox>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Button Style="{DynamicResource PrimaryButton}"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding Path=SearchSongsCommand}"
+                    Margin="10">
+                                    Vyhledat
+                                </Button>
+
+
+                                <Button Style="{DynamicResource PrimaryButton}"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding Path=ResetSongListCommand}"
+                    Margin="10">
+                                    Resetovat vyhledávání
+                                </Button>
+                            </StackPanel>
+
+                                
+                        </StackPanel>
+
+                        <materialDesign:Card Padding="10" Margin="16" Grid.Row="1">
+                            <ListView ItemsSource="{Binding Path=Songs}" ScrollViewer.CanContentScroll="True"
+                                      Height="200"
                           Style="{StaticResource MaterialDesignListView}"
                           HorizontalContentAlignment="Stretch">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Setter Property="Background" Value="WhiteSmoke" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Path=IsSongShared}" Value="true">
-                                                <Setter Property="Control.Background" Value="Green" />
-                                                <Setter Property="Control.Foreground" Value="White" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Path=IsSongDownloaded}" Value="true">
-                                                <Setter Property="Control.Background" Value="Orange" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="250" />
-                                    <ColumnDefinition Width="*"></ColumnDefinition>
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <Setter Property="Background" Value="WhiteSmoke" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Path=IsSongShared}" Value="true">
+                                                            <Setter Property="Control.Background" Value="Green" />
+                                                            <Setter Property="Control.Foreground" Value="White" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=IsSongDownloaded}" Value="true">
+                                                            <Setter Property="Control.Background" Value="Orange" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="250" />
+                                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Path=Title}" HorizontalAlignment="Left"
+                                            <TextBlock Grid.Column="0" Text="{Binding Path=Title}" HorizontalAlignment="Left"
                                            VerticalAlignment="Center" TextWrapping="Wrap" />
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
 
-                                    <Button Margin="0,0,30,0"
+                                                <Button Margin="0,0,30,0"
                                             Content="Sdílet"
                                             Command="{
                                                     Binding Path=ViewModel.ShareSongCommand, 
@@ -83,22 +114,22 @@
                                             CommandParameter="{Binding}"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center">
-                                        <Button.Style>
-                                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsSongDownloaded}" Value="True">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsSongShared}" Value="True">
-                                                        <Setter Property="Control.Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                                    <Button.Style>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsSongDownloaded}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding IsSongShared}" Value="True">
+                                                                    <Setter Property="Control.Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
 
-                                    <Button Style="{DynamicResource PrimaryButton}"
+                                                <Button Style="{DynamicResource PrimaryButton}"
                                             Margin="0,0,30,0"
                                             Content="Zrušit sdílení písničky"
                                             Command="{
@@ -113,7 +144,7 @@
                                             CommandParameter="{Binding}"
                                             Visibility="{Binding Path=IsSongShared,Converter={StaticResource BoolToVisibilityConverter}}" />
 
-                                    <Button Style="{DynamicResource PrimaryButton}"
+                                                <Button Style="{DynamicResource PrimaryButton}"
                                             Margin="0,0,30,0"
                                             Content="Zobrazit ID sdílené písničky"
                                             Command="{
@@ -128,7 +159,7 @@
                                             CommandParameter="{Binding}"
                                             Visibility="{Binding Path=IsSongShared,Converter={StaticResource BoolToVisibilityConverter}}" />
 
-                                    <Button Style="{DynamicResource PrimaryButton}"
+                                                <Button Style="{DynamicResource PrimaryButton}"
                                             Margin="0,0,30,0"
                                             Content="Aktualizovat písničku"
                                             Command="{
@@ -144,7 +175,7 @@
                                             Visibility="{Binding Path=IsSongDownloaded,Converter={StaticResource BoolToVisibilityConverter}}" />
 
 
-                                    <Button Style="{DynamicResource SpecialButton}"
+                                                <Button Style="{DynamicResource SpecialButton}"
                                             Margin="0,0,30,0"
                                             Content="Generovat prezentaci"
                                             Command="{
@@ -158,7 +189,7 @@
                                             }"
                                             CommandParameter="{Binding}" />
 
-                                    <Button Style="{DynamicResource PrimaryButton}"
+                                                <Button Style="{DynamicResource PrimaryButton}"
                                             Command="{
                                                 Binding Path=ViewModel.EditSongCommand, 
                                                 RelativeSource={
@@ -171,8 +202,8 @@
                                             CommandParameter="{Binding}"
                                             Margin="0,0,30,0"
                                             Content="Upravit">
-                                    </Button>
-                                    <Button Style="{DynamicResource DangerButton}"
+                                                </Button>
+                                                <Button Style="{DynamicResource DangerButton}"
                                             Content="Smazat"
                                             Command="{
                                                 Binding Path=ViewModel.DeleteSongCommand, 
@@ -184,28 +215,51 @@
                                                 }
                                             }"
                                             CommandParameter="{Binding}" />
-                                </StackPanel>
+                                            </StackPanel>
 
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <d:ListView.ItemsSource>
-                        <x:Array Type="{x:Type entities:Song}">
-                            <entities:Song Title="Song title 1" Text="Sample text" IsSongShared="True" />
-                            <entities:Song Title="Song title 2" Text="Sample text" IsSongShared="False" IsSongDownloaded="True" />
-                            <entities:Song Title="Song title 3" Text="Sample text" IsSongShared="False" />
-                        </x:Array>
-                    </d:ListView.ItemsSource>
-                </ListView>
-            </materialDesign:Card>
-            <Button Style="{DynamicResource PrimaryButton}"
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Command="{Binding Path=AddSharedSongCommand}"
-                    Margin="10">
-                Přidat sdílenou písničku
-            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <d:ListView.ItemsSource>
+                                    <x:Array Type="{x:Type entities:Song}">
+                                        <entities:Song Title="Song title 1" Text="Sample text" IsSongShared="True" />
+                                        <entities:Song Title="Song title 2" Text="Sample text" IsSongShared="False" IsSongDownloaded="True" />
+                                        <entities:Song Title="Song title 3" Text="Sample text" IsSongShared="False" />
+                                    </x:Array>
+                                </d:ListView.ItemsSource>
+                            </ListView>
+                        </materialDesign:Card>
+
+                        <ContentControl Content="{Binding}" Grid.Row="2">
+                            <ContentControl.Style>
+                                <Style TargetType="ContentControl">
+                                    <Setter Property="ContentTemplate"
+                                    Value="{StaticResource Desktop_Buttons}" />
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsLessThanOrEqualToConverter}, ConverterParameter=650}"
+                                             Value="True">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource Mobile_Buttons}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource IsGreaterThanOrEqualToConverter}, ConverterParameter=650}"
+                                             Value="True">
+                                            <Setter Property="ContentTemplate" Value="{StaticResource Desktop_Buttons}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                        </ContentControl>
+                    </StackPanel>
+
+
+
+                </Grid>
+            </ScrollViewer>
+
+            <materialDesign:Snackbar Grid.Row="3"
+                                 HorizontalAlignment="Stretch"
+                                 MessageQueue="{Binding BoundMessageQueue}">
+            </materialDesign:Snackbar>
         </Grid>
     </materialDesign:DialogHost>
 
