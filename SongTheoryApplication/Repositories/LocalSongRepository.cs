@@ -19,7 +19,13 @@ public class LocalSongRepository : ILocalSongRepository
         var songs = await RetrieveAllSongsAsync();
         songs.Add(song);
 
-        var songsJsonText = JsonSerializer.Serialize(songs);
+        var songsJsonText = JsonSerializer.Serialize<List<Song>>(
+            songs, 
+            new JsonSerializerOptions 
+            { 
+            WriteIndented = true
+            }
+       );
 
         var fileStream = new FileStream(ApplicationConstants.SONGS_JSON_FILENAME, FileMode.Create);
 
@@ -38,6 +44,7 @@ public class LocalSongRepository : ILocalSongRepository
         existingSong.Title = song.Title;
         existingSong.Text = song.Text;
         existingSong.Source = song.Source;
+        existingSong.Tags = song.Tags;
         existingSong.IsSongShared = song.IsSongShared;
         existingSong.SharedSongId = song.SharedSongId;
         existingSong.CopySongId = song.CopySongId;

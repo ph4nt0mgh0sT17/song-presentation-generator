@@ -5,7 +5,7 @@ namespace SongTheoryApplication.Requests;
 public class EditSongRequest
 {
     public EditSongRequest(
-        string? id, string? songTitle, string? songText, string? songSource,
+        string? id, string? songTitle, string? songText, string? songSource, string? songTags,
         bool isSongShared = false, string? sharedSongId = null, bool isSongDownloaded = false,
         string? copySongId = null)
     {
@@ -17,6 +17,7 @@ public class EditSongRequest
         SongTitle = songTitle;
         SongText = songText;
         SongSource = songSource;
+        SongTags = songTags;
         IsSongShared = isSongShared;
         SharedSongId = sharedSongId;
         IsSongDownloaded = isSongDownloaded;
@@ -27,6 +28,7 @@ public class EditSongRequest
     public string SongTitle { get; }
     public string SongText { get; }
     public string? SongSource { get; }
+    public string? SongTags { get; }
     public bool IsSongShared { get; }
     public string? SharedSongId { get; }
     public bool IsSongDownloaded { get; }

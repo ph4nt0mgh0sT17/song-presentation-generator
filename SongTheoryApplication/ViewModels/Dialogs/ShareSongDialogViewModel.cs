@@ -42,7 +42,7 @@ public partial class ShareSongDialogViewModel : ObservableObject
 
         try
         {
-            await _shareService.ShareSong(new ShareSongRequest(_sharedSongId, _song.Title, _song.Text, _song.Source));
+            await _shareService.ShareSong(new ShareSongRequest(_sharedSongId, _song.Title, _song.Text, _song.Source, _song.Tags));
         }
         catch (SharedSongAlreadyExistsException)
         {
@@ -52,7 +52,7 @@ public partial class ShareSongDialogViewModel : ObservableObject
 
         try
         {
-            await _songService.UpdateSongAsync(new EditSongRequest(_song.Id, _song.Title, _song.Text, _song.Source,
+            await _songService.UpdateSongAsync(new EditSongRequest(_song.Id, _song.Title, _song.Text, _song.Source, _song.Tags,
                 true, _sharedSongId, _song.IsSongDownloaded, _song.CopySongId));
         }
         catch (Exception ex)

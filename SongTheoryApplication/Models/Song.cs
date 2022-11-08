@@ -13,7 +13,7 @@ public class Song
         Text = "Text";
     }
 
-    public Song(string? title, string? text, string? source, bool isSongShared = false, string? sharedSongId = null, 
+    public Song(string? title, string? text, string? source, string? tags, bool isSongShared = false, string? sharedSongId = null, 
         bool isSongDownloaded = false, string? copySongId = null)
     {
         Guard.IsNotNullOrEmpty(title, nameof(title));
@@ -23,6 +23,7 @@ public class Song
         Title = title;
         Text = text;
         Source = source;
+        Tags = tags;
         IsSongShared = isSongShared;
         SharedSongId = sharedSongId;
         IsSongDownloaded = isSongDownloaded;
@@ -33,6 +34,7 @@ public class Song
     public string Title { get; set; }
     public string Text { get; set; }
     public string? Source { get; set; }
+    public string? Tags { get; set; }
     public bool IsSongShared { get; set; }
     public string? SharedSongId { get; set; }
     public bool IsSongDownloaded { get; set; }

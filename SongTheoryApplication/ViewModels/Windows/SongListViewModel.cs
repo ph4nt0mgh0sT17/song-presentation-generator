@@ -105,7 +105,7 @@ public partial class SongListViewModel : BaseViewModel
         await _shareService.DeleteSongAsync(song.SharedSongId);
 
         await _songService.UpdateSongAsync(
-            new EditSongRequest(song.Id, song.Title, song.Text, song.Source, false, null, song.IsSongDownloaded, song.CopySongId));
+            new EditSongRequest(song.Id, song.Title, song.Text, song.Source, song.Tags, false, null, song.IsSongDownloaded, song.CopySongId));
         song.IsSongShared = false;
         song.SharedSongId = null;
 
@@ -196,10 +196,10 @@ public partial class SongListViewModel : BaseViewModel
                 if (result is true)
                 {
                     newCopySong =
-                        await _songService.CreateSongAsync(new CreateSongRequest(song.Title, song.Text, song.Source));
+                        await _songService.CreateSongAsync(new CreateSongRequest(song.Title, song.Text, song.Source, song.Tags));
                     await _songService.UpdateSongAsync(
                         new EditSongRequest(
-                            song.Id, song.Title, song.Text, song.Source, song.IsSongShared, song.SharedSongId,
+                            song.Id, song.Title, song.Text, song.Source, song.Tags, song.IsSongShared, song.SharedSongId,
                             song.IsSongDownloaded, newCopySong.Id
                         )
                     );

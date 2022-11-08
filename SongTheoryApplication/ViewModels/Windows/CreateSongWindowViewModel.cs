@@ -37,6 +37,9 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     [ObservableProperty]
     private string? _songSource = null;
 
+    [ObservableProperty]
+    private string? _songTags = null;
+
     [ObservableProperty] private bool _presentationIsBeingGenerated;
 
     private readonly ISongService _songService;
@@ -92,7 +95,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     {
         if (!CanCreateSong) return;
 
-        var createSongRequest = new CreateSongRequest(SongTitle, SongText, SongSource);
+        var createSongRequest = new CreateSongRequest(SongTitle, SongText, SongSource, SongTags);
 
         try
         {

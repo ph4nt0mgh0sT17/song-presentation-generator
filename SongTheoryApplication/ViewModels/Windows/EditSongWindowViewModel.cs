@@ -36,6 +36,9 @@ public partial class EditSongWindowViewModel : ObservableValidator
     [ObservableProperty]
     private string? _songSource = null;
 
+    [ObservableProperty]
+    private string? _songTags = null;
+
     private string SongId { get; }
 
     [ObservableProperty] private bool _presentationIsBeingGenerated;
@@ -114,7 +117,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
         if (!CanUpdateSong) return;
 
         var editSongRequest = new EditSongRequest(
-            SongId, SongTitle, SongText, SongSource, 
+            SongId, SongTitle, SongText, SongSource, SongTags,
             _isSongShared, _song.SharedSongId, _song.IsSongDownloaded, 
             _song.CopySongId
         );
@@ -125,7 +128,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
             if (_song.IsSongShared)
             {
                 await _shareService.UpdateSongAsync(_song.SharedSongId,
-                    new ShareSongRequest(_song.SharedSongId, SongTitle, SongText, SongSource)
+                    new ShareSongRequest(_song.SharedSongId, SongTitle, SongText, SongSource, SongTags)
                 );
             }
 

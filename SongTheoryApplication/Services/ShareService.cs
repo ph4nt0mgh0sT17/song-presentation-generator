@@ -28,7 +28,7 @@ public class ShareService : IShareService
         await _shareSongRepository.SaveSongAsync(
             shareSongRequest.ShareSongId, 
             new ShareSong(shareSongRequest.SongTitle,
-            shareSongRequest.SongText, shareSongRequest.SongSource)
+            shareSongRequest.SongText, shareSongRequest.SongSource, shareSongRequest.SongTags)
        );
     }
 
@@ -48,7 +48,7 @@ public class ShareService : IShareService
         if (shareSong == null)
             throw new InvalidOperationException($"The share song with id {shareSong} does not exist.");
 
-        await _songService.CreateSongAsync(new CreateSongRequest(shareSong.Title, shareSong.Title, shareSong.Source, false, sharedSongId, true));
+        await _songService.CreateSongAsync(new CreateSongRequest(shareSong.Title, shareSong.Title, shareSong.Source, shareSong.Tags, false, sharedSongId, true));
     }
 
     public async Task UpdateSongAsync(string? sharedSongId, ShareSongRequest? updateShareSongRequest)
@@ -61,7 +61,8 @@ public class ShareService : IShareService
             new ShareSong(
                 updateShareSongRequest.SongTitle,
                 updateShareSongRequest.SongText,
-                updateShareSongRequest.SongSource
+                updateShareSongRequest.SongSource,
+                updateShareSongRequest.SongTags
             )
         );
     }
@@ -82,7 +83,7 @@ public class ShareService : IShareService
 
         await _songService.UpdateSongAsync(
             new EditSongRequest(
-                song.Id, sharedSong.Title, sharedSong.Text, sharedSong.Source, false, song.SharedSongId, true, song.CopySongId
+                song.Id, sharedSong.Title, sharedSong.Text, sharedSong.Source, sharedSong.Tags, false, song.SharedSongId, true, song.CopySongId
             )
         );
     }
