@@ -26,7 +26,7 @@ public static class SongUtility
         PresentationSlideDetail? currentPresentationSlide;
         PresentationTextStyle? currentPresentationTextStyle;
 
-        var pattern = Regex.Match(songTextLines[0], @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
+        var pattern = Regex.Match(songTextLines[0], @"\/style\(([a-zA-Z0-9_\-,\.]+)\)");
         if (pattern.Success)
         {
             currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
@@ -39,7 +39,7 @@ public static class SongUtility
             currentPresentationTextStyle = new PresentationTextStyle("", "Default");
             currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"));
 
-            if (!songTextLines[0].StartsWith("/use-style"))
+            if (!songTextLines[0].StartsWith("/style"))
             {
                 currentPresentationTextStyle.TextContent += songTextLines[0] + "\n";
             }
@@ -53,11 +53,11 @@ public static class SongUtility
             {
                 // TODO: Do special operations (/end-slide or /use-style)
                 //       However, /use-style cannot be used twice in the same style
-                if (currentTextLine.StartsWith("/use-style"))
+                if (currentTextLine.StartsWith("/style"))
                 {
                     if (currentPresentationTextStyle.TextContent != "")
                     {
-                        pattern = Regex.Match(currentTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
+                        pattern = Regex.Match(currentTextLine, @"\/style\(([a-zA-Z0-9_\-,\.]+)\)");
                         if (pattern.Success)
                         {
                             currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
@@ -72,7 +72,7 @@ public static class SongUtility
                     else
                     {
 
-                        pattern = Regex.Match(currentTextLine, @"\/use-style\(([a-zA-Z0-9_\-,\.]+)\)");
+                        pattern = Regex.Match(currentTextLine, @"\/style\(([a-zA-Z0-9_\-,\.]+)\)");
                         if (pattern.Success)
                         {
                             currentPresentationTextStyle.StyleName = pattern.Groups[1].Value;
@@ -86,7 +86,7 @@ public static class SongUtility
                     continue;
                 }
 
-                if (currentTextLine.StartsWith("/new-slide"))
+                if (currentTextLine.StartsWith("/slide"))
                 {
                     slides.Add(currentPresentationSlide);
                     currentPresentationSlide =
