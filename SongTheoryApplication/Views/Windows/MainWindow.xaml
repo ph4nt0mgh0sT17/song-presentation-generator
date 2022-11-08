@@ -16,64 +16,68 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="{Binding Path=ApplicationTitle, Mode=OneWay}"
-        Height="{Binding Path=Height, Mode=TwoWay}" Width="{Binding Path=Width, Mode=TwoWay}"
-        MinWidth="{Binding Path=MinWidth, Mode=OneWay}" MinHeight="{Binding Path=MinHeight, Mode=OneWay}"
-        Left="{Binding Path=LeftWindow, Mode=OneWay}" Top="{Binding Path=TopWindow, Mode=OneWay}"
+        WindowStartupLocation="CenterScreen"
+        Width="700" Height="500"
+        MinWidth="575" MinHeight="500"
         x:Name="Main">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="125"></RowDefinition>
             <RowDefinition Height="6*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <materialDesign:Card Grid.Row="0" Padding="10" Margin="16">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+            <TextBlock Grid.Row="0"  HorizontalAlignment="Center" VerticalAlignment="Center"
                        TextWrapping="WrapWithOverflow"
                        Text="{Binding Path=MainWindowTitleText}"
-                       d:Text="Window title test"
+                       d:Text="Aplikace pro evidenci písniček a jejich vygenerování do PowerPoint prezentace"
                        FontSize="25">
             </TextBlock>
         </materialDesign:Card>
 
-        <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
 
-            <materialDesign:Card Padding="32" Margin="16">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock HorizontalAlignment="Center" FontSize="25">
+            <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <materialDesign:Card Padding="32" Margin="16">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock HorizontalAlignment="Center" FontSize="25">
                         Vytvoření písničky v systému
-                    </TextBlock>
-                    <Button Margin="50" Style="{StaticResource PrimaryButton}"
+                        </TextBlock>
+                        <Button Margin="50" Style="{StaticResource PrimaryButton}"
                             Command="{Binding Path=OpenCreateSongWindowCommand}"
                             Content="Vytvořit písničku" />
-                </StackPanel>
-            </materialDesign:Card>
+                    </StackPanel>
+                </materialDesign:Card>
 
 
-            <materialDesign:Card Padding="32" Margin="16">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock HorizontalAlignment="Center" FontSize="25">
+                <materialDesign:Card Padding="32" Margin="16">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock HorizontalAlignment="Center" FontSize="25">
                         Zobrazení evidence písniček v systému
-                    </TextBlock>
-                    <Button Margin="50"
+                        </TextBlock>
+                        <Button Margin="50"
                             Style="{StaticResource PrimaryButton}"
                             Command="{Binding Path=OpenSongListWindowCommand}"
                             Content="Zobrazit evidenci písniček" />
-                </StackPanel>
-            </materialDesign:Card>
+                    </StackPanel>
+                </materialDesign:Card>
 
-            <materialDesign:Card Padding="32" Margin="16">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock HorizontalAlignment="Center" FontSize="25">
+                <materialDesign:Card Padding="32" Margin="16">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock HorizontalAlignment="Center" FontSize="25">
                         Vygenerování prezentace písniček
-                    </TextBlock>
-                    <Button Margin="50"
+                        </TextBlock>
+                        <Button Margin="50"
                             Style="{StaticResource PrimaryButton}"
                             Command="{Binding Path=OpenGenerateSongsPresentationWindowCommand}"
                             Content="Vygenerovat prezentaci písniček" />
-                </StackPanel>
-            </materialDesign:Card>
-        </WrapPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+            </WrapPanel>
+        </ScrollViewer>
 
         <materialDesign:Snackbar Grid.Row="2"
                                  HorizontalAlignment="Stretch"

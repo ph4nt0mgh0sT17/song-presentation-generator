@@ -19,6 +19,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Vygenerování prezentace písniček"
         Width="1280" Height="720"
+        MinWidth="500" MinHeight="600"
         x:Name="GenerateSongsPresentation">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">

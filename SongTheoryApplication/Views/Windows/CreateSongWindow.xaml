@@ -19,10 +19,16 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Vytvoření písničky"
-        Width="1280" Height="720"
+        Width="1280" Height="650"
+        MinWidth="375" MinHeight="650"
         x:Name="CreateSong">
     <materialDesign:DialogHost>
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+            </Grid.RowDefinitions>
             <StackPanel Orientation="Vertical"
                         Visibility="{
                         Binding Path=PresentationIsBeingGenerated, 
@@ -60,20 +66,20 @@
                     <TextBlock TextWrapping="WrapWithOverflow">Zdroj písničky</TextBlock>
                     <TextBox Text="{Binding Path=SongSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                 </StackPanel>
+            </StackPanel>
 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button
                         Margin="0,0,20,0"
                         Style="{DynamicResource PrimaryButton}"
                         Command="{Binding Path=CreateSongCommand}"
                         Content="Uložit">
-                    </Button>
-                    <Button
+                </Button>
+                <Button
                         Style="{DynamicResource SecondaryButton}"
                         Command="{Binding Path=GenerateSongPresentationCommand}"
                         Content="Vygenerovat prezentaci">
-                    </Button>
-                </StackPanel>
+                </Button>
             </StackPanel>
 
             <Grid

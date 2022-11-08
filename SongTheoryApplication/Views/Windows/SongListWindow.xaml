@@ -13,7 +13,8 @@
         xmlns:entities="clr-namespace:SongTheoryApplication.Models"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:SongListViewModel}"
-        Title="SongListWindow" Height="450" Width="1258" WindowStartupLocation="CenterScreen">
+        Title="SongListWindow" Height="450" Width="1258" 
+        MinWidth="375" MinHeight="500" WindowStartupLocation="CenterScreen">
     <behaviors:Interaction.Triggers>
         <behaviors:EventTrigger EventName="Loaded">
             <behaviors:InvokeCommandAction Command="{Binding Path=OnLoadedCommand}" />
