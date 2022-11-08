@@ -22,8 +22,8 @@ sdílení písní mezi uživately (aplikacemi) a následné generování písni�
 
    - Text písničky bez stylování je zpravidla vygenerován pouze do jednoho slidu
    - Chceme-li nějakou další část písničky vygenerovat na další slide musíme na oddělený řádek mezi částmi písničky 
-napsat příkaz **/new-slide**, který nám zajistí, že se vytvoří nový slide
-   - Pokud chceme aplikovat styl (Styly jsou k dispozici v souboru **ApplicationConfiguration.json**), musíme opět na oddělený řádek před částí písničky, na kterou chceme daný styl aplikovat, napsat příkaz **/use-style(Název stylu)**
+napsat příkaz **/slide**, který nám zajistí, že se vytvoří nový slide
+   - Pokud chceme aplikovat styl (Styly jsou k dispozici v souboru **ApplicationConfiguration.json**), musíme opět na oddělený řádek před částí písničky, na kterou chceme daný styl aplikovat, napsat příkaz **/style(Název stylu)**
 
 4. Evidence písní
    - V evidenci písní naleznem veškeré uložené lokální nebo sdílené (stáhnuté) písničky
