@@ -15,7 +15,6 @@ public class CreateSongRequest
     {
         Guard.IsNotNullOrEmpty(songTitle, nameof(songTitle));
         Guard.IsNotNullOrEmpty(songText, nameof(songText));
-        Guard.IsNotNullOrEmpty(source);
 
         SongTitle = songTitle;
         SongText = songText;
@@ -27,7 +26,7 @@ public class CreateSongRequest
 
     public string SongTitle { get; }
     public string SongText { get; }
-    public string SongSource { get; }
+    public string? SongSource { get; }
     public bool IsSongShared { get; }
     public string? SharedSongId { get; }
     public bool IsSongDownloaded { get; }

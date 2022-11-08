@@ -18,7 +18,6 @@ public class Song
     {
         Guard.IsNotNullOrEmpty(title, nameof(title));
         Guard.IsNotNullOrEmpty(text, nameof(text));
-        Guard.IsNotNull(source);
 
         Id = Guid.NewGuid().ToString();
         Title = title;
@@ -33,7 +32,7 @@ public class Song
     public string Id { get; set; }
     public string Title { get; set; }
     public string Text { get; set; }
-    public string Source { get; set; }
+    public string? Source { get; set; }
     public bool IsSongShared { get; set; }
     public string? SharedSongId { get; set; }
     public bool IsSongDownloaded { get; set; }

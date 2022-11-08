@@ -9,7 +9,6 @@ public class ShareSongRequest
         Guard.IsNotNullOrEmpty(songTitle);
         Guard.IsNotNullOrEmpty(songText);
         Guard.IsNotNull(shareSongId);
-        Guard.IsNotNull(songSource);
 
         ShareSongId = shareSongId;
         SongTitle = songTitle;
@@ -20,5 +19,5 @@ public class ShareSongRequest
     public string ShareSongId { get; set; }
     public string SongTitle { get; }
     public string SongText { get; }
-    public string SongSource { get; }
+    public string? SongSource { get; }
 }

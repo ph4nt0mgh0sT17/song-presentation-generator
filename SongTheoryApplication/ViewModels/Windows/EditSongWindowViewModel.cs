@@ -34,9 +34,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
     private string _songText = "";
 
     [ObservableProperty]
-    [Required(ErrorMessage = "Zdroj písničky je požadován")]
-    [MinLength(2, ErrorMessage = "Zdroj písničky musí být nejméně 2 znaky dlouhý")]
-    private string _songSource = "";
+    private string? _songSource = null;
 
     private string SongId { get; }
 
@@ -61,7 +59,6 @@ public partial class EditSongWindowViewModel : ObservableValidator
     {
         return !string.IsNullOrEmpty(SongTitle) &&
                !string.IsNullOrEmpty(SongText) &&
-               !string.IsNullOrEmpty(SongSource)&&
                !HasErrors;
     }
 
@@ -106,7 +103,6 @@ public partial class EditSongWindowViewModel : ObservableValidator
         {
             case nameof(SongTitle):
             case nameof(SongText):
-            case nameof(SongSource):
                 UpdateSongCommand.NotifyCanExecuteChanged();
                 GenerateSongPresentationCommand.NotifyCanExecuteChanged();
                 break;
