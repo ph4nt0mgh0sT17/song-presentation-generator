@@ -335,9 +335,11 @@ public partial class SongListViewModel : BaseViewModel
     }
 
     [ICommand]
-    private void OpenCreateSongWindow()
+    private async Task OpenCreateSongWindow()
     {
         new CreateSongWindow().ShowDialog();
+
+        await ResetSongList();
     }
 
     [ICommand]
