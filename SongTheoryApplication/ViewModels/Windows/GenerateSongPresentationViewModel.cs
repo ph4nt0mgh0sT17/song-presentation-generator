@@ -132,11 +132,13 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     public async Task GeneratePresentation()
     {
         var saveFileDialog = _saveFileDialogProvider.ProvideSaveFileDialog();
+        saveFileDialog.Filter = "PowerPoint files (*.pptx)|*.pptx";
+        saveFileDialog.DefaultExt = "*.pptx";
 
         if (saveFileDialog.ShowDialog() == true)
         {
             PresentationIsGenerating = true;
-            var fileName = saveFileDialog.FileName;
+            var fileName = saveFileDialog.FileName.EndsWith(".pptx") ? saveFileDialog.FileName : $"{saveFileDialog.FileName}.pptx";
 
             var presentationGenerationRequests = SelectedSongs
                 .Select(selectedSong => new PresentationGenerationRequest(
@@ -179,11 +181,11 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     {
         try
         {
-            ProcessExtensions.StartFileProcess($"{fileName}.pptx");
+            ProcessExtensions.StartFileProcess(fileName);
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
+            _logger.LogError(ex, $"The file: '{fileName}' cannot be started.");
             await DialogHost.Show(new ErrorNotificationDialogViewModel(
                 "Prezentace nemůže být z neznámých důvodu spuštěna. Prosím spusťte ji manuálně.",
                 "Chyba"

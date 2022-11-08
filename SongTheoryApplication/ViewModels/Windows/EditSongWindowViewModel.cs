@@ -164,10 +164,13 @@ public partial class EditSongWindowViewModel : ObservableValidator
             return;
 
         var saveFileDialog = new SaveFileDialog();
+        saveFileDialog.Filter = "PowerPoint files (*.pptx)|*.pptx";
+        saveFileDialog.DefaultExt = "*.pptx";
 
         if (saveFileDialog.ShowDialog() == true)
         {
-            await GeneratePresentation(saveFileDialog.FileName, slideTexts);
+            var fileName = saveFileDialog.FileName.EndsWith(".pptx") ? saveFileDialog.FileName : $"{saveFileDialog.FileName}.pptx";
+            await GeneratePresentation(fileName, slideTexts);
         }
     }
 
@@ -216,11 +219,11 @@ public partial class EditSongWindowViewModel : ObservableValidator
     {
         try
         {
-            StartFileProcess($"{fileName}.pptx");
+            StartFileProcess(fileName);
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
+            _logger.LogError(ex, $"The file: '{fileName}' cannot be started.");
             await DialogHost.Show(new ErrorNotificationDialogViewModel(
                 ApplicationConstants.PresentationCannotBeStartedDialog.DESCRIPTION,
                 ApplicationConstants.PresentationCannotBeStartedDialog.TITLE

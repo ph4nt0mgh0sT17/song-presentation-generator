@@ -125,7 +125,10 @@ public class PresentationGeneratorService : IPresentationGeneratorService
             slideIndex++;
         });
 
-        presentation.SaveAs($"{fileName}.pptx");
+        if (!fileName.EndsWith(".pptx"))
+            fileName += ".pptx";
+
+        presentation.SaveAs(fileName);
 
         ExitPowerpointApplication(powerpointApplication);
     }
@@ -154,7 +157,10 @@ public class PresentationGeneratorService : IPresentationGeneratorService
             GenerateSongSlides(presentationGenerationRequest, presentation, ref slideIndex);
         }
 
-        presentation.SaveAs($"{fileName}.pptx");
+        if (!fileName.EndsWith(".pptx"))
+            fileName += ".pptx";
+
+        presentation.SaveAs($"{fileName}");
 
         ExitPowerpointApplication(powerpointApplication);
     }
