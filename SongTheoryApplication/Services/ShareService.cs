@@ -48,7 +48,7 @@ public class ShareService : IShareService
         if (shareSong == null)
             throw new InvalidOperationException($"The share song with id {shareSong} does not exist.");
 
-        await _songService.CreateSongAsync(new CreateSongRequest(shareSong.Title, shareSong.Title, shareSong.Source, shareSong.Tags, false, sharedSongId, true));
+        await _songService.CreateSongAsync(new CreateSongRequest(shareSong.Title, shareSong.Text, shareSong.Source, shareSong.Tags, false, sharedSongId, true));
     }
 
     public async Task UpdateSongAsync(string? sharedSongId, ShareSongRequest? updateShareSongRequest)
