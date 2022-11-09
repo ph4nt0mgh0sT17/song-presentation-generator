@@ -263,10 +263,12 @@ public partial class SongListViewModel : BaseViewModel
     private async Task GenerateSongPresentation(Song song)
     {
         var saveFileDialog = _saveFileDialogProvider.ProvideSaveFileDialog();
+        saveFileDialog.Filter = "PowerPoint files (*.pptx)|*.pptx";
+        saveFileDialog.DefaultExt = "*.pptx";
 
         if (saveFileDialog.ShowDialog() == true)
         {
-            var fileName = saveFileDialog.FileName;
+            var fileName = saveFileDialog.FileName.EndsWith(".pptx") ? saveFileDialog.FileName : $"{saveFileDialog.FileName}.pptx";
 
             try
             {
@@ -282,6 +284,7 @@ public partial class SongListViewModel : BaseViewModel
 
             catch (AggregateException ex)
             {
+                _logger.LogError(ex, "Cannot generate the presentation");
                 foreach (var innerException in ex.InnerExceptions)
                 {
                     if (innerException is not Exception) continue;
@@ -300,11 +303,11 @@ public partial class SongListViewModel : BaseViewModel
     {
         try
         {
-            ProcessExtensions.StartFileProcess($"{fileName}.pptx");
+            ProcessExtensions.StartFileProcess(fileName);
         }
         catch (InvalidOperationException ex)
         {
-            _logger.LogError(ex, $"The file: '{fileName}.pptx' cannot be started.");
+            _logger.LogError(ex, $"The file: '{fileName}' cannot be started.");
             await _dialogHostService.OpenDialog(new ErrorNotificationDialogViewModel(
                 "Prezentace nemůže být z neznámých důvodu spuštěna. Prosím spusťte ji manuálně.",
                 "Chyba"

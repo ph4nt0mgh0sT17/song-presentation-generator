@@ -38,6 +38,7 @@ public static class SongUtility
         {
             currentPresentationTextStyle = new PresentationTextStyle("", "Default");
             currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"));
+            currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
 
             if (!songTextLines[0].StartsWith("/style"))
             {
