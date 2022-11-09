@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,7 +30,7 @@ using SongTheoryApplication.Views.Windows;
 namespace SongTheoryApplication.ViewModels.Windows;
 
 [ViewModel]
-public partial class SongListViewModel : BaseViewModel
+public partial class SongListViewModel : ObservableValidator
 {
     [ObservableProperty] private string? titleName;
 
@@ -50,6 +51,8 @@ public partial class SongListViewModel : BaseViewModel
 
     public SnackbarMessageQueue BoundMessageQueue { get; } = new();
 
+    public bool CanResetSongList => _searchSongQuery != null && _searchSongQuery.Length != 0;
+
     public SongListViewModel(
         ILocalSongRepository localSongRepository,
         ISongService songService,
@@ -69,6 +72,18 @@ public partial class SongListViewModel : BaseViewModel
 
         CheckConfigurationIsFound(configuration);
         CheckPowerPointIsInstalled(applicationService);
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        switch (e.PropertyName)
+        {
+            case nameof(SearchSongQuery):
+                ResetSongListCommand.NotifyCanExecuteChanged();
+                break;
+        }
     }
 
     private void CheckConfigurationIsFound(IConfiguration configuration)
@@ -364,7 +379,7 @@ public partial class SongListViewModel : BaseViewModel
         Songs = new ObservableCollection<Song>(filteredSongs);
     }
 
-    [ICommand]
+    [ICommand(CanExecute = nameof(CanResetSongList), AllowConcurrentExecutions = false)]
     public async Task ResetSongList()
     {
         var songs = await _localSongRepository.RetrieveAllSongsAsync();
