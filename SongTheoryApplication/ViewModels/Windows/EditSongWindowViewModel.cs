@@ -92,6 +92,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
         SongText = song.Text;
         SongId = song.Id;
         SongSource = song.Source;
+        SongTags = song.Tags;
         _isSongShared = song.IsSongShared;
 
         EditSongWindow = editSongWindow;
