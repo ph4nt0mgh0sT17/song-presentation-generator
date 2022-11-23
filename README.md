@@ -13,7 +13,7 @@ sdílení písní mezi uživately (aplikacemi) a následné generování písni�
 
    - V aplikaci stiskněte tlačítko **Vytvořit písničku**
    - Zobrazí se nové okno s možností vyplnit název písničky, Text písničky a také její zdroj
-   - Návod jak stylovat text písničky bude v 3. bodě
+   - Návod jak stylovat text písničky bude v 4. bodě
    - Poté až jsou všechny textové pole vyplněny, máme možnost stisknout tlačítko **Uložit** nebo **Vygenerovat prezentaci**
    - Tlačítko **Uložit** jednoduše uloží písničku v počítačí a zavře dané okno
    - Tlačítko **Vygenerovat prezentaci** otevře nové dialogové okno kde si můžeme vybrat kde uložit danou vygenerovanou prezentaci a po vygenerování se nám otevře
