@@ -45,27 +45,6 @@
                         AcceptsReturn="True">
                 </TextBox>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Button Style="{DynamicResource PrimaryButton}"
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Command="{Binding Path=SearchSongsCommand}"
-                    Margin="10">
-                        Vyhledat
-                    </Button>
-
-
-                    <Button Style="{DynamicResource PrimaryButton}"
-                    Grid.Row="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Command="{Binding Path=ResetSongListCommand}"
-                    Margin="10">
-                        Resetovat vyhledávání
-                    </Button>
-                </StackPanel>
-
 
             </StackPanel>
 

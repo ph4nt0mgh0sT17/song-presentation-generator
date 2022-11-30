@@ -39,7 +39,9 @@ public partial class SongListViewModel : ObservableValidator
     [ObservableProperty] private bool _songsAreLoading;
 
     [ObservableProperty]
-    private string? _searchSongQuery = null;
+    private string? _searchSongQuery = "";
+
+    private List<Song> _songDatabase = new List<Song>();
 
     private readonly ILocalSongRepository _localSongRepository;
     private readonly IShareService _shareService;
@@ -50,8 +52,6 @@ public partial class SongListViewModel : ObservableValidator
     private readonly ILogger<SongListViewModel> _logger;
 
     public SnackbarMessageQueue BoundMessageQueue { get; } = new();
-
-    public bool CanResetSongList => _searchSongQuery != null && _searchSongQuery.Length != 0;
 
     public SongListViewModel(
         ILocalSongRepository localSongRepository,
@@ -81,7 +81,21 @@ public partial class SongListViewModel : ObservableValidator
         switch (e.PropertyName)
         {
             case nameof(SearchSongQuery):
-                ResetSongListCommand.NotifyCanExecuteChanged();
+                Task.Run(async () =>
+                {
+                    if (SearchSongQuery.Length != 0)
+                    {
+                        var changedSongs = new List<Song>(_songDatabase.Where(DoesSongMatchesSongQuery).ToList());
+
+                        Songs = new ObservableCollection<Song>(changedSongs);
+                    }
+                    else
+                    {
+                        var changedSongs = new List<Song>(_songDatabase);
+                        Songs = new ObservableCollection<Song>(changedSongs);
+                    }
+                });
+                
                 break;
         }
     }
@@ -123,6 +137,9 @@ public partial class SongListViewModel : ObservableValidator
     {
         SongsAreLoading = true;
         var songs = await _localSongRepository.RetrieveAllSongsAsync();
+        songs = songs.OrderBy(currentSong => currentSong.Title).ToList();
+
+        _songDatabase = new List<Song>(songs);
 
         Songs = new ObservableCollection<Song>(songs);
         SongsAreLoading = false;
@@ -154,7 +171,7 @@ public partial class SongListViewModel : ObservableValidator
             "SongListDialog"
         );
 
-        await OnLoadedAsync();
+        await RefreshSongs();
     }
 
     [ICommand]
@@ -195,7 +212,7 @@ public partial class SongListViewModel : ObservableValidator
             "SongListDialog"
         );
 
-        await OnLoadedAsync();
+        await RefreshSongs();
     }
 
     [ICommand]
@@ -224,7 +241,7 @@ public partial class SongListViewModel : ObservableValidator
             return;
         }
 
-        await OnLoadedAsync();
+        await RefreshSongs();
 
         await _dialogHostService.OpenDialog(
             new SuccessNotificationDialogViewModel("Píseň je úspěšně aktualizována.", "Úspěch"),
@@ -271,7 +288,7 @@ public partial class SongListViewModel : ObservableValidator
 
         new EditSongWindow(newCopySong).ShowDialog();
 
-        Songs = new ObservableCollection<Song>(await _localSongRepository.RetrieveAllSongsAsync());
+        await RefreshSongs();
     }
 
     [ICommand]
@@ -357,7 +374,24 @@ public partial class SongListViewModel : ObservableValidator
     {
         new CreateSongWindow().ShowDialog();
 
-        await ResetSongList();
+        await RefreshSongs();
+    }
+
+    private async Task RefreshSongs()
+    {
+        await OnLoadedAsync();
+
+        if (SearchSongQuery.Length != 0)
+        {
+            var changedSongs = new List<Song>(_songDatabase.Where(DoesSongMatchesSongQuery).ToList());
+
+            Songs = new ObservableCollection<Song>(changedSongs);
+        }
+        else
+        {
+            var changedSongs = new List<Song>(_songDatabase);
+            Songs = new ObservableCollection<Song>(changedSongs);
+        }
     }
 
     [ICommand]
@@ -378,17 +412,6 @@ public partial class SongListViewModel : ObservableValidator
 
         Songs = new ObservableCollection<Song>(filteredSongs);
     }
-
-    [ICommand(CanExecute = nameof(CanResetSongList), AllowConcurrentExecutions = false)]
-    public async Task ResetSongList()
-    {
-        var songs = await _localSongRepository.RetrieveAllSongsAsync();
-
-        Songs = new ObservableCollection<Song>(songs);
-
-        SearchSongQuery = null;
-    }
-
     private bool DoesSongMatchesSongQuery(Song song)
     {
         if (SearchSongQuery == null || SearchSongQuery.Length == 0)

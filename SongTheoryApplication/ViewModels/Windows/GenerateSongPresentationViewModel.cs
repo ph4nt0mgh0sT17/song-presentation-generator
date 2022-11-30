@@ -61,19 +61,23 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
         switch (e.PropertyName)
         {
             case nameof(SearchSongQuery):
-                if (SearchSongQuery.Length != 0)
+                Task.Run(async () =>
                 {
-                    var changedSongs = new List<Song>(_songDatabase.Where(DoesSongMatchesSongQuery).ToList());
+                    if (SearchSongQuery.Length != 0)
+                    {
+                        var changedSongs = new List<Song>(_songDatabase.Where(DoesSongMatchesSongQuery).ToList());
 
-                    SelectedSongs.ToList().ForEach(selectedSong => changedSongs.Remove(selectedSong));
+                        SelectedSongs.ToList().ForEach(selectedSong => changedSongs.Remove(selectedSong));
 
-                    AllSongs = new ObservableCollection<Song>(changedSongs);
-                } else
-                {
-                    var changedSongs = new List<Song>(_songDatabase);
-                    SelectedSongs.ToList().ForEach(selectedSong => changedSongs.Remove(selectedSong));
-                    AllSongs = new ObservableCollection<Song>(changedSongs);
-                }
+                        AllSongs = new ObservableCollection<Song>(changedSongs);
+                    }
+                    else
+                    {
+                        var changedSongs = new List<Song>(_songDatabase);
+                        SelectedSongs.ToList().ForEach(selectedSong => changedSongs.Remove(selectedSong));
+                        AllSongs = new ObservableCollection<Song>(changedSongs);
+                    }
+                });
 
                 break;
         }
@@ -85,6 +89,7 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
         SongsAreLoading = true;
 
         var songs = await _localSongRepository.RetrieveAllSongsAsync();
+        songs = songs.OrderBy(currentSong => currentSong.Title).ToList();
         _songDatabase = new List<Song>(songs);
         AllSongs = new ObservableCollection<Song>(songs);
 
