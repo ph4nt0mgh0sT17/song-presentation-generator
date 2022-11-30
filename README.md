@@ -32,18 +32,22 @@ sdílení písní mezi uživately (aplikacemi) a následné generování písni�
    }
    ```
 
-4. Stylování textu písně
+4. Změna pozadí slidu
+   - Změna se provádí stejně jako minulý krok v souboru: **ApplicationConfiguration.json**
+   - Stačí změnit položku **SlideBackgroundColor**
+
+5. Stylování textu písně
 
    - Text písničky bez stylování je zpravidla vygenerován pouze do jednoho slidu
    - Chceme-li nějakou další část písničky vygenerovat na další slide musíme na oddělený řádek mezi částmi písničky 
 napsat příkaz **/slide**, který nám zajistí, že se vytvoří nový slide
    - Pokud chceme aplikovat styl (Styly jsou k dispozici v souboru **ApplicationConfiguration.json**), musíme opět na oddělený řádek před částí písničky, na kterou chceme daný styl aplikovat, napsat příkaz **/style(Název stylu)**
 
-5. Evidence písní
+6. Evidence písní
    - V evidenci písní naleznem veškeré uložené lokální nebo sdílené (stáhnuté) písničky
    - V této evidenci písní lze písničky sdílet, generovat jejich prezentaci, upravovat či mazat
 
-6. Sdílení písně
+7. Sdílení písně
    - Píseň lze jednoduše začít sdílet z **Evidence písní** kliknutím na tlačítko **Sdílet** u dané písně
    - Po kliknutí na tlačítko se otevře dialogové okno s textovým polem do kterého vypíšeme identifikátor pod kterým, chceme danou píseň sdílet
    - Poté stačí kliknout na tlačítko **Sdílet píseň** a písnička bude sdílená
