@@ -24,13 +24,13 @@ namespace SongTheoryApplication.ViewModels.Windows;
 public partial class EditSongWindowViewModel : ObservableValidator
 {
     [ObservableProperty]
-    [Required(ErrorMessage = "Jméno písničky je požadováno")]
-    [MinLength(2, ErrorMessage = "Jméno písničky musí být nejméně 2 znaky dlouhé")]
+    [Required(ErrorMessage = "Jméno písně je požadováno")]
+    [MinLength(2, ErrorMessage = "Jméno písně musí být nejméně 2 znaky dlouhé")]
     private string _songTitle = "";
 
     [ObservableProperty]
-    [Required(ErrorMessage = "Text písničky je požadováno")]
-    [MinLength(2, ErrorMessage = "Text písničky musí být nejméně 2 znaky dlouhé")]
+    [Required(ErrorMessage = "Text písně je požadováno")]
+    [MinLength(2, ErrorMessage = "Text písně musí být nejméně 2 znaky dlouhé")]
     private string _songText = "";
 
     [ObservableProperty]
@@ -139,8 +139,8 @@ public partial class EditSongWindowViewModel : ObservableValidator
         catch (SongCannotBeCreatedException)
         {
             await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                "Písnička nemohla být upravena.",
-                "Písnička nemohla být upravena"
+                "Píseň nemohla být upravena.",
+                "Píseň nemohla být upravena"
             ));
         }
     }
@@ -148,8 +148,8 @@ public partial class EditSongWindowViewModel : ObservableValidator
     private async Task DisplaySuccessDialog()
     {
         await DialogHost.Show(new SuccessNotificationDialogViewModel(
-            "Písnička úspěšně upravena!",
-            "Písnička byla úspěšně upravena."
+            "Píseň úspěšně upravena!",
+            "Píseň byla úspěšně upravena."
         ));
 
         EditSongWindow.Close();
@@ -190,7 +190,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
 
             var answer = await DialogHost.Show(new DialogQuestionViewModel(
                 "Úspěch",
-                "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
+                "Prezentace písně byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
             ));
 
             if (answer is true)
