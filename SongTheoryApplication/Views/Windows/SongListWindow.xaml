@@ -36,7 +36,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Margin="30,0,30,0" Grid.Row="0">
-                <TextBlock TextWrapping="Wrap">Vyhledat písničku podle názvu, textu či tagu</TextBlock>
+                <TextBlock TextWrapping="Wrap">Vyhledat píseň podle názvu, textu či tagu</TextBlock>
                 <TextBox
                         Text="{Binding Path=SearchSongQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                     ValidatesOnDataErrors=True, 
@@ -132,7 +132,7 @@
 
                                         <Button Style="{DynamicResource PrimaryButton}"
                                             Margin="0,0,30,0"
-                                            Content="Zrušit sdílení písničky"
+                                            Content="Zrušit sdílení písně"
                                             Command="{
                                                     Binding Path=ViewModel.DeleteSharingSongCommand, 
                                                     RelativeSource={
@@ -147,7 +147,7 @@
 
                                         <Button Style="{DynamicResource PrimaryButton}"
                                             Margin="0,0,30,0"
-                                            Content="Zobrazit ID sdílené písničky"
+                                            Content="Zobrazit ID sdílené písně"
                                             Command="{
                                                     Binding Path=ViewModel.ShowSharedSongIdCommand, 
                                                     RelativeSource={
@@ -162,7 +162,7 @@
 
                                         <Button Style="{DynamicResource PrimaryButton}"
                                             Margin="0,0,30,0"
-                                            Content="Aktualizovat písničku"
+                                            Content="Aktualizovat píseň"
                                             Command="{
                                                     Binding Path=ViewModel.UpdateDownloadedSongCommand, 
                                                     RelativeSource={

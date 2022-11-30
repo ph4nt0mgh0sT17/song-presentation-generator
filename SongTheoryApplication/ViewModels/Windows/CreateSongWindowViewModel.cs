@@ -25,13 +25,13 @@ namespace SongTheoryApplication.ViewModels.Windows;
 public partial class CreateSongWindowViewModel : ObservableValidator
 {
     [ObservableProperty]
-    [Required(ErrorMessage = "Jméno písničky je požadováno")]
-    [MinLength(2, ErrorMessage = "Jméno písničky musí být nejméně 2 znaky dlouhé")]
+    [Required(ErrorMessage = "Jméno písně je požadováno")]
+    [MinLength(2, ErrorMessage = "Jméno písně musí být nejméně 2 znaky dlouhé")]
     private string _songTitle = "";
 
     [ObservableProperty]
-    [Required(ErrorMessage = "Text písničky je požadováno")]
-    [MinLength(2, ErrorMessage = "Text písničky musí být nejméně 2 znaky dlouhý")]
+    [Required(ErrorMessage = "Text písně je požadováno")]
+    [MinLength(2, ErrorMessage = "Text písně musí být nejméně 2 znaky dlouhý")]
     private string _songText = "";
 
     [ObservableProperty]
@@ -47,7 +47,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
     private readonly ILogger<CreateSongWindowViewModel> _logger;
     private readonly IApplicationService _applicationService;
 
-    public string CreateSongWindowTitleText => "Formulář pro vytvoření písničky";
+    public string CreateSongWindowTitleText => "Formulář pro vytvoření písně";
     public IAsyncRelayCommand CreateSongCommand { get; }
 
     public bool CanCreateSong => CheckCanCreateSong();
@@ -106,16 +106,16 @@ public partial class CreateSongWindowViewModel : ObservableValidator
         catch (SongAlreadyExistsException)
         {
             await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                "Písnička nemohla být vytvořena, protože už existuje písnička se stejným jménem.",
-                "Písnička nemohla být vytvořena"
+                "Píseň nemohla být vytvořena, protože už existuje píseň se stejným jménem.",
+                "Píseň nemohla být vytvořena"
             ));
         }
 
         catch (SongCannotBeCreatedException)
         {
             await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                "Písnička nemohla být vytvořena.",
-                "Písnička nemohla být vytvořena"
+                "Píseň nemohla být vytvořena.",
+                "Píseň nemohla být vytvořena"
             ));
         }
     }
@@ -125,16 +125,16 @@ public partial class CreateSongWindowViewModel : ObservableValidator
         if (CreateSongWindow == null)
         {
             await DialogHost.Show(new SuccessNotificationDialogViewModel(
-                "Písnička úspěšně vytvořena!",
-                "Písnička byla úspěšně vytvořena, ale okno nemůže být z neznámých důvodu zavřeno. Prosím zavřete ho manuálně."
+                "Píseň úspěšně vytvořena!",
+                "Píseň byla úspěšně vytvořena, ale okno nemůže být z neznámých důvodu zavřeno. Prosím zavřete ho manuálně."
             ));
         }
 
         else
         {
             await DialogHost.Show(new SuccessNotificationDialogViewModel(
-                "Písnička úspěšně vytvořena!",
-                "Písnička byla úspěšně vytvořena."
+                "Píseň úspěšně vytvořena!",
+                "Píseň byla úspěšně vytvořena."
             ));
 
             CreateSongWindow.Close();
@@ -176,7 +176,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
 
             var answer = await DialogHost.Show(new DialogQuestionViewModel(
                 "Úspěch",
-                "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
+                "Prezentace písně byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
             ));
 
             if (answer is true)
@@ -229,7 +229,7 @@ public partial class CreateSongWindowViewModel : ObservableValidator
             _logger.LogError(ex, "The song text cannot be parsed into slides.");
             await DialogHost.Show(new ErrorNotificationDialogViewModel(
                 ex.ApplicationErrorText,
-                "Písnička nemůže být vygenerována"
+                "Píseň nemůže být vygenerována"
             ));
 
             return null;

@@ -21,8 +21,8 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     private readonly Dictionary<string, int> COLORS = new()
     {
         // TODO: Add more colors (only basic ones) -> It is not expected to be some fancy colors
-        { "Red", 16711680 },
-        { "Blue", 255 },
+        { "Red", 255 },
+        { "Blue", 16711680 },
         { "Green", 32768 },
         { "Black", 0 }
     };
@@ -53,8 +53,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         var configuration = _configuration.Get<ApplicationConfiguration>();
 
         var textSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutBlank);
-        var songTextLabel =
-            textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 500);
+        var songTextLabel =textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 500);
         songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
 
         foreach (var textStyle in slideDetail.PresentationTextStyles)

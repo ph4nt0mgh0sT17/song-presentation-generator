@@ -107,7 +107,7 @@ public partial class SongListViewModel : ObservableValidator
         if (!applicationService.IsPowerPointInstalled)
         {
             BoundMessageQueue.Enqueue(
-                content: "Aplikace PowerPoint nebyla nalezena ve vašem počítači. Nebudete moci vygenerovat písničky.",
+                content: "Aplikace PowerPoint nebyla nalezena ve vašem počítači. Nebudete moci vygenerovat píseň.",
                 actionContent: "Zavřít",
                 actionHandler: _ => { },
                 actionArgument: null,
@@ -172,7 +172,7 @@ public partial class SongListViewModel : ObservableValidator
         Songs.Insert(songIndex, song);
 
         await _dialogHostService.OpenDialog(
-            new SuccessNotificationDialogViewModel("Písnička je odstraněna ze sdílení.", "Úspěch"),
+            new SuccessNotificationDialogViewModel("Píseň je odstraněna ze sdílení.", "Úspěch"),
             "SongListDialog"
         );
     }
@@ -181,8 +181,8 @@ public partial class SongListViewModel : ObservableValidator
     private async Task ShowSharedSongIdAsync(Song song)
     {
         await _dialogHostService.OpenDialog(
-            new DisplaySharedSongIdDialogViewModel("ID sdílené písničky",
-                $"ID sdílené písničky je: {song.SharedSongId}", song.SharedSongId),
+            new DisplaySharedSongIdDialogViewModel("ID sdílené písně",
+                $"ID sdílené písně je: {song.SharedSongId}", song.SharedSongId),
             "SongListDialog"
         );
     }
@@ -209,7 +209,7 @@ public partial class SongListViewModel : ObservableValidator
         {
             await _dialogHostService.OpenDialog(
                 new ErrorNotificationDialogViewModel(
-                    "Písnička nemůže být aktualizována, protože sdílená píseň již neexistuje.", "Chyba"),
+                    "Píseň nemůže být aktualizována, protože sdílená píseň již neexistuje.", "Chyba"),
                 "SongListDialog"
             );
             return;
@@ -218,7 +218,7 @@ public partial class SongListViewModel : ObservableValidator
         {
             await _dialogHostService.OpenDialog(
                 new ErrorNotificationDialogViewModel(
-                    "Písnička nemůže být aktualizována, protože píseň neexistuje ve vašem počítači.", "Chyba"),
+                    "Píseň nemůže být aktualizována, protože píseň neexistuje ve vašem počítači.", "Chyba"),
                 "SongListDialog"
             );
             return;
@@ -227,7 +227,7 @@ public partial class SongListViewModel : ObservableValidator
         await OnLoadedAsync();
 
         await _dialogHostService.OpenDialog(
-            new SuccessNotificationDialogViewModel("Písnička je úspěšně aktualizována.", "Úspěch"),
+            new SuccessNotificationDialogViewModel("Píseň je úspěšně aktualizována.", "Úspěch"),
             "SongListDialog"
         );
     }
@@ -246,8 +246,8 @@ public partial class SongListViewModel : ObservableValidator
             {
 
                 var result = await _dialogHostService.OpenDialog(
-                    new DialogQuestionViewModel("Vytvoření kopie písničky",
-                        "Přejete si vytvořit kopii písničky, abyste ji mohli editovat?"),
+                    new DialogQuestionViewModel("Vytvoření kopie písně",
+                        "Přejete si vytvořit kopii písně, abyste ji mohli editovat?"),
                     "SongListDialog"
                 );
 
@@ -304,7 +304,7 @@ public partial class SongListViewModel : ObservableValidator
                 {
                     if (innerException is not Exception) continue;
                     await _dialogHostService.OpenDialog(new ErrorNotificationDialogViewModel(
-                        "Prezentace písničky nemohla být úspěšně vygenerována. Kontaktujte administrátora.",
+                        "Prezentace písně nemohla být úspěšně vygenerována. Kontaktujte administrátora.",
                         "Chyba"
                     ), "SongListDialog");
 
@@ -334,7 +334,7 @@ public partial class SongListViewModel : ObservableValidator
     {
         var answer = await _dialogHostService.OpenDialog(new DialogQuestionViewModel(
             "Úspěch",
-            "Prezentace písničky byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
+            "Prezentace písně byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
         ), "SongListDialog");
         return answer;
     }

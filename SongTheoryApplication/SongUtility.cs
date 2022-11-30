@@ -29,7 +29,14 @@ public static class SongUtility
         var pattern = Regex.Match(songTextLines[0], @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
         if (pattern.Success)
         {
-            currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
+            if (songTextLines[0].Trim() == "/style")
+            {
+                currentPresentationTextStyle = new PresentationTextStyle("", "Default");
+            }
+            else
+            {
+                currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[2].Value);
+            }
             currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"));
             currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
         }
@@ -61,7 +68,14 @@ public static class SongUtility
                         pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
                         if (pattern.Success)
                         {
-                            currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
+                            if (currentTextLine.Trim() == "/style")
+                            {
+                                currentPresentationTextStyle = new PresentationTextStyle("", "Default");
+                            }
+                            else
+                            {
+                                currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[2].Value);
+                            }
                             currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
                         }
                         else
@@ -76,7 +90,14 @@ public static class SongUtility
                         pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
                         if (pattern.Success)
                         {
-                            currentPresentationTextStyle.StyleName = pattern.Groups[1].Value;
+                            if (currentTextLine.Trim() == "/style")
+                            {
+                                currentPresentationTextStyle.StyleName = "Default";
+                            }
+                            else
+                            {
+                                currentPresentationTextStyle.StyleName = pattern.Groups[2].Value;
+                            }
                         }
                         else
                         {

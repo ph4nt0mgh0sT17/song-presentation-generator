@@ -114,19 +114,19 @@
                 <StackPanel Margin="20"
                             Grid.Column="1"
                             MinWidth="300">
-                    <TextBlock Text="Přidání sdílené písničky" FontSize="35" />
+                    <TextBlock Text="Přidání sdílené písně" FontSize="35" />
                     <TextBox Text="{Binding Path=SharedSongId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Visibility="{Binding Path=IsSharedSongAdded,Converter={StaticResource ReversedBoolToVisibilityConverter}}"></TextBox>
                 </StackPanel>
             </Grid>
             <Grid Visibility="{Binding Path=SharedSongIdAlreadyInLocalRepository,Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Foreground="Red">Písnička již existuje ve vašem počítači.</TextBlock>
+                <TextBlock Foreground="Red">Píseň již existuje ve vašem počítači.</TextBlock>
             </Grid>
             <Grid Visibility="{Binding Path=SharedSongDoesNotExist,Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Foreground="Red">Písnička neexistuje.</TextBlock>
+                <TextBlock Foreground="Red">Píseň neexistuje.</TextBlock>
             </Grid>
             <Grid Visibility="{Binding Path=IsSharedSongAdded,Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Foreground="Green">Sdílená písnička je úspěšně sdílena.</TextBlock>
+                <TextBlock Foreground="Green">Sdílená píseň je úspěšně sdílena.</TextBlock>
             </Grid>
             <StackPanel Visibility="{Binding Path=IsSharedSongAdded,Converter={StaticResource ReversedBoolToVisibilityConverter}}"
                         Orientation="Horizontal" Margin="0, 20, 0, 0"
@@ -163,16 +163,16 @@
                 <StackPanel Margin="20"
                             Grid.Column="1"
                             MinWidth="300">
-                    <TextBlock Text="Sdílení písničky" FontSize="35" />
+                    <TextBlock Text="Sdílení písně" FontSize="35" />
                     <TextBox Text="{Binding Path=SharedSongId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Visibility="{Binding Path=IsSongShared,Converter={StaticResource ReversedBoolToVisibilityConverter}}"></TextBox>
                 </StackPanel>
             </Grid>
             <Grid Visibility="{Binding Path=SharedSongIdIsOccupied,Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Foreground="Red">ID, které jste vybrali pro sdílení písničky, je obsazeno.</TextBlock>
+                <TextBlock Foreground="Red">ID, které jste vybrali pro sdílení písně, je obsazeno.</TextBlock>
             </Grid>
             <Grid Visibility="{Binding Path=IsSongShared,Converter={StaticResource BoolToVisibilityConverter}}">
-                <TextBlock Foreground="Green">Písnička je úspěšně sdílena.</TextBlock>
+                <TextBlock Foreground="Green">Píseň je úspěšně sdílena.</TextBlock>
             </Grid>
             <StackPanel Visibility="{Binding Path=IsSongShared,Converter={StaticResource ReversedBoolToVisibilityConverter}}"
                         Orientation="Horizontal" Margin="0, 20, 0, 0"

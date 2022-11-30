@@ -49,7 +49,7 @@ public partial class EditSongWindowViewModel : ObservableValidator
     private readonly IApplicationService _applicationService;
     private readonly IShareService _shareService;
 
-    public string EditSongWindowTitleText => "Formulář pro úpravu písničky";
+    public string EditSongWindowTitleText => "Formulář pro úpravu písně";
     public IAsyncRelayCommand UpdateSongCommand { get; }
 
     public EditSongWindow EditSongWindow { get; }

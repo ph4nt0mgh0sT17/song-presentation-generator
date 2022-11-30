@@ -167,7 +167,7 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
                 {
                     if (innerException is not Exception) continue;
                     await DialogHost.Show(new ErrorNotificationDialogViewModel(
-                        "Prezentace písničky nemohla být úspěšně vygenerována. Kontaktujte administrátora.",
+                        "Prezentace písní nemohla být úspěšně vygenerována. Kontaktujte administrátora.",
                         "Chyba"
                     ), "SongListDialog");
 
@@ -198,7 +198,7 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
         var answer = await DialogHost.Show(
             new DialogQuestionViewModel(
                 "Úspěch",
-                "Prezentace písniček byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
+                "Prezentace písní byla úspěšně vytvořena. Přejete si nyní zobrazit vygenerovanou prezentaci?"
             ),
             "GenerateSongPresentationDialog"
         );

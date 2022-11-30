@@ -13,7 +13,7 @@
                     VerticalAlignment="Center"
                     Command="{Binding Path=AddSharedSongCommand}"
                     Margin="10">
-                Přidat sdílenou písničku
+                Přidat sdílenou píseň
             </Button>
 
             <Button Style="{DynamicResource PrimaryButton}"
@@ -31,7 +31,7 @@
                     VerticalAlignment="Center"
                     Command="{Binding Path=OpenGenerateSongsPresentationWindowCommand}"
                     Margin="10">
-                Vytvoření prezentace písniček
+                Vytvoření prezentace písní
             </Button>
         </StackPanel>
     </DataTemplate>
@@ -44,7 +44,7 @@
                     VerticalAlignment="Center"
                     Command="{Binding Path=AddSharedSongCommand}"
                     Margin="10">
-                Přidat sdílenou písničku
+                Přidat sdílenou píseň
             </Button>
 
             <Button Style="{DynamicResource PrimaryButton}"
@@ -62,7 +62,7 @@
                     VerticalAlignment="Center"
                     Command="{Binding Path=OpenGenerateSongsPresentationWindowCommand}"
                     Margin="10">
-                Vytvoření prezentace písniček
+                Vytvoření prezentace písní
             </Button>
         </StackPanel>
     </DataTemplate>

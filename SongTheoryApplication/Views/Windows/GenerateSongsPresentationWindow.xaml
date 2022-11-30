@@ -17,7 +17,7 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="Vygenerování prezentace písniček"
+        Title="Vygenerování prezentace písní"
         Width="600" Height="500"
         MinWidth="600" MinHeight="500"
         x:Name="GenerateSongsPresentation">
@@ -36,7 +36,7 @@
             <materialDesign:Card Grid.Row="0" Margin="16">
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                            Padding="15"
-                           Text="Vygenerování prezentace písniček"
+                           Text="Vygenerování prezentace písní"
                            TextWrapping="WrapWithOverflow"
                            FontSize="15">
                 </TextBlock>
@@ -131,7 +131,7 @@
                 Visibility="{Binding Path=PresentationIsGenerating, Converter={StaticResource ReversedBoolToVisibilityConverter}}" 
                 HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" Grid.Row="2">
                 <CheckBox Margin="0,0,0,10" 
-                          Content="Přidat prázdný slide mezi písničky"
+                          Content="Přidat prázdný slide mezi písně"
                           IsChecked="{Binding Path=IsAddEmptySlideBetweenSongsChecked}" 
                           d:IsChecked="True" />
                 <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"

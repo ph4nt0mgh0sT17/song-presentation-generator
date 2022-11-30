@@ -16,7 +16,7 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="Úprava písničky"
+        Title="Úprava písně"
         Width="375" Height="650"
         MinWidth="375" MinHeight="650">
     <materialDesign:DialogHost>
@@ -48,12 +48,12 @@
                         </materialDesign:Card>
 
                         <StackPanel Margin="30">
-                            <TextBlock TextWrapping="WrapWithOverflow">Název písničky</TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow">Název písně</TextBlock>
                             <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </StackPanel>
 
                         <StackPanel Margin="30">
-                            <TextBlock TextWrapping="Wrap">Text písničky</TextBlock>
+                            <TextBlock TextWrapping="Wrap">Text písně</TextBlock>
                             <TextBox
                         Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                     ValidatesOnDataErrors=True, 
@@ -66,12 +66,12 @@
                         </StackPanel>
 
                         <StackPanel Margin="30">
-                            <TextBlock TextWrapping="WrapWithOverflow">Zdroj písničky</TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow">Zdroj písně</TextBlock>
                             <TextBox Text="{Binding Path=SongSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </StackPanel>
 
                         <StackPanel Margin="30">
-                            <TextBlock TextWrapping="WrapWithOverflow">Tagy písničky</TextBlock>
+                            <TextBlock TextWrapping="WrapWithOverflow">Tagy písně</TextBlock>
                             <TextBox Text="{Binding Path=SongTags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </StackPanel>
                     </StackPanel>

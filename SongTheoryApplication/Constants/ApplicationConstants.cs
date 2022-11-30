@@ -10,7 +10,7 @@ public static class ApplicationConstants
         public const string TITLE = "Chyba";
 
         public const string DESCRIPTION =
-            "Prezentace písničky nemohla být úspěšně vygenerována. Kontaktujte administrátora.";
+            "Prezentace písně nemohla být úspěšně vygenerována. Kontaktujte administrátora.";
     }
 
     public static class PresentationCannotBeStartedDialog
