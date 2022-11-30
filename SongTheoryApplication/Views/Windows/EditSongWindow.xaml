@@ -18,7 +18,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Úprava písně"
         Width="375" Height="650"
-        MinWidth="375" MinHeight="650">
+        MinWidth="375" MinHeight="700">
     <materialDesign:DialogHost>
         <Grid>
 
@@ -32,49 +32,44 @@
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Vertical"
+                    <Grid
                         Visibility="{
                         Binding Path=PresentationIsBeingGenerated, 
                         Converter={StaticResource ReversedBoolToVisibilityConverter}
                     }">
-                        <materialDesign:Card Margin="16">
-                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Padding="15"
-                               Text="{Binding Path=EditSongWindowTitleText}"
-                               d:Text="Create song form"
-                               TextWrapping="WrapWithOverflow"
-                               FontSize="15">
-                            </TextBlock>
-                        </materialDesign:Card>
-
-                        <StackPanel Margin="30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="100" />
+                            <RowDefinition Height="100" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Margin="30" Grid.Row="0">
                             <TextBlock TextWrapping="WrapWithOverflow">Název písně</TextBlock>
                             <TextBox Text="{Binding Path=SongTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </StackPanel>
 
-                        <StackPanel Margin="30">
+                        <Grid Margin="30" Grid.Row="1">
                             <TextBlock TextWrapping="Wrap">Text písně</TextBlock>
-                            <TextBox
+                            <TextBox Margin="0,20"
                         Text="{Binding Path=SongText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
                     ValidatesOnDataErrors=True, 
                     ValidatesOnNotifyDataErrors=True}"
                         TextWrapping="WrapWithOverflow"
                         VerticalScrollBarVisibility="Visible"
-                        AcceptsReturn="True"
-                        Height="100">
+                        AcceptsReturn="True">
                             </TextBox>
-                        </StackPanel>
+                        </Grid>
 
-                        <StackPanel Margin="30">
+                        <StackPanel Margin="30" Grid.Row="2">
                             <TextBlock TextWrapping="WrapWithOverflow">Zdroj písně</TextBlock>
                             <TextBox Text="{Binding Path=SongSource, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </StackPanel>
 
-                        <StackPanel Margin="30">
+                        <StackPanel Margin="30" Grid.Row="3">
                             <TextBlock TextWrapping="WrapWithOverflow">Tagy písně</TextBlock>
                             <TextBox Text="{Binding Path=SongTags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         </StackPanel>
-                    </StackPanel>
+                    </Grid>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" 
                         HorizontalAlignment="Center" 
