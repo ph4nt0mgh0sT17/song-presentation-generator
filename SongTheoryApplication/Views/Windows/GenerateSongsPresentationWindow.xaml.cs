@@ -23,6 +23,19 @@ public partial class GenerateSongsPresentationWindow : Window
     public GenerateSongsPresentationWindow()
     {
         InitializeComponent();
-        DataContext = Ioc.Default.GetService<GenerateSongPresentationViewModel>();
+        var viewModel = Ioc.Default.GetService<GenerateSongPresentationViewModel>();
+
+        DataContext = viewModel;
+    }
+
+    public GenerateSongPresentationViewModel ViewModel
+    {
+        get
+        {
+            if (DataContext is GenerateSongPresentationViewModel generateSongPresentationViewModel)
+                return generateSongPresentationViewModel;
+
+            throw new InvalidOperationException("The DataContext of this window must be GenerateSongPresentationViewModel.");
+        }
     }
 }

@@ -30,23 +30,16 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     [ObservableProperty] private bool _presentationIsGenerating;
     [ObservableProperty] private bool _isAddEmptySlideBetweenSongsChecked;
 
-    [ObservableProperty]
-    [AlsoNotifyCanExecuteFor(nameof(SelectSongCommand))]
-    private Song? _selectedSong;
+    private List<Song> _songDatabase = new List<Song>();
 
     [ObservableProperty]
-    [AlsoNotifyCanExecuteFor(nameof(SelectSongCommand))]
-    [AlsoNotifyCanExecuteFor(nameof(DeselectSongCommand))]
-    [AlsoNotifyCanExecuteFor(nameof(MoveSongDownCommand), nameof(MoveSongUpCommand))]
-    private Song? _selectedSongToDeselect;
+    private string? _searchSongQuery = "";
 
     private readonly ILocalSongRepository _localSongRepository;
     private readonly IPresentationGeneratorService _presentationGeneratorService;
     private readonly ISaveFileDialogProvider _saveFileDialogProvider;
     private readonly ILogger<SongListViewModel> _logger;
 
-    public bool IsSongSelected => SelectedSong != null;
-    public bool IsSongToDeselectSelected => SelectedSongToDeselect != null;
     public bool CanGeneratePresentation => SelectedSongs.Count > 0;
 
     public GenerateSongPresentationViewModel(
@@ -67,12 +60,21 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
 
         switch (e.PropertyName)
         {
-            case nameof(SelectedSong):
-                SelectedSongToDeselect = null;
-                break;
+            case nameof(SearchSongQuery):
+                if (SearchSongQuery.Length != 0)
+                {
+                    var changedSongs = new List<Song>(_songDatabase.Where(DoesSongMatchesSongQuery).ToList());
 
-            case nameof(SelectedSongToDeselect):
-                SelectedSong = null;
+                    SelectedSongs.ToList().ForEach(selectedSong => changedSongs.Remove(selectedSong));
+
+                    AllSongs = new ObservableCollection<Song>(changedSongs);
+                } else
+                {
+                    var changedSongs = new List<Song>(_songDatabase);
+                    SelectedSongs.ToList().ForEach(selectedSong => changedSongs.Remove(selectedSong));
+                    AllSongs = new ObservableCollection<Song>(changedSongs);
+                }
+
                 break;
         }
     }
@@ -83,49 +85,10 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
         SongsAreLoading = true;
 
         var songs = await _localSongRepository.RetrieveAllSongsAsync();
+        _songDatabase = new List<Song>(songs);
         AllSongs = new ObservableCollection<Song>(songs);
 
         SongsAreLoading = false;
-    }
-
-    [ICommand(CanExecute = nameof(IsSongSelected))]
-    public void SelectSong()
-    {
-        Guard.IsNotNull(SelectedSong);
-
-        SelectedSongs.Add(SelectedSong);
-        AllSongs.Remove(SelectedSong);
-        SelectedSong = null;
-        GeneratePresentationCommand.NotifyCanExecuteChanged();
-    }
-
-    [ICommand(CanExecute = nameof(IsSongToDeselectSelected))]
-    public void DeselectSong()
-    {
-        Guard.IsNotNull(SelectedSongToDeselect);
-
-        AllSongs.Add(SelectedSongToDeselect);
-        SelectedSongs.Remove(SelectedSongToDeselect);
-        SelectedSongToDeselect = null;
-        GeneratePresentationCommand.NotifyCanExecuteChanged();
-    }
-
-    [ICommand(CanExecute = nameof(IsSongToDeselectSelected))]
-    public void MoveSongUp()
-    {
-        var currentSongIndex = SelectedSongs.IndexOf(SelectedSongToDeselect);
-        var newSongIndex = Math.Max(0, currentSongIndex - 1);
-
-        SelectedSongs.Move(currentSongIndex, newSongIndex);
-    }
-
-    [ICommand(CanExecute = nameof(IsSongToDeselectSelected))]
-    public void MoveSongDown()
-    {
-        var currentSongIndex = SelectedSongs.IndexOf(SelectedSongToDeselect);
-        var newSongIndex = Math.Min(SelectedSongs.Count - 1, currentSongIndex + 1);
-
-        SelectedSongs.Move(currentSongIndex, newSongIndex);
     }
 
     [ICommand(CanExecute = nameof(CanGeneratePresentation))]
@@ -177,6 +140,22 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
         }
     }
 
+    [ICommand]
+    public void SelectSong(Song song)
+    {
+        SelectedSongs.Add(song);
+        AllSongs.Remove(song);
+        GeneratePresentationCommand.NotifyCanExecuteChanged();
+    }
+
+    [ICommand]
+    public void DeselectSong(Song song)
+    {
+        SelectedSongs.Remove(song);
+        AllSongs.Add(song);
+        GeneratePresentationCommand.NotifyCanExecuteChanged();
+    }
+
     private async Task OpenPresentation(string fileName)
     {
         try
@@ -215,5 +194,15 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
                 fileName
             );
         });
+    }
+
+    private bool DoesSongMatchesSongQuery(Song song)
+    {
+        if (SearchSongQuery == null || SearchSongQuery.Length == 0)
+            return true;
+
+        return song.Title.Contains(SearchSongQuery.Trim(), StringComparison.CurrentCultureIgnoreCase) ||
+            song.Text.Contains(SearchSongQuery.Trim(), StringComparison.CurrentCultureIgnoreCase) ||
+            song.Tags != null && song.Tags.Contains(SearchSongQuery.Trim(), StringComparison.CurrentCultureIgnoreCase);
     }
 }

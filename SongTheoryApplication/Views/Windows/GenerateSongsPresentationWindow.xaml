@@ -49,7 +49,19 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <materialDesign:Card Padding="10" Margin="16" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" TextWrapping="Wrap">Vyhledat píseň podle názvu, textu či tagu</TextBlock>
+                <TextBox Grid.Row="0" Text="{Binding Path=SearchSongQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, 
+                    ValidatesOnDataErrors=True, 
+                    ValidatesOnNotifyDataErrors=True}"
+                        TextWrapping="WrapWithOverflow"
+                        AcceptsReturn="True">
+                </TextBox>
+                <materialDesign:Card Grid.Row="1" Padding="10" Margin="16" Grid.Column="0">
                     <ListView ItemsSource="{Binding Path=AllSongs}"
                               SelectedItem="{Binding Path=SelectedSong}"
                               ScrollViewer.CanContentScroll="True"
@@ -57,6 +69,17 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <materialDesign:Card>
+                                    <materialDesign:Card.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick" Command="{
+                                                    Binding Path=ViewModel.SelectSongCommand, 
+                                                    RelativeSource={
+                                                        RelativeSource FindAncestor, 
+                                                        AncestorType={
+                                                            x:Type Window
+                                                        }
+                                                    }
+                                                }" CommandParameter="{Binding}" />
+                                    </materialDesign:Card.InputBindings>
                                     <TextBlock Padding="15" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                Text="{Binding Path=Title}"
                                                TextWrapping="WrapWithOverflow"
@@ -75,27 +98,8 @@
                     </ListView>
                 </materialDesign:Card>
 
-                <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center"
-                            HorizontalAlignment="Right">
-                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
-                            HorizontalAlignment="Center"
-                            Content="&#62;"
-                            Command="{Binding Path=SelectSongCommand}" />
-                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
-                            HorizontalAlignment="Center"
-                            Content="&#60;"
-                            Command="{Binding Path=DeselectSongCommand}" />
-                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
-                            HorizontalAlignment="Center"
-                            Content="&#708;"
-                            Command="{Binding Path=MoveSongUpCommand}" />
-                    <Button Margin="0,0,0,10" Style="{DynamicResource PrimaryButton}"
-                            HorizontalAlignment="Center"
-                            Content="&#709;"
-                            Command="{Binding Path=MoveSongDownCommand}" />
-                </StackPanel>
 
-                <materialDesign:Card Padding="10" Margin="16" Grid.Column="2">
+                <materialDesign:Card Padding="10" Margin="16" Grid.Column="2" Grid.RowSpan="2">
                     <ListView ItemsSource="{Binding Path=SelectedSongs}"
                               SelectedItem="{Binding Path=SelectedSongToDeselect}"
                               ScrollViewer.CanContentScroll="True"
@@ -103,6 +107,17 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <materialDesign:Card>
+                                    <materialDesign:Card.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick" Command="{
+                                                    Binding Path=ViewModel.DeselectSongCommand, 
+                                                    RelativeSource={
+                                                        RelativeSource FindAncestor, 
+                                                        AncestorType={
+                                                            x:Type Window
+                                                        }
+                                                    }
+                                                }" CommandParameter="{Binding}" />
+                                    </materialDesign:Card.InputBindings>
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                                                Padding="15"
                                                Text="{Binding Path=Title}"
