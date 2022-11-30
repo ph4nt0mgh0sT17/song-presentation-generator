@@ -21,7 +21,7 @@
         Title="Vytvoření písně"
         Width="375" Height="650"
         MinWidth="375" MinHeight="700"
-        x:Name="CreateSong">
+        x:Name="CreateSong" Closing="CreateSong_Closing">
     <materialDesign:DialogHost>
         <Grid>
 

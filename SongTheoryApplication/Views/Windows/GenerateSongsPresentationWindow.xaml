@@ -20,7 +20,7 @@
         Title="Vygenerování prezentace písní"
         Width="600" Height="500"
         MinWidth="600" MinHeight="500"
-        x:Name="GenerateSongsPresentation">
+        x:Name="GenerateSongsPresentation" Closing="GenerateSongsPresentation_Closing">
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:InvokeCommandAction Command="{Binding Path=OnLoadedCommand}" />

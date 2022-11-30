@@ -15,7 +15,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm2:SongListViewModel}"
         Title="SongListWindow" Height="450" Width="400" 
-        MinWidth="375" MinHeight="500" WindowStartupLocation="CenterScreen">
+        MinWidth="375" MinHeight="500" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Window.Resources>
         <converters:IsLessThanOrEqualToConverter x:Key="IsLessThanOrEqualToConverter" />
         <converters:IsGreaterThanOrEqualToConverter x:Key="IsGreaterThanOrEqualToConverter" />

@@ -1,5 +1,5 @@
 ﻿{
-  "SlideBackgroundColor":  "Black",
+  "SlideBackgroundColor": "Black",
   "PresentationSettings": [
     {
       "Name": "Default",
@@ -22,5 +22,35 @@
       "FontColor": "Green",
       "IsBold": false
     }
-  ]
+  ],
+  "WindowsSettings": {
+    "CreateSongWindow": {
+      "Width": 0,
+      "Height": 0,
+      "Top": 0,
+      "Left": 0,
+      "Maximized": false
+    },
+    "EditSongWindow": {
+      "Width": 0,
+      "Height": 0,
+      "Top": 0,
+      "Left": 0,
+      "Maximized": false
+    },
+    "SongListWindow": {
+      "Width": 0,
+      "Height": 0,
+      "Top": 0,
+      "Left": 0,
+      "Maximized": false
+    },
+    "GenerateSongsPresentationWindow": {
+      "Width": 0,
+      "Height": 0,
+      "Top": 0,
+      "Left": 0,
+      "Maximized": false
+    }
+  }
 }

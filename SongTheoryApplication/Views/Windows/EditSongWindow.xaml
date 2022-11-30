@@ -18,7 +18,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="Úprava písně"
         Width="375" Height="650"
-        MinWidth="375" MinHeight="700">
+        MinWidth="375" MinHeight="700" Closing="Window_Closing">
     <materialDesign:DialogHost>
         <Grid>
 
