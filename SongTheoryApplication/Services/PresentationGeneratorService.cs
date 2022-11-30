@@ -53,7 +53,11 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         var configuration = _configuration.Get<ApplicationConfiguration>();
 
         var textSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutBlank);
-        var songTextLabel =textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 500);
+
+        textSlide.FollowMasterBackground = MsoTriState.msoFalse;
+        textSlide.Background.Fill.BackColor.RGB = COLORS[configuration.SlideBackgroundColor ?? "Black"];
+            
+        var songTextLabel =textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 600);
         songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
 
         foreach (var textStyle in slideDetail.PresentationTextStyles)
@@ -115,7 +119,10 @@ public class PresentationGeneratorService : IPresentationGeneratorService
 
         var powerpointApplication = new Application();
 
+
         var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
+
+        presentation.PageSetup.SlideSize = PpSlideSizeType.ppSlideSizeOnScreen;
 
         int slideIndex = 1;
         presentationGenerationRequest.Slides.ForEach(currentSlide =>

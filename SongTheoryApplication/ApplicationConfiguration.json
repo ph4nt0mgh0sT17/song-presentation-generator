@@ -1,11 +1,12 @@
 ﻿{
+  "SlideBackgroundColor":  "Black",
   "PresentationSettings": [
     {
       "Name": "Default",
       "FontSize": 15,
       "FontFamily": "JetBrains Mono",
       "FontColor": "Red",
-      "IsBold":  true
+      "IsBold": true
     },
     {
       "Name": "Style1",
