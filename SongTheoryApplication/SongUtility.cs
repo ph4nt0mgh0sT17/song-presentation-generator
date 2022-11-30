@@ -26,7 +26,7 @@ public static class SongUtility
         PresentationSlideDetail? currentPresentationSlide;
         PresentationTextStyle? currentPresentationTextStyle;
 
-        var pattern = Regex.Match(songTextLines[0], @"\/style\(([a-zA-Z0-9_\-,\.]+)\)");
+        var pattern = Regex.Match(songTextLines[0], @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
         if (pattern.Success)
         {
             currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
@@ -58,7 +58,7 @@ public static class SongUtility
                 {
                     if (currentPresentationTextStyle.TextContent != "")
                     {
-                        pattern = Regex.Match(currentTextLine, @"\/style\(([a-zA-Z0-9_\-,\.]+)\)");
+                        pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
                         if (pattern.Success)
                         {
                             currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[1].Value);
@@ -73,7 +73,7 @@ public static class SongUtility
                     else
                     {
 
-                        pattern = Regex.Match(currentTextLine, @"\/style\(([a-zA-Z0-9_\-,\.]+)\)");
+                        pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
                         if (pattern.Success)
                         {
                             currentPresentationTextStyle.StyleName = pattern.Groups[1].Value;
