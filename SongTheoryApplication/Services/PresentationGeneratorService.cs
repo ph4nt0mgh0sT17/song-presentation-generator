@@ -149,6 +149,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         var powerpointApplication = new Application();
 
         var presentation = powerpointApplication.Presentations.Add(MsoTriState.msoFalse);
+        presentation.PageSetup.SlideSize = PpSlideSizeType.ppSlideSizeOnScreen;
 
         var slideIndex = 1;
         for (var index = 0; index < presentationGenerationRequests.Count; index++)
