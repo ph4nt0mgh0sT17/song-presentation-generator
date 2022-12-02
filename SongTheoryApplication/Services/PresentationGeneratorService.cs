@@ -24,7 +24,13 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         { "Red", 255 },
         { "Blue", 16711680 },
         { "Green", 32768 },
-        { "Black", 0 }
+        { "Black", 0 },
+        { "White", 16777215 },
+        { "Maroon", 800000 },
+        { "DarkRed", 9109504 },
+        { "FireBrick", 11674146 },
+        { "LawnGreen", 8190976 }
+
     };
 
 
