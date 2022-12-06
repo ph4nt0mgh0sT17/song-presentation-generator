@@ -69,6 +69,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
 
         foreach (var textStyle in slideDetail.PresentationTextStyles)
         {
+            if (textStyle.TextContent.Length == 0) continue;
             var defaultSettings =
                 configuration.PresentationSettings?.FirstOrDefault(x => x.Name.Equals(textStyle.StyleName, StringComparison.InvariantCultureIgnoreCase)) ??
                 configuration.PresentationSettings?.FirstOrDefault(x => x.Name == "Default") ??
