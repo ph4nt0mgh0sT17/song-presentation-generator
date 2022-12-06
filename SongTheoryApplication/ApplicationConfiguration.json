@@ -1,26 +1,20 @@
 ﻿{
   "SlideBackgroundColor": "Black",
+  "SlideTitleColor": "White",
   "PresentationSettings": [
     {
       "Name": "Default",
-      "FontSize": 15,
+      "FontSize": 40,
       "FontFamily": "JetBrains Mono",
-      "FontColor": "Red",
+      "FontColor": "White",
       "IsBold": true
     },
     {
-      "Name": "Style1",
-      "FontSize": 20,
+      "Name": "Title",
+      "FontSize": 40,
       "FontFamily": "JetBrains Mono",
-      "FontColor": "Blue",
+      "FontColor": "Yellow",
       "IsBold": true
-    },
-    {
-      "Name": "Style2",
-      "FontSize": 25,
-      "FontFamily": "JetBrains Mono",
-      "FontColor": "Green",
-      "IsBold": false
     }
   ],
   "WindowsSettings": {
@@ -32,17 +26,17 @@
       "Maximized": false
     },
     "EditSongWindow": {
-      "Width": 0,
-      "Height": 0,
-      "Top": 0,
-      "Left": 0,
+      "Width": 375,
+      "Height": 700,
+      "Top": 208,
+      "Left": 208,
       "Maximized": false
     },
     "SongListWindow": {
-      "Width": 0,
-      "Height": 0,
-      "Top": 0,
-      "Left": 0,
+      "Width": 1031,
+      "Height": 578,
+      "Top": 251,
+      "Left": 398,
       "Maximized": false
     },
     "GenerateSongsPresentationWindow": {

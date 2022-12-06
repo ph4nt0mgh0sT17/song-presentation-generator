@@ -5,6 +5,7 @@ namespace SongTheoryApplication.Configuration;
 public class ApplicationConfiguration
 {
     public string? SlideBackgroundColor { get; set; }
+    public string? SlideTitleColor { get; set; }
     public List<PresentationSetting>? PresentationSettings { get; set; }
     public WindowsSettings? WindowsSettings { get; set; }
 

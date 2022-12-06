@@ -26,7 +26,7 @@ public static class SongUtility
         PresentationSlideDetail? currentPresentationSlide;
         PresentationTextStyle? currentPresentationTextStyle;
 
-        var pattern = Regex.Match(songTextLines[0], @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
+        var pattern = Regex.Match(songTextLines[0], @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|{([a-zA-Z0-9_\-,\.]+)}|)");
         if (pattern.Success)
         {
             if (songTextLines[0].Trim() == "/style")
@@ -35,8 +35,14 @@ public static class SongUtility
             }
             else
             {
-                currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[2].Value);
+                var styleName = pattern.Groups[2].Value;
+                if (styleName.Length == 0)
+                {
+                    styleName = pattern.Groups[3].Value;
+                }
+                currentPresentationTextStyle = new PresentationTextStyle("", styleName);
             }
+
             currentPresentationSlide = new PresentationSlideDetail(new PresentationFormatStyle("Center"));
             currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
         }
@@ -57,69 +63,77 @@ public static class SongUtility
         {
             var currentTextLine = songTextLines[index];
 
-            if (currentTextLine.StartsWith("/"))
+            // TODO: Do special operations (/end-slide or /use-style)
+            //       However, /use-style cannot be used twice in the same style
+            if (currentTextLine.StartsWith("/style"))
             {
-                // TODO: Do special operations (/end-slide or /use-style)
-                //       However, /use-style cannot be used twice in the same style
-                if (currentTextLine.StartsWith("/style"))
+                if (currentPresentationTextStyle.TextContent != "")
                 {
-                    if (currentPresentationTextStyle.TextContent != "")
+                    pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|{([a-zA-Z0-9_\-,\.]+)}|)");
+                    if (pattern.Success)
                     {
-                        pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
-                        if (pattern.Success)
+                        if (currentTextLine.Trim() == "/style")
                         {
-                            if (currentTextLine.Trim() == "/style")
-                            {
-                                currentPresentationTextStyle = new PresentationTextStyle("", "Default");
-                            }
-                            else
-                            {
-                                currentPresentationTextStyle = new PresentationTextStyle("", pattern.Groups[2].Value);
-                            }
-                            currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+                            currentPresentationTextStyle = new PresentationTextStyle("", "Default");
                         }
                         else
                         {
-                            currentPresentationTextStyle = new PresentationTextStyle("", "Default");
-                            currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+                            var styleName = pattern.Groups[2].Value;
+                            if (styleName.Length == 0)
+                            {
+                                styleName = pattern.Groups[3].Value;
+                            }
+                            currentPresentationTextStyle = new PresentationTextStyle("", styleName);
+                        }
+
+                        currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+                    }
+                    else
+                    {
+                        currentPresentationTextStyle = new PresentationTextStyle("", "Default");
+                        currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+                    }
+                }
+                else
+                {
+                    pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|{([a-zA-Z0-9_\-,\.]+)}|)");
+                    if (pattern.Success)
+                    {
+                        if (currentTextLine.Trim() == "/style")
+                        {
+                            currentPresentationTextStyle.StyleName = "Default";
+                        }
+                        else
+                        {
+                            var styleName = pattern.Groups[2].Value;
+                            if (styleName.Length == 0)
+                            {
+                                styleName = pattern.Groups[3].Value;
+                            }
+
+                            currentPresentationTextStyle.StyleName = styleName;
                         }
                     }
                     else
                     {
-
-                        pattern = Regex.Match(currentTextLine, @"\/style(\(([a-zA-Z0-9_\-,\.]+)\)|)");
-                        if (pattern.Success)
-                        {
-                            if (currentTextLine.Trim() == "/style")
-                            {
-                                currentPresentationTextStyle.StyleName = "Default";
-                            }
-                            else
-                            {
-                                currentPresentationTextStyle.StyleName = pattern.Groups[2].Value;
-                            }
-                        }
-                        else
-                        {
-                            currentPresentationTextStyle.StyleName = "Default";
-                        }
+                        currentPresentationTextStyle.StyleName = "Default";
                     }
-
-                    continue;
                 }
 
-                if (currentTextLine.StartsWith("/slide"))
-                {
-                    slides.Add(currentPresentationSlide);
-                    currentPresentationSlide =
-                        new PresentationSlideDetail(currentPresentationSlide.PresentationFormatStyle);
-                    currentPresentationTextStyle =
-                        new PresentationTextStyle("", currentPresentationTextStyle.StyleName);
+                continue;
+            }
 
-                    currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+            if (currentTextLine.StartsWith("/slide"))
+            {
+                slides.Add(currentPresentationSlide);
+                currentPresentationSlide =
+                    new PresentationSlideDetail(currentPresentationSlide.PresentationFormatStyle);
+                currentPresentationTextStyle =
+                    new PresentationTextStyle("", currentPresentationTextStyle.StyleName);
 
-                    continue;
-                }
+                currentPresentationSlide.PresentationTextStyles.Add(currentPresentationTextStyle);
+
+                continue;
             }
 
             currentPresentationTextStyle.TextContent += currentTextLine + "\n";

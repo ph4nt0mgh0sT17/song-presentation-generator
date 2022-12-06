@@ -30,6 +30,10 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     [ObservableProperty] private bool _presentationIsGenerating;
     [ObservableProperty] private bool _isAddEmptySlideBetweenSongsChecked;
 
+    [ObservableProperty]
+    [AlsoNotifyCanExecuteFor(nameof(MoveSongUpCommand), nameof(MoveSongDownCommand))]
+    private Song? _selectedSong;
+
     private List<Song> _songDatabase = new List<Song>();
 
     [ObservableProperty]
@@ -39,6 +43,8 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     private readonly IPresentationGeneratorService _presentationGeneratorService;
     private readonly ISaveFileDialogProvider _saveFileDialogProvider;
     private readonly ILogger<SongListViewModel> _logger;
+
+    public bool IsSongSelected => SelectedSong != null;
 
     public bool CanGeneratePresentation => SelectedSongs.Count > 0;
 
@@ -159,6 +165,36 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
         SelectedSongs.Remove(song);
         AllSongs.Add(song);
         GeneratePresentationCommand.NotifyCanExecuteChanged();
+    }
+
+    [ICommand]
+    public void SelectSongForMove(Song song)
+    {
+        SelectedSong = song;
+    }
+
+    [ICommand]
+    public void SelectSongForNothing(Song song)
+    {
+        SelectedSong = null;
+    }
+
+    [ICommand(CanExecute = nameof(IsSongSelected))]
+    public void MoveSongUp()
+    {
+        var currentSongIndex = SelectedSongs.IndexOf(SelectedSong);
+        var newSongIndex = Math.Max(0, currentSongIndex - 1);
+
+        SelectedSongs.Move(currentSongIndex, newSongIndex);
+    }
+
+    [ICommand(CanExecute = nameof(IsSongSelected))]
+    public void MoveSongDown()
+    {
+        var currentSongIndex = SelectedSongs.IndexOf(SelectedSong);
+        var newSongIndex = Math.Min(SelectedSongs.Count - 1, currentSongIndex + 1);
+
+        SelectedSongs.Move(currentSongIndex, newSongIndex);
     }
 
     private async Task OpenPresentation(string fileName)

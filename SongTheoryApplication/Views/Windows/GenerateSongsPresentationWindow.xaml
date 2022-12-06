@@ -79,6 +79,16 @@
                                                         }
                                                     }
                                                 }" CommandParameter="{Binding}" />
+
+                                        <MouseBinding MouseAction="LeftClick" Command="{
+                                                    Binding Path=ViewModel.SelectSongForNothingCommand, 
+                                                    RelativeSource={
+                                                        RelativeSource FindAncestor, 
+                                                        AncestorType={
+                                                            x:Type Window
+                                                        }
+                                                    }
+                                                }" CommandParameter="{Binding}" />
                                     </materialDesign:Card.InputBindings>
                                     <TextBlock Padding="15" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                Text="{Binding Path=Title}"
@@ -98,10 +108,14 @@
                     </ListView>
                 </materialDesign:Card>
 
+                <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Margin="0,0,0,10" Style="{StaticResource PrimaryButton}" Command="{Binding Path=MoveSongUpCommand}">&#708;</Button>
+                    <Button Margin="0,0,0,10" Style="{StaticResource PrimaryButton}" Command="{Binding Path=MoveSongDownCommand}">&#709;</Button>
+                </StackPanel>
 
                 <materialDesign:Card Padding="10" Margin="16" Grid.Column="2" Grid.RowSpan="2">
                     <ListView ItemsSource="{Binding Path=SelectedSongs}"
-                              SelectedItem="{Binding Path=SelectedSongToDeselect}"
+                              SelectedItem="{Binding Path=SelectedSong}"
                               ScrollViewer.CanContentScroll="True"
                               HorizontalContentAlignment="Stretch">
                         <ListView.ItemTemplate>
@@ -110,6 +124,16 @@
                                     <materialDesign:Card.InputBindings>
                                         <MouseBinding MouseAction="LeftDoubleClick" Command="{
                                                     Binding Path=ViewModel.DeselectSongCommand, 
+                                                    RelativeSource={
+                                                        RelativeSource FindAncestor, 
+                                                        AncestorType={
+                                                            x:Type Window
+                                                        }
+                                                    }
+                                                }" CommandParameter="{Binding}" />
+
+                                        <MouseBinding MouseAction="LeftClick" Command="{
+                                                    Binding Path=ViewModel.SelectSongForMoveCommand, 
                                                     RelativeSource={
                                                         RelativeSource FindAncestor, 
                                                         AncestorType={

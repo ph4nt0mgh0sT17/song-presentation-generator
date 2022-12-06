@@ -29,8 +29,8 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         { "Maroon", 800000 },
         { "DarkRed", 9109504 },
         { "FireBrick", 11674146 },
-        { "LawnGreen", 8190976 }
-
+        { "LawnGreen", 8190976 },
+        { "Yellow", 16776960 }
     };
 
 
@@ -65,6 +65,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
             
         var songTextLabel =textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 600);
         songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
+
 
         foreach (var textStyle in slideDetail.PresentationTextStyles)
         {
@@ -113,10 +114,17 @@ public class PresentationGeneratorService : IPresentationGeneratorService
     /// <param name="presentation">The <see cref="Presentation" /> object that will contain the slide.</param>
     private void GenerateTitleSlide(string songTitle, Presentation presentation, int slideIndex = 1)
     {
+        var configuration = _configuration.Get<ApplicationConfiguration>();
+        
         var titleSlide = presentation.Slides.Add(slideIndex, PpSlideLayout.ppLayoutTitleOnly);
+        
+        titleSlide.FollowMasterBackground = MsoTriState.msoFalse;
+        titleSlide.Background.Fill.BackColor.RGB = COLORS[configuration.SlideBackgroundColor ?? "Black"];
 
         var titleLabel = titleSlide.Shapes.Title;
         titleLabel.TextFrame.TextRange.Text = songTitle;
+        
+        titleLabel.TextFrame.TextRange.Font.Color.RGB = COLORS[configuration.SlideTitleColor ?? "White"];
     }
 
     public void GeneratePresentation(PresentationGenerationRequest? presentationGenerationRequest, string fileName)
@@ -200,6 +208,7 @@ public class PresentationGeneratorService : IPresentationGeneratorService
 
     private void CreateEmptySlide(Presentation presentation, ref int slideIndex)
     {
+
         GenerateTextSlide(
             new PresentationSlideDetail(new PresentationFormatStyle("Unknown")),
             presentation,
