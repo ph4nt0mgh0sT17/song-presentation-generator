@@ -170,10 +170,17 @@ public partial class CreateSongWindowViewModel : ObservableValidator
         {
             await Task.Run(() =>
             {
-                _presentationGeneratorService.GeneratePresentation(
-                    new PresentationGenerationRequest(SongTitle, slideTexts),
-                    fileName
-                );
+                try
+                {
+                    _presentationGeneratorService.GeneratePresentation(
+                        new PresentationGenerationRequest(SongTitle, slideTexts),
+                        fileName
+                    );
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, ApplicationConstants.Logs.CANNOT_GENERATE_PRESENTATION);
+                }
             });
 
             var answer = await DialogHost.Show(new DialogQuestionViewModel(

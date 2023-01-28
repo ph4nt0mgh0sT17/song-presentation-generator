@@ -11,6 +11,7 @@ using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using SongTheoryApplication.Attributes;
+using SongTheoryApplication.Constants;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
 using SongTheoryApplication.Providers;
@@ -229,11 +230,19 @@ public partial class GenerateSongPresentationViewModel : ObservableObject
     {
         await Task.Run(() =>
         {
-            _presentationGeneratorService.GenerateMultipleSongsPresentation(
-                presentationGenerationRequests,
-                IsAddEmptySlideBetweenSongsChecked,
-                fileName
-            );
+            try
+            {
+                _presentationGeneratorService.GenerateMultipleSongsPresentation(
+                    presentationGenerationRequests,
+                    IsAddEmptySlideBetweenSongsChecked,
+                    fileName
+                );
+            }
+            
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ApplicationConstants.Logs.CANNOT_GENERATE_PRESENTATION);
+            }
         });
     }
 

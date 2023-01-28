@@ -30,7 +30,13 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         { "DarkRed", 9109504 },
         { "FireBrick", 11674146 },
         { "LawnGreen", 8190976 },
-        { "Yellow", 16776960 }
+        { "Yellow", 16776960 },
+        { "Navy", 128 },
+        { "Cyan", 65535 },
+        { "Gray", 8421504 },
+        { "Silver", 12632256 },
+        { "Olive", 8421376 }
+        
     };
 
 

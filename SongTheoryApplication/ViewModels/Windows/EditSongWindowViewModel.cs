@@ -170,22 +170,37 @@ public partial class EditSongWindowViewModel : ObservableValidator
         if (saveFileDialog.ShowDialog() == true)
         {
             var fileName = saveFileDialog.FileName.EndsWith(".pptx") ? saveFileDialog.FileName : $"{saveFileDialog.FileName}.pptx";
-            await GeneratePresentation(fileName, slideTexts);
+            try
+            {
+                await GeneratePresentation(fileName, slideTexts);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.InnerException, ApplicationConstants.Logs.CANNOT_GENERATE_PRESENTATION);
+            }
         }
     }
 
     private async Task GeneratePresentation(string fileName, List<PresentationSlideDetail> slideTexts)
     {
         PresentationIsBeingGenerated = true;
+        _logger.LogInformation("presentation is generated");
 
         try
         {
             await Task.Run(() =>
             {
-                _presentationGeneratorService.GeneratePresentation(
-                    new PresentationGenerationRequest(SongTitle, slideTexts),
-                    fileName
-                );
+                try
+                {
+                    _presentationGeneratorService.GeneratePresentation(
+                        new PresentationGenerationRequest(SongTitle, slideTexts),
+                        fileName
+                    );
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, ApplicationConstants.Logs.CANNOT_GENERATE_PRESENTATION);
+                }
             });
 
             var answer = await DialogHost.Show(new DialogQuestionViewModel(

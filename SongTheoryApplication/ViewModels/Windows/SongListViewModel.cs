@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using SongTheoryApplication.Attributes;
 using SongTheoryApplication.Configuration;
+using SongTheoryApplication.Constants;
 using SongTheoryApplication.Exceptions;
 using SongTheoryApplication.Extensions;
 using SongTheoryApplication.Models;
@@ -362,10 +363,18 @@ public partial class SongListViewModel : ObservableValidator
         {
             var slides = SongUtility.ParseSongTextIntoSlides(song.Text);
 
-            _presentationGeneratorService.GeneratePresentation(
-                new PresentationGenerationRequest(song.Title, slides),
-                fileName
-            );
+            try
+            {
+                _presentationGeneratorService.GeneratePresentation(
+                    new PresentationGenerationRequest(song.Title, slides),
+                    fileName
+                );
+            }
+            
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ApplicationConstants.Logs.CANNOT_GENERATE_PRESENTATION);
+            }
         });
     }
 
