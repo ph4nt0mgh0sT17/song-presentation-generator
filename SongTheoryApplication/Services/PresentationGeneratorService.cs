@@ -69,7 +69,8 @@ public class PresentationGeneratorService : IPresentationGeneratorService
         textSlide.FollowMasterBackground = MsoTriState.msoFalse;
         textSlide.Background.Fill.BackColor.RGB = COLORS[configuration.SlideBackgroundColor ?? "Black"];
             
-        var songTextLabel =textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 800, 600);
+        var songTextLabel =textSlide.Shapes.AddTextbox(MsoTextOrientation.msoTextOrientationHorizontal, 10, 10, 690, 600);
+        songTextLabel.TextFrame.WordWrap = MsoTriState.msoTrue;
         songTextLabel.TextFrame.TextRange.ParagraphFormat.Alignment = PpParagraphAlignment.ppAlignCenter;
 
 
